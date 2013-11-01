@@ -1,6 +1,6 @@
-function UserSettings(storage) {
+var UserSettings = function(storage) {
     this._storage = storage;
-}
+};
 
 UserSettings.prototype = {
     get_prop: function(propertyName) {

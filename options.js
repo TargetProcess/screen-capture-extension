@@ -6,8 +6,7 @@ var props = [
     'password'
 ];
 
-function save_options() {
-
+function saveOptions() {
     for (var i = 0; i < props.length; i++) {
         var p = props[i];
         settings.set_prop(p, $('#' + p).val());
@@ -16,14 +15,12 @@ function save_options() {
     // Update status to let user know options were saved.
     var $status = $('#status');
     $status.html('Options Saved!');
-    setTimeout(function () {
+    setTimeout(function() {
         $status.html('');
     }, 2000);
-
 }
 
-function restore_options() {
-
+function restoreOptions() {
     for (var i = 0; i < props.length; i++) {
         var p = props[i];
         var val = settings.get_prop(p);
@@ -31,7 +28,7 @@ function restore_options() {
     }
 }
 
-$(function () {
-    restore_options();
-    $('#save').click(save_options);
+$(function() {
+    restoreOptions();
+    $('#save').click(saveOptions);
 });

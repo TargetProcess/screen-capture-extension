@@ -1,4 +1,5 @@
-require([], function () {
+/*global chrome, require*/
+require([], function() {
 
     var DOMAIN = 'http://' + settings.get_prop('domain') + '.tpondemand.com';
     var LOGIN = settings.get_prop('login');
@@ -11,7 +12,7 @@ require([], function () {
                 url: DOMAIN + '/api/v1/projects?resultInclude=[Id,Name]',
                 dataType: 'json',
                 contentType: 'application/json',
-                beforeSend: function (xhr) {
+                beforeSend: function(xhr) {
                     xhr.setRequestHeader(
                         'Authorization',
                         'Basic ' + btoa(LOGIN + ':' + PASSWORD)
@@ -20,15 +21,15 @@ require([], function () {
             });
     };
 
-    chrome.extension.onRequest.addListener(function (request, sender, callback) {
+    chrome.extension.onRequest.addListener(function(request, sender, callback) {
         var fn = {
-            'tp-chrome-extension/screen': function (r) {
+            'tp-chrome-extension/screen': function(r) {
                 //
             },
-            'capturePage': function () {
+            'capturePage': function() {
                 console.log('capture-page');
             },
-            'openPage': function () {
+            'openPage': function() {
                 console.log('open-page');
             }
         }[request.msg];
@@ -52,7 +53,7 @@ require([], function () {
                     Description: description,
                     Project: { Id: projectId }
                 }),
-                beforeSend: function (xhr) {
+                beforeSend: function(xhr) {
                     xhr.setRequestHeader(
                         'Authorization',
                         'Basic ' + btoa(LOGIN + ':' + PASSWORD)
@@ -94,7 +95,7 @@ require([], function () {
         return $result;
     };
 
-    var captureTab = function () {
+    var captureTab = function() {
         var d = $.Deferred();
 
         chrome.tabs.captureVisibleTab(
@@ -102,7 +103,7 @@ require([], function () {
             {
                 format: 'png'
             },
-            function (base64str) {
+            function(base64str) {
                 if (base64str) {
                     d.resolve(base64str);
                 }
@@ -115,7 +116,7 @@ require([], function () {
     };
 
 
-    chrome.tabs.getSelected(null, function (tab) {
+    chrome.tabs.getSelected(null, function(tab) {
 
         var fnSendRequest = function() {
             chrome.extension.sendRequest(
@@ -123,7 +124,7 @@ require([], function () {
                     msg: 'tp-chrome-extension/screen',
                     val: 'test!'
                 },
-                function (response) {
+                function(response) {
                 }
             );
         };
@@ -135,13 +136,13 @@ require([], function () {
 
         var $box = $('#box');
         var $btn = $('.i-role-trigger-take');
-        $btn.on('click', function () {
+        $btn.on('click', function() {
 
             $box.removeClass('take-screenshot');
 
             captureTab()
-                .fail(function () {
-                    alert('error')
+                .fail(function() {
+                    alert('error');
                 })
                 .done(function(base64str) {
 
@@ -164,7 +165,6 @@ require([], function () {
                     $text.focus();
 
                     $('.i-role-trigger-post').one('click', function() {
-
                         var description = '<p>test</p>';
 
                         postBugToTargetProcess(
