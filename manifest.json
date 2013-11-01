@@ -1,0 +1,24 @@
+{
+    "name": "TargetProcess Screen Capture",
+    "version": "0.0.1",
+    "manifest_version": 2,
+    "description": "Post bugs to TP3 with screenshot in one click!",
+    "browser_action": {
+        "default_icon": "images/icons/icon.png",
+        "default_popup": "popup.html"
+    },
+    "options_page": "options.html",
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "http://*.tpondemand.com/",
+        "http://*/*",
+        "https://*/*",
+        "notifications"
+    ],
+    "icons": {
+        "16": "images/icons/icon16.png",
+        "48": "images/icons/icon48.png",
+        "128": "images/icons/icon128.png"
+    }
+}
