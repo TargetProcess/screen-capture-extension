@@ -9,7 +9,7 @@
     <option forin="true" />
     <option immed="false" />
     <option latedef="true" />
-    <option newcap="false" />
+    <option newcap="true" />
     <option noarg="true" />
     <option noempty="true" />
     <option nonew="true" />
@@ -19,6 +19,7 @@
     <option unused="true" />
     <option strict="false" />
     <option trailing="false" />
+    <option indent="4" />
     <option asi="false" />
     <option boss="false" />
     <option debug="false" />

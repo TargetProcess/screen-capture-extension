@@ -1,30 +1,27 @@
-// Saves options to localStorage.
+/*global settings*/
 
-var props = [
-    'domain',
-    'login',
-    'password'
-];
+// Saves/restore options.
 
 function saveOptions() {
-    for (var i = 0; i < props.length; i++) {
-        var p = props[i];
-        settings.set_prop(p, $('#' + p).val());
+    var options = $('.option');
+    for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        settings.set_prop(option.id, option.value);
     }
 
     // Update status to let user know options were saved.
     var $status = $('#status');
-    $status.html('Options Saved!');
+    $status.html('Options saved!');
     setTimeout(function() {
         $status.html('');
     }, 2000);
 }
 
 function restoreOptions() {
-    for (var i = 0; i < props.length; i++) {
-        var p = props[i];
-        var val = settings.get_prop(p);
-        $('#' + p).val(val);
+    var options = $('.option');
+    for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        option.value = settings.get_prop(option.id);
     }
 }
 
