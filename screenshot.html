@@ -149,31 +149,22 @@
 <body>
 
 <div id="drawing-toolbar">
-    <div id="page">
-        <div id="editor">
-            <div class="toolbar">
-                <input type="button" class="button pencil clicked" title="Use pencil">
-                <input type="button" class="button line" title="Draw a line">
-                <input type="button" class="button rectangle" title="Draw a rectangle">
-                <input type="button" class="button ellipse" title="Draw an ellipse or a circle">
-                <input type="button" class="button eraser" title="Use eraser">
-                <input type="button" class="button new" title="New canvas">
-                <input type="button" class="button undo" title="Undo">
-                <input type="button" class="button redo disabled" title="Redo">
+    <div id="editor">
+        <div class="toolbar">
+            <input type="button" class="button pencil clicked" title="Use pencil" />
+            <input type="button" class="button line" title="Draw a line" />
+            <input type="button" class="button rectangle" title="Draw a rectangle" />
+            <input type="button" class="button ellipse" title="Draw an ellipse or a circle" />
+            <input type="button" class="button eraser" title="Use eraser" />
+            <input type="button" class="button new" title="New canvas" />
+            <input type="button" class="button undo" title="Undo" />
+            <input type="button" class="button redo disabled" title="Redo" />
 
-                <div style="float:right; width:100px;">
-                    <div>
-                        <input class="color" value="000000" title="Color" autocomplete="off" />
-                    </div>
-                </div>
-            </div>
+            <input class="color" value="000000" title="Color" autocomplete="off" />
         </div>
-
-        <input type="hidden" name="ctl00$ContentPlaceHolder1$hfGeneratedScriptContent"
-                id="ctl00_ContentPlaceHolder1_hfGeneratedScriptContent" value="" />
-
-        <div id="scriptContent"></div>
     </div>
+
+    <input type="hidden" id="generatedScriptContent" value="" />
 </div>
 
 <div id="dataContainer">
@@ -199,13 +190,13 @@ Then ...
 
     <p>
         <select class="i-role-severities">
-            <!-- options goes here -->
+            <!-- options go here -->
         </select>
     </p>
 
     <p>
         <select class="i-role-priorities">
-            <!-- options goes here -->
+            <!-- options go here -->
         </select>
     </p>
 

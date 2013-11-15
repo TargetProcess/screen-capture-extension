@@ -33,7 +33,7 @@
     <option iterator="false" />
     <option lastsemic="false" />
     <option laxbreak="false" />
-    <option laxcomma="false" />
+    <option laxcomma="true" />
     <option loopfunc="false" />
     <option multistr="false" />
     <option proto="false" />

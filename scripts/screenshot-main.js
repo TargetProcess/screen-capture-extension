@@ -1,5 +1,6 @@
+/*global require, settings*/
 require([
-      '/scripts/chrome.api.js'
+    '/scripts/chrome.api.js'
     , '/scripts/targetprocess.api.js'
     , '/scripts/image-editor/actions-logger.js'
     , '/scripts/image-editor/paint-manager.js'
@@ -12,7 +13,7 @@ require([
     paintManager.init(actionsLogger);
 
 
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         paintManager.tool_change("pencil");
 
@@ -38,7 +39,7 @@ require([
         var currentValue = 2;
         paintManager.setLineWidth(currentValue, false);
 
-        $("#editor .toolbar .button").click(function () {
+        $("#editor .toolbar .button").click(function() {
             var isDisabled = $(this).hasClass("disabled");
 
             if (!isDisabled) {
@@ -64,14 +65,14 @@ require([
                 else if ($(this).hasClass("undo")) {
                     actionsLogger.Undo();
                     $("#editor .toolbar .button.pencil").addClass("clicked");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $("#editor .toolbar .button.undo").removeClass("clicked");
                     }, 300);
                 }
                 else if ($(this).hasClass("redo")) {
                     actionsLogger.Redo();
                     $("#editor .toolbar .button.pencil").addClass("clicked");
-                    setTimeout(function () {
+                    setTimeout(function() {
                         $("#editor .toolbar .button.redo").removeClass("clicked");
                     }, 300);
                 }
@@ -80,14 +81,6 @@ require([
             }
         });
     });
-
-
-
-
-
-
-
-
 
 
     var DOMAIN = 'http://' + settings.get_prop('domain') + '.tpondemand.com';
@@ -107,7 +100,7 @@ require([
 
     tpApi
         .setup()
-        .done(function (setup) {
+        .done(function(setup) {
             setup
                 .projects
                 .forEach(createOption.bind($('.i-role-projects')));
@@ -121,7 +114,7 @@ require([
             $('.i-role-trigger-post').prop('disabled', false);
         });
 
-    $postTrigger.one('click', function () {
+    $postTrigger.one('click', function() {
 
         postProgress();
 
@@ -155,9 +148,6 @@ require([
                     width: '100%',
                     height: '100%',
                     'background-color': '#000',
-                    filter: 'alpha(opacity=50)',
-                    '-moz-opacity': 0.5,
-                    '-khtml-opacity': 0.5,
                     opacity: 0.5,
                     'z-index': 10000
                 })

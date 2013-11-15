@@ -1,6 +1,6 @@
 define([], function() {
 
-    var ELEMENT_ID = 'ctl00_ContentPlaceHolder1_hfGeneratedScriptContent';
+    var ELEMENT_ID = 'generatedScriptContent';
 
     var ActionsLogger = function(paintManager, UiManager) {
         this.paintManager = paintManager;
