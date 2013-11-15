@@ -8,7 +8,7 @@ UserSettings.prototype = {
     },
 
     set_prop: function(propertyName, value) {
-        return this._storage[propertyName] = value;
+        this._storage[propertyName] = value;
     }
 };
 
