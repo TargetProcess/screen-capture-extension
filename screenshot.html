@@ -39,6 +39,148 @@
             float: left;
             width: 1200px;
         }
+
+
+        #drawing-toolbar {
+            display: inline-block;
+            margin-left: 315px;
+        }
+
+        #editor {
+            margin: 0 auto;
+            position: relative;
+            width: 582px;
+            float: left;
+        }
+
+        #editor .toolbar {
+            height: 50px;
+            width: 100%;
+            background-color: lightgray;
+            text-align: left;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        #editor .toolbar .color {
+            float: right;
+            width: 50px;
+        }
+
+        #editor .toolbar .button {
+            margin-top: 2.5px;
+            background-color: white;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 45px;
+            height: 45px;
+            border-width: 1px;
+            border-color: black;
+            cursor: pointer;
+        }
+
+        #editor .toolbar .button:hover {
+            opacity: 0.7;
+        }
+
+        #editor .toolbar .button.clicked {
+            border-width: 3px;
+        }
+
+        #editor .toolbar .button.rectangle {
+            background-image: url('/images/restangle.png');
+        }
+
+        #editor .toolbar .button.ellipse {
+            background-image: url('/images/ellipse.png');
+        }
+
+        #editor .toolbar .button.pencil {
+            background-image: url('/images/pencil.png');
+        }
+
+        #editor .toolbar .button.line {
+            background-image: url('/images/line.png');
+        }
+
+        #editor .toolbar .button.eraser {
+            background-image: url('/images/eraser.png');
+        }
+
+        #editor .toolbar .button.new {
+            margin-left: 12px;
+            margin-right: 12px;
+            background-image: url('/images/new_file.png');
+        }
+
+        #editor .toolbar .button.undo {
+            background-image: url('/images/undo.png');
+        }
+
+        #editor .toolbar .button.redo {
+            background-image: url('/images/redo.png');
+        }
+
+        #editor .toolbar .button.disabled {
+            opacity: 0.3;
+        }
+
+        #container {
+            position: relative;
+        }
+
+        #imageView {
+            border: 1px solid #000;
+        }
+
+        #imageTemp {
+            cursor: pointer;
+        }
+
+        #imageTemp {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+        }
+
+        #description {
+            float: left;
+            margin-left: 40px;
+            width: 300px;
+            line-height: 50px;
+        }
+
+        #consoleWrapper, #console {
+            width: 300px;
+            height: 435px;
+            overflow: hidden;
+        }
+
+        #consoleWrapper {
+            background-color: lightgray;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+
+            padding: 0 15px 15px 15px;
+            line-height: 20px;
+
+            height: 455px;
+            margin-top: 30px; /*margin-top: -230px;*/
+
+            display: none;
+        }
+
+        #console {
+            overflow-y: scroll;
+            background-color: black;
+
+            padding-left: 5px;
+            padding-top: 5px;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
     </style>
 
     <script src="scripts/screenshot.js"></script>
@@ -48,7 +190,39 @@
 </head>
 <body>
 
-<div id="toolbar" style="text-align: center;">Toolbar</div>
+<div id="drawing-toolbar" style="text-align: center;">
+    <div id="page">
+        <div id="editor">
+            <div class="toolbar">
+                <input type="button" class="button pencil clicked" title="Use pencil">
+                <input type="button" class="button line" title="Draw a line">
+                <input type="button" class="button rectangle" title="Draw a rectangle">
+                <input type="button" class="button ellipse" title="Draw an ellipse or a circle">
+                <input type="button" class="button eraser" title="Use eraser">
+                <input type="button" class="button new" title="New canvas">
+                <input type="button" class="button undo" title="Undo">
+                <input type="button" class="button redo disabled" title="Redo">
+
+                <div style="float:right; width:100px;">
+                    <div>
+                        <input class="color" value="000000"
+                               title="Color" autocomplete="off"
+                               style="background-image: none; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="description">
+            <div id="consoleWrapper">
+                <div id="console"></div>
+            </div>
+        </div>
+
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$hfGeneratedScriptContent" id="ctl00_ContentPlaceHolder1_hfGeneratedScriptContent" value="">
+
+        <div id="scriptContent"></div>
+    </div>
+</div>
 
 <div id="dataContainer">
 
@@ -89,7 +263,10 @@ Then ...
 </div>
 
 <div id="imageContainer">
-    <img id="target" width="1200" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+    <div id="container">
+        <!--<img id="target" width="1200" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />-->
+        <canvas id="imageView" width="1200" height="800"></canvas>
+    </div>
 </div>
 
 </body>

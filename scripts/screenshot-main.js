@@ -1,7 +1,94 @@
 require([
       '/scripts/chrome.api.js'
     , '/scripts/targetprocess.api.js'
-], function(ChromeApi, TPApi) {
+    , '/scripts/image-editor/actions-logger.js'
+    , '/scripts/image-editor/paint-manager.js'
+    , '/scripts/image-editor/ui.js'
+], function(ChromeApi, TPApi, ActionsLogger, PaintManager, UI) {
+
+    var paintManager = new PaintManager();
+    var uiManager = new UI();
+    var actionsLogger = new ActionsLogger(paintManager, uiManager);
+    paintManager.init(actionsLogger);
+
+
+    $(document).ready(function () {
+
+        paintManager.tool_change("pencil");
+
+//       $("#slider").slider({
+//           value: 5,
+//           min: 1,
+//           max: 14,
+//           step: 1,
+//           slide: function (event, ui) {
+//               if (event.originalEvent) {
+//                   //manual change
+//                   //alert(ui.value);
+//                   $(this).css("height", ui.value);
+//                   paintManager.setLineWidth(ui.value, true);
+//               }
+//               else {
+//                   //programmatic change
+//               }
+//           }
+//       });
+//       var currentValue = $("#slider").slider('value');
+//       $("#slider").css("height", currentValue);
+        var currentValue = 2;
+        paintManager.setLineWidth(currentValue, false);
+
+        $("#editor .toolbar .button").click(function () {
+            var isDisabled = $(this).hasClass("disabled");
+
+            if (!isDisabled) {
+                $("#editor .toolbar .button").removeClass("clicked");
+                $(this).addClass("clicked");
+
+                paintManager.changeColor($(".color").val());
+
+                var toolType = "pencil";
+                if ($(this).hasClass("line")) {
+                    toolType = "line";
+                }
+                else if ($(this).hasClass("rectangle")) {
+                    toolType = "rect";
+                }
+                else if ($(this).hasClass("ellipse")) {
+                    toolType = "circle";
+                }
+                else if ($(this).hasClass("eraser")) {
+                    paintManager.changeColor("FFFFFF");
+                    toolType = "eraser";
+                }
+                else if ($(this).hasClass("undo")) {
+                    actionsLogger.Undo();
+                    $("#editor .toolbar .button.pencil").addClass("clicked");
+                    setTimeout(function () {
+                        $("#editor .toolbar .button.undo").removeClass("clicked");
+                    }, 300);
+                }
+                else if ($(this).hasClass("redo")) {
+                    actionsLogger.Redo();
+                    $("#editor .toolbar .button.pencil").addClass("clicked");
+                    setTimeout(function () {
+                        $("#editor .toolbar .button.redo").removeClass("clicked");
+                    }, 300);
+                }
+
+                paintManager.tool_change(toolType);
+            }
+        });
+    });
+
+
+
+
+
+
+
+
+
 
     var DOMAIN = 'http://' + settings.get_prop('domain') + '.tpondemand.com';
     var LOGIN = settings.get_prop('login');
@@ -44,7 +131,7 @@ require([
             priority: $('.i-role-priorities').val(),
             issueName: $('.i-role-screenshot-name').val(),
             description: $('.i-role-screenshot-desc').val(),
-            base64str: $('#target').prop('src')
+            base64str: $('#imageView')[0].toDataURL('image/png')
         };
 
         tpApi
