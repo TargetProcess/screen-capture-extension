@@ -93,6 +93,8 @@ require([
         password: PASSWORD
     });
 
+    $('#referenceToAccount').prop('href', DOMAIN);
+
     var $text = $('.i-role-screenshot-name');
     $text.focus();
     var $postTrigger = $('.i-role-trigger-post');
