@@ -8,51 +8,109 @@ define([], function() {
 
     API.prototype = {
 
-        fetchProjects: function() {
+        setup: function() {
+            var $result = $.Deferred();
 
-            return $
-                .ajax({
-                    method: 'GET',
-                    url: this.domain + '/api/v1/projects?resultInclude=[Id,Name]',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(
-                            'Authorization',
-                            'Basic ' + btoa(this.login + ':' + this.password)
-                        );
-                    }
+            var $dTId = this.getEntityTypeId('Bug');
+            var $dPrs = $dTId.then(this.fetchPriorities.bind(this));
+            var $dSev = this.fetchSeverities();
+            var $dPrj = this.fetchProjects();
+
+            $
+                .when($dTId, $dPrj, $dSev, $dPrs)
+                .then(function(entityTypeId, projects, severities, priorities) {
+                    $result.resolve({
+                        entityTypeId: entityTypeId,
+                        projects: projects.Items,
+                        severities: severities.Items,
+                        priorities: priorities.Items
+                    });
                 });
+
+            return $result;
         },
 
-        postBugToTargetProcess: function(projectId, issueName, description, base64str) {
+        req: function(url, data) {
+            var cfg = {
+                method: 'GET',
+                url: this.domain + url,
+                dataType: 'json',
+                contentType: 'application/json',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(
+                        'Authorization',
+                        'Basic ' + btoa(this.login + ':' + this.password)
+                    );
+                }
+            };
+
+            if (data) {
+                cfg.data = JSON.stringify(data);
+                cfg.method = 'POST';
+            }
+
+            return $.ajax(cfg);
+        },
+
+        getEntityTypeId: function(entityName) {
+            var $result = $.Deferred();
+            this.req("/api/v1/entitytypes.asmx?include=[Id]&where=Name eq '" + entityName + "'")
+                .done(function(r) {
+                    $result.resolve(r.Items[0].Id);
+                });
+            return $result;
+        },
+
+        fetchSeverities: function() {
+            var $result = $.Deferred();
+            this.req('/api/v1/severities?resultInclude=[Id,Name]')
+                .done(function (r) {
+                    $result.resolve(r)
+                });
+            return $result;
+        },
+
+        fetchPriorities: function(entityTypeId) {
+            var $result = $.Deferred();
+            this.req('/api/v1/priorities?resultInclude=[Id,Name]&where=EntityType.Id eq ' + entityTypeId)
+                .done(function (r) {
+                    $result.resolve(r)
+                });
+            return $result;
+        },
+
+        fetchProjects: function() {
+            var $result = $.Deferred();
+            this.req('/api/v1/projects?resultInclude=[Id,Name]')
+                .done(function(r) {
+                    $result.resolve(r)
+                });
+            return $result;
+        },
+
+        postBugToTargetProcess: function(data) {
+
+            var projectId = data.projectId;
+            var severity = data.severity;
+            var priority = data.priority;
+            var issueName = data.issueName;
+            var description = data.description;
+            var base64str = data.base64str;
 
             var $result = $.Deferred();
 
-            $
-                .ajax({
-                    method: 'POST',
-                    url: this.domain + '/api/v1/Bugs?resultInclude=[Id,Name]',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        Name: issueName,
-                        Description: description,
-                        Project: { Id: projectId }
-                    }),
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader(
-                            'Authorization',
-                            'Basic ' + btoa(this.login + ':' + this.password)
-                        );
-                    }
+            this.req(
+                '/api/v1/Bugs?resultInclude=[Id,Name]',
+                {
+                    Name: issueName,
+                    Description: description,
+                    Severity: { Id: severity },
+                    Priority: { Id: priority },
+                    Project: { Id: projectId }
                 })
                 .done(function(r) {
-                    this
-                        .postAttachmentToTargetProcess(r.Id, base64str)
-                        .done(function() {
-                            $result.resolve(r);
-                        });
+                    this.postAttachmentToTargetProcess(r.Id, base64str)
+                        .done($result.resolve.bind($result, r));
                 }.bind(this));
 
             return $result;
