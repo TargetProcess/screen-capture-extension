@@ -1,11 +1,15 @@
 function setScreenshotUrl(url) {
     // document.getElementById('target').src = url;
+    var canvas = document.getElementById('imageView');
+    var context = canvas.getContext('2d');
 
-    var example = document.getElementById('imageView');
-    var ctx = example.getContext('2d');
-    var pic = new Image();
-    pic.onload = function() {
-        ctx.drawImage(pic, 0, 0);
+    var image = new Image();
+    image.onload = function() {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        // FIXME canvas size
+        context.drawImage(image, 0, 0);
+        image.onload = null;
     };
-    pic.src = url;
+    image.src = url;
 }
