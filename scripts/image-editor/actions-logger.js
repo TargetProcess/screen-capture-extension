@@ -13,10 +13,9 @@ define([], function() {
         kSequenceStartString: "/*s*/\r\n",
         kSequenceStartStringForSearch: "/*s*/",
 
-        addScriptWithUndoSupport : function (script, shouldUndo) {
-            var console = document.getElementById(ELEMENT_ID);
-
-            if (console != null) {
+        addScriptWithUndoSupport: function(script, shouldUndo) {
+            var scriptConsole = document.getElementById(ELEMENT_ID);
+            if (scriptConsole) {
                 var undoText = "";
                 if (shouldUndo) {
                     undoText = this.kSequenceStartString;
@@ -26,18 +25,15 @@ define([], function() {
                     this._UndoStack = [];
                 }
 
-                console.value += undoText + script;
+                scriptConsole.value += undoText + script;
             }
         },
 
-        addScript: function (script) {
+        addScript: function(script) {
             var retVal = this.addScriptWithUndoSupport(script, true);
-
-            //UiManager.ButtonFlash();
-            this.UiManager.AllowSubmit();
-
-            this.UiManager.ConsoleWrite(script);
-
+            //this.UiManager.ButtonFlash();
+            //this.UiManager.AllowSubmit();
+            console.log(script);
             return retVal;
         },
 
@@ -49,27 +45,27 @@ define([], function() {
             this.addScript(this.kSequenceStartString);
         },
 
-        isLoggerStarted: function () {
+        isLoggerStarted: function() {
             var lines = this.getScript().split("\n");
             return (lines.length > 5);
         },
 
-        getScript: function () {
-            var console = document.getElementById(ELEMENT_ID);
-            if (console != null) {
-                return console.value;
+        getScript: function() {
+            var scriptConsole = document.getElementById(ELEMENT_ID);
+            if (scriptConsole) {
+                return scriptConsole.value;
             }
             return "";
         },
 
-        setScript: function (script) {
-            var console = document.getElementById(ELEMENT_ID);
-            if (console != null) {
-                console.value = script;
+        setScript: function(script) {
+            var scriptConsole = document.getElementById(ELEMENT_ID);
+            if (scriptConsole) {
+                scriptConsole.value = script;
             }
         },
 
-        Undo: function () {
+        Undo: function() {
             var scriptContent = this.getScript();
             var lastSequenceIndex = scriptContent.lastIndexOf(this.kSequenceStartStringForSearch);
 
@@ -88,12 +84,12 @@ define([], function() {
             }
         },
 
-        Redo: function () {
+        Redo: function() {
             var redoScript = this._UndoStack.pop();
 
             if (redoScript) {
                 var scriptContent = this.getScript();
-                scriptContent = scriptContent + redoScript;
+                scriptContent += redoScript;
                 this.paintManager.RepaintByScript(scriptContent);
                 this.setScript(scriptContent);
             }

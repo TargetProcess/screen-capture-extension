@@ -40,10 +40,10 @@
             width: 1200px;
         }
 
-
         #drawing-toolbar {
             display: inline-block;
             margin-left: 315px;
+            text-align: center;
         }
 
         #editor {
@@ -65,17 +65,17 @@
         #editor .toolbar .color {
             float: right;
             width: 50px;
+            background: black none;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
         }
 
         #editor .toolbar .button {
-            margin-top: 2.5px;
-            background-color: white;
-            background-position: center;
-            background-repeat: no-repeat;
+            margin-top: 2px;
+            background: white no-repeat center;
             width: 45px;
             height: 45px;
-            border-width: 1px;
-            border-color: black;
+            border: 1px solid black;
             cursor: pointer;
         }
 
@@ -135,52 +135,10 @@
 
         #imageTemp {
             cursor: pointer;
-        }
-
-        #imageTemp {
             position: absolute;
             top: 1px;
             left: 1px;
         }
-
-        #description {
-            float: left;
-            margin-left: 40px;
-            width: 300px;
-            line-height: 50px;
-        }
-
-        #consoleWrapper, #console {
-            width: 300px;
-            height: 435px;
-            overflow: hidden;
-        }
-
-        #consoleWrapper {
-            background-color: lightgray;
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-
-            padding: 0 15px 15px 15px;
-            line-height: 20px;
-
-            height: 455px;
-            margin-top: 30px; /*margin-top: -230px;*/
-
-            display: none;
-        }
-
-        #console {
-            overflow-y: scroll;
-            background-color: black;
-
-            padding-left: 5px;
-            padding-top: 5px;
-            font-size: 12px;
-            font-weight: normal;
-        }
-
     </style>
 
     <script src="scripts/screenshot.js"></script>
@@ -190,7 +148,7 @@
 </head>
 <body>
 
-<div id="drawing-toolbar" style="text-align: center;">
+<div id="drawing-toolbar">
     <div id="page">
         <div id="editor">
             <div class="toolbar">
@@ -205,20 +163,14 @@
 
                 <div style="float:right; width:100px;">
                     <div>
-                        <input class="color" value="000000"
-                               title="Color" autocomplete="off"
-                               style="background-image: none; background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);">
+                        <input class="color" value="000000" title="Color" autocomplete="off" />
                     </div>
                 </div>
             </div>
         </div>
-        <div id="description">
-            <div id="consoleWrapper">
-                <div id="console"></div>
-            </div>
-        </div>
 
-        <input type="hidden" name="ctl00$ContentPlaceHolder1$hfGeneratedScriptContent" id="ctl00_ContentPlaceHolder1_hfGeneratedScriptContent" value="">
+        <input type="hidden" name="ctl00$ContentPlaceHolder1$hfGeneratedScriptContent"
+                id="ctl00_ContentPlaceHolder1_hfGeneratedScriptContent" value="" />
 
         <div id="scriptContent"></div>
     </div>
@@ -226,7 +178,8 @@
 
 <div id="dataContainer">
 
-    <p>Edit screenshot and post it to <a href="http://www.targetprocess.com">TargetProcess</a></p>
+    <p>Edit screenshot and post it to <a id="referenceToAccount"
+            href="http://www.targetprocess.com">TargetProcess</a></p>
 
     <p><input class="i-role-screenshot-name" type="text" value="See error on screenshot..." /></p>
 
