@@ -1,72 +1,96 @@
+<!DOCTYPE html>
 <html>
-<script src="scripts/screenshot.js"></script>
+<head>
+    <meta charset="utf-8" />
+    <title>Screenshot</title>
 
-<script src="scripts/libs/jquery-2.0.3.min.js"></script>
-<script src="scripts/class-user-settings.js"></script>
-<script src="scripts/require.js" data-main="scripts/screenshot-main"></script>
+    <style>
+        body {
+            border: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #dataContainer {
+            float: left;
+            padding-left: 5px;
+            width: 310px;
+        }
+
+        #dataContainer button, #dataContainer input, #dataContainer select, #dataContainer textarea {
+            margin: 0;
+        }
+
+        #dataContainer input {
+            width: 300px;
+        }
+
+        #dataContainer select {
+            width: 304px;
+        }
+
+        #dataContainer textarea {
+            height: 100px;
+            width: 298px;
+        }
+
+        #imageContainer {
+            border: 1px dotted gray;
+            float: left;
+            width: 1200px;
+        }
+    </style>
+
+    <script src="scripts/screenshot.js"></script>
+    <script src="scripts/libs/jquery-2.0.3.min.js"></script>
+    <script src="scripts/class-user-settings.js"></script>
+    <script src="scripts/require.js" data-main="scripts/screenshot-main"></script>
+</head>
 <body>
-<p>Edit screenshot and post it to <a href="http://www.targetprocess.com">TargetProcess</a></p>
-<table cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td width="300px" style="vertical-align:top;">
-            <table cellpadding="0" cellspacing="0" width="100%">
-                <tr>
-                    <td>
-                        <button class="i-role-trigger-post">Post!</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input class="i-role-screenshot-name" type="text" value="See error on screenshot..." style="width:100%" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <textarea class="i-role-screenshot-desc" style="width: 100%; height: 100px;">Given ... When ... Then</textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Select project:</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select class="i-role-projects" style="width:100%">
-                            <!-- options goes here -->
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Select severity:</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select class="i-role-severities" style="width:100%">
-                            <!-- options goes here -->
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>Select priority:</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select class="i-role-priorities" style="width:100%">
-                            <!-- options goes here -->
-                        </select>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <img id="target" src="white.png" width="100%">
-        </td>
-    </tr>
-</table>
+
+<div id="toolbar" style="text-align: center;">Toolbar</div>
+
+<div id="dataContainer">
+
+    <p>Edit screenshot and post it to <a href="http://www.targetprocess.com">TargetProcess</a></p>
+
+    <p><input class="i-role-screenshot-name" type="text" value="See error on screenshot..." /></p>
+
+    <p>
+        <textarea class="i-role-screenshot-desc">
+Given ...
+When ...
+Then ...
+        </textarea>
+    </p>
+
+    <p>
+        <select class="i-role-projects">
+            <!-- options go here -->
+        </select>
+    </p>
+
+    <p>
+        <select class="i-role-severities">
+            <!-- options goes here -->
+        </select>
+    </p>
+
+    <p>
+        <select class="i-role-priorities">
+            <!-- options goes here -->
+        </select>
+    </p>
+
+    <p>
+        <button class="i-role-trigger-post">Post!</button>
+    </p>
+
+</div>
+
+<div id="imageContainer">
+    <img id="target" width="1200" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+</div>
+
 </body>
 </html>
