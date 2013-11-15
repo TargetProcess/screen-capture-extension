@@ -1,11 +1,10 @@
-var id = 100;
-
 function takeScreenshot() {
+
     chrome
         .tabs
         .captureVisibleTab(null, function (base64) {
             var screenshotUrl = base64;
-            var viewTabUrl = chrome.extension.getURL('screenshot.html?id=' + (++id));
+            var viewTabUrl = chrome.extension.getURL('screenshot.html?id=' + (+new Date()));
 
             chrome
                 .tabs

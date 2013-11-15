@@ -1,7 +1,18 @@
 <html>
 <script src="scripts/screenshot.js"></script>
+
+<script src="scripts/libs/jquery-2.0.3.min.js"></script>
+<script src="scripts/class-user-settings.js"></script>
+<script src="scripts/require.js" data-main="scripts/screenshot-main"></script>
 <body>
 <p>Edit screenshot and post it to <a href="http://www.targetprocess.com">TargetProcess</a></p>
+<div class="i-role-integration-panel">
+    <button class="i-role-trigger-post">Post!</button>
+    <input class="i-role-screenshot-name" type="text" value="See error on screenshot..." />
+    <select class="i-role-projects">
+        <!-- options goes here -->
+    </select>
+</div>
 <p>
     <img id="target" src="white.png" width="640" height="480">
 <p>

@@ -48,7 +48,11 @@ define([], function() {
                     }
                 })
                 .done(function(r) {
-                    this.postAttachmentToTargetProcess(r.Id, base64str).done($result.resolve);
+                    this
+                        .postAttachmentToTargetProcess(r.Id, base64str)
+                        .done(function() {
+                            $result.resolve(r);
+                        });
                 }.bind(this));
 
             return $result;
