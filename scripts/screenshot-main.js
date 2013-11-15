@@ -29,13 +29,12 @@ require([
         });
 
     $postTrigger.one('click', function () {
-        var description = '<p>test</p>';
 
         tpApi
             .postBugToTargetProcess(
                 $('.i-role-projects').val(),
-                $text.val(),
-                description,
+                $('.i-role-screenshot-name').val(),
+                $('.i-role-screenshot-desc').val(),
                 $('#target').prop('src')
             )
             .done(function (r) {
