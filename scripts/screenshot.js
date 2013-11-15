@@ -7,7 +7,6 @@ function setScreenshotUrl(url) {
     image.onload = function() {
         canvas.width = image.width;
         canvas.height = image.height;
-        // FIXME canvas size
         context.drawImage(image, 0, 0);
         image.onload = null;
     };
