@@ -373,6 +373,98 @@ define([], function () {
             };
         };
 
+        // The arrow tool.
+        tools.arrow = function () {
+            tool = this;
+            this.started = false;
+
+
+            function drawArrowhead(locx, locy, angle, sizex, sizey) {
+                var ctx = this;
+                var hx = sizex / 2;
+                var hy = sizey / 2;
+                ctx.translate((locx), (locy));
+                ctx.rotate(angle);
+                ctx.translate(-hx,-hy);
+
+                ctx.beginPath();
+                ctx.moveTo(0,0);
+                ctx.lineTo(0, 1 * sizey);
+                ctx.lineTo(1 * sizex, 1 * hy);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.clear(true);
+            }
+
+
+            function findAngle(sx, sy, ex, ey) {
+                // make sx and sy at the zero point
+                return Math.atan((ey - sy) / (ex - sx));
+            }
+
+
+
+            this.mousedown = function (ev) {
+                var right = 2;
+
+                if (ev.button === right) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    tool.started = false;
+                    img_update();
+                    return;
+                }
+                else if (tool.started) {
+                    tool.mousemove(ev);
+
+                    self.actionsLogger.addScript(
+                        "context.strokeStyle = '#" + $(".color").val() + "';\r\n" +
+                            "context.beginPath();\r\n" +
+                            "context.moveTo(" + tool.x0 + ", " + tool.y0 + ");\r\n" +
+                            "context.lineTo(" + ev._x + ",   " + ev._y + ");\r\n" +
+                            "context.stroke();\r\n" +
+                            "context.closePath();\r\n"
+
+                    );
+
+                    tool.started = false;
+                    img_update();
+                }
+                else {
+                    tool.started = true;
+                    tool.x0 = ev._x;
+                    tool.y0 = ev._y;
+
+                }
+            };
+
+            this.mousemove = function (ev) {
+                if (!tool.started) {
+                    return;
+                }
+
+                var sx = tool.x0;
+                var sy = tool.y0;
+                var ex = ev._x;
+                var ey = ev._y;
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                context.beginPath();
+                context.moveTo(sx, sy);
+                context.lineTo(ex, ey);
+                context.stroke();
+                context.closePath();
+
+                var ang = findAngle(sx, sy, ex, ey);
+                context.fillRect(ex, ey, 2, 2);
+                drawArrowhead.call(context, ex, ey, ang, 12, 12);
+            };
+
+            this.mouseup = function (ev) {
+
+            };
+        };
+
         this.init = function(actionsLogger) {
 
             self.actionsLogger = actionsLogger;

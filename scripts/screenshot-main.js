@@ -48,19 +48,10 @@ require([
 
                 paintManager.changeColor($(".color").val());
 
+                var dataTool = $(this).data('tool');
                 var toolType = "pencil";
-                if ($(this).hasClass("line")) {
-                    toolType = "line";
-                }
-                else if ($(this).hasClass("rectangle")) {
-                    toolType = "rect";
-                }
-                else if ($(this).hasClass("ellipse")) {
-                    toolType = "circle";
-                }
-                else if ($(this).hasClass("eraser")) {
-                    paintManager.changeColor("FFFFFF");
-                    toolType = "eraser";
+                if (dataTool) {
+                    toolType = dataTool;
                 }
                 else if ($(this).hasClass("undo")) {
                     actionsLogger.Undo();

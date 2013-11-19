@@ -102,6 +102,10 @@
             background-image: url('/images/line.png');
         }
 
+        #editor .toolbar .button.arrow {
+            background-image: url('/images/arrow.png');
+        }
+
         #editor .toolbar .button.eraser {
             background-image: url('/images/eraser.png');
         }
@@ -150,11 +154,12 @@
 <div id="drawing-toolbar">
     <div id="editor">
         <div class="toolbar">
-            <input type="button" class="button pencil clicked" title="Use pencil" />
-            <input type="button" class="button line" title="Draw a line" />
-            <input type="button" class="button rectangle" title="Draw a rectangle" />
-            <input type="button" class="button ellipse" title="Draw an ellipse or a circle" />
-            <input type="button" class="button eraser" title="Use eraser" />
+            <input type="button" class="button pencil clicked" data-tool="pencil" title="Use pencil" />
+            <input type="button" class="button line" data-tool="line" title="Draw a line" />
+            <input type="button" class="button arrow" data-tool="arrow" title="Draw an arrow" />
+            <input type="button" class="button rectangle" data-tool="rect" title="Draw a rectangle" />
+            <input type="button" class="button ellipse" data-tool="circle" title="Draw an ellipse or a circle" />
+            <input type="button" class="button eraser" data-tool="eraser" title="Use eraser" />
             <input type="button" class="button new" title="New canvas" />
             <input type="button" class="button undo" title="Undo" />
             <input type="button" class="button redo disabled" title="Redo" />
