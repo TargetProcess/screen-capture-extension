@@ -92,7 +92,7 @@ define([
                     }
                 },
                 mouseup: function(e) {
-                    tool.mousemove(ev);
+                    noop(tool.mouseup).bind(tool)(ev);
                     tool.started = false;
                     noop(tool.mouseup).bind(tool)(e);
                     img_update();

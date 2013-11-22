@@ -142,6 +142,22 @@ define([], function () {
                 drawArrowhead.call(context, ex, ey, ang, 16, 16);
             };
         };
+
+        tools.text = function () {
+            var tool = this;
+
+            this.mousedown = function (ev) {
+                var sx = tool.x0;
+                var sy = tool.y0;
+
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = context.strokeStyle;
+                context.font = 'bold 16px sans-serif';
+                context.textBaseline = 'top';
+                context.textAlign = 'left';
+                context.fillText('this is text!!!', sx, sy);
+            };
+        };
     }
 
     return ToolKit;
