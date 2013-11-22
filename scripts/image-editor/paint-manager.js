@@ -8,7 +8,7 @@ define([
 
     function CanvasPaint() {
         var tool;
-        var context, canvas, canvaso, contexto;
+        var tmpContext, tmpCanvas, srcCanvas, srcContext;
 
          // The active tool instance.
         this.init = function(actionsLogger) {
@@ -18,34 +18,34 @@ define([
 
 
             // Find the canvas element.
-            canvaso = document.getElementById('imageView');
+            srcCanvas = document.getElementById('imageView');
             this.actionsLogger.addScriptWithNoUndo("canvaso = document.getElementById('imageView');\r\n");
 
 
             // Get the 2D canvas context.
-            contexto = canvaso.getContext('2d');
+            srcContext = srcCanvas.getContext('2d');
             this.actionsLogger.addScriptWithNoUndo("context = canvaso.getContext('2d');\r\n");
 
 
             // Add the temporary canvas.
-            canvas = document.createElement('canvas');
-            canvas.id = 'imageTemp';
-            canvas.width = canvaso.width;
-            canvas.height = canvaso.height;
-            canvaso.parentNode.appendChild(canvas);
+            tmpCanvas = document.createElement('canvas');
+            tmpCanvas.id = 'imageTemp';
+            tmpCanvas.width = srcCanvas.width;
+            tmpCanvas.height = srcCanvas.height;
+            srcCanvas.parentNode.appendChild(tmpCanvas);
 
 
-            context = canvas.getContext('2d');
-            context.strokeStyle = ("#FF0000");
+            tmpContext = tmpCanvas.getContext('2d');
+            tmpContext.strokeStyle = ("#FF0000");
 
 
-            this.tools = new ToolKit(context, canvas);
+            this.tools = new ToolKit(tmpContext, tmpCanvas);
             tool = this.tool_change('pencil');
 
             // Attach the mousedown, mousemove and mouseup event listeners.
-            canvas.addEventListener('mousedown', commonMousePatternHandler, false);
-            canvas.addEventListener('mousemove', commonMousePatternHandler, false);
-            canvas.addEventListener('mouseup',   commonMousePatternHandler, false);
+            tmpCanvas.addEventListener('mousedown', commonMousePatternHandler, false);
+            tmpCanvas.addEventListener('mousemove', commonMousePatternHandler, false);
+            tmpCanvas.addEventListener('mouseup',   commonMousePatternHandler, false);
         }.bind(this);
 
         this.tool_change = function (toolName) {
@@ -54,26 +54,26 @@ define([
         }.bind(this);
 
         this.changeColor = function (color) {
-            context.strokeStyle = '#' + color;
+            tmpContext.strokeStyle = '#' + color;
         };
 
         this.setLineWidth = function (width, allowUndo) {
-            context.lineWidth = parseInt(width, 10);
+            tmpContext.lineWidth = parseInt(width, 10);
             this.actionsLogger.addScriptWithUndoSupport("context.lineWidth = " + width + ";\r\n", allowUndo);
         }.bind(this);
 
         this.RepaintByScript = function (script) {
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            contexto.clearRect(0, 0, canvas.width, canvas.height);
+            tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
+            srcContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
             tool.started = false;
-            contexto.drawImage(canvas, 0, 0);
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            srcContext.drawImage(tmpCanvas, 0, 0);
+            tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
             eval(script);
         };
 
         var img_update = function() {
-            contexto.drawImage(canvas, 0, 0);
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            srcContext.drawImage(tmpCanvas, 0, 0);
+            tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
         };
 
         function commonMousePatternHandler(ev) {
@@ -85,17 +85,17 @@ define([
                     tool.started = true;
                     tool.x0 = ev._x;
                     tool.y0 = ev._y;
-                    noop(tool.mousedown.bind(tool))(e);
+                    noop(tool.mousedown).bind(tool)(e);
                 },
                 mousemove: function(e) {
                     if (tool.started) {
-                        noop(tool.mousemove.bind(tool))(e);
+                        noop(tool.mousemove).bind(tool)(e);
                     }
                 },
                 mouseup: function(e) {
                     tool.mousemove(ev);
                     tool.started = false;
-                    noop(tool.mouseup.bind(tool))(e);
+                    noop(tool.mouseup).bind(tool)(e);
                     img_update();
                 }
             };
