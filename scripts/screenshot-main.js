@@ -1,4 +1,3 @@
-/*global require, settings*/
 require([
     '/scripts/chrome.api.js'
     , '/scripts/targetprocess.api.js'
@@ -8,8 +7,7 @@ require([
 ], function(ChromeApi, TPApi, ActionsLogger, PaintManager, UI) {
 
     var paintManager = new PaintManager();
-    var uiManager = new UI();
-    var actionsLogger = new ActionsLogger(paintManager, uiManager);
+    var actionsLogger = new ActionsLogger(paintManager, new UI());
     paintManager.init(actionsLogger);
 
 
@@ -17,26 +15,7 @@ require([
 
         paintManager.tool_change("pencil");
 
-//       $("#slider").slider({
-//           value: 5,
-//           min: 1,
-//           max: 14,
-//           step: 1,
-//           slide: function (event, ui) {
-//               if (event.originalEvent) {
-//                   //manual change
-//                   //alert(ui.value);
-//                   $(this).css("height", ui.value);
-//                   paintManager.setLineWidth(ui.value, true);
-//               }
-//               else {
-//                   //programmatic change
-//               }
-//           }
-//       });
-//       var currentValue = $("#slider").slider('value');
-//       $("#slider").css("height", currentValue);
-        var currentValue = 2;
+        var currentValue = 3;
         paintManager.setLineWidth(currentValue, false);
 
         $("#editor .toolbar .button").click(function() {
@@ -50,22 +29,15 @@ require([
 
                 var dataTool = $(this).data('tool');
                 var toolType = "pencil";
-                if (dataTool) {
-                    toolType = dataTool;
-                }
-                else if ($(this).hasClass("undo")) {
+
+                if (dataTool === 'undo') {
                     actionsLogger.Undo();
-                    $("#editor .toolbar .button.pencil").addClass("clicked");
-                    setTimeout(function() {
-                        $("#editor .toolbar .button.undo").removeClass("clicked");
-                    }, 300);
                 }
-                else if ($(this).hasClass("redo")) {
+                else if (dataTool === 'redo') {
                     actionsLogger.Redo();
-                    $("#editor .toolbar .button.pencil").addClass("clicked");
-                    setTimeout(function() {
-                        $("#editor .toolbar .button.redo").removeClass("clicked");
-                    }, 300);
+                }
+                else if (dataTool) {
+                    toolType = dataTool;
                 }
 
                 paintManager.tool_change(toolType);
