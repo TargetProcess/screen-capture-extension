@@ -17,16 +17,9 @@ define([], function () {
             this.started = false;
 
             this.mousedown = function (ev) {
-                if (tool.started) {
-                    tool.mousemove(ev);
-                    tool.started = false;
-                    img_update();
-                }
-                else {
-                    tool.started = true;
-                    tool.x0 = ev._x;
-                    tool.y0 = ev._y;
-                }
+                tool.started = true;
+                tool.x0 = ev._x;
+                tool.y0 = ev._y;
             };
 
             this.mousemove = function (ev) {
@@ -48,7 +41,11 @@ define([], function () {
                 context.strokeRect(x, y, w, h);
             };
 
-            this.mouseup = function (ev) {};
+            this.mouseup = function (ev) {
+                tool.mousemove(ev);
+                tool.started = false;
+                img_update();
+            };
         };
 
         // The line tool.
@@ -57,17 +54,9 @@ define([], function () {
             this.started = false;
 
             this.mousedown = function (ev) {
-                if (tool.started) {
-                    tool.mousemove(ev);
-                    tool.started = false;
-                    img_update();
-                }
-                else {
-                    tool.started = true;
-                    tool.x0 = ev._x;
-                    tool.y0 = ev._y;
-
-                }
+                tool.started = true;
+                tool.x0 = ev._x;
+                tool.y0 = ev._y;
             };
 
             this.mousemove = function (ev) {
@@ -84,7 +73,11 @@ define([], function () {
                 context.closePath();
             };
 
-            this.mouseup = function (ev) {};
+            this.mouseup = function (ev) {
+                tool.mousemove(ev);
+                tool.started = false;
+                img_update();
+            };
         };
 
         // The circle tool.
@@ -93,28 +86,9 @@ define([], function () {
             this.started = false;
 
             this.mousedown = function (ev) {
-                if (tool.started) {
-                    tool.mousemove(ev);
-
-                    var startingAngle = 0;
-                    var endingAngle = 2 * Math.PI; // 360 degrees is equal to 2Ï€ radians
-                    var dx = Math.abs(ev._x - tool.x0),
-                        dy = Math.abs(ev._y - tool.y0),
-                        x = Math.min(ev._x, tool.x0) + (dx / 2),
-                        y = Math.min(ev._y, tool.y0) + (dy / 2),
-                        r = Math.round(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)));
-                    var circumference = Math.max(dx, dy);
-                    var scaleX = dx / circumference;
-                    var scaleY = dy / circumference;
-
-                    tool.started = false;
-                    img_update();
-                }
-                else {
-                    tool.started = true;
-                    tool.x0 = ev._x;
-                    tool.y0 = ev._y;
-                }
+                tool.started = true;
+                tool.x0 = ev._x;
+                tool.y0 = ev._y;
             };
 
             this.mousemove = function (ev) {
@@ -151,7 +125,23 @@ define([], function () {
                 context.restore();
             };
 
-            this.mouseup = function (ev) {};
+            this.mouseup = function (ev) {
+                tool.mousemove(ev);
+
+                var startingAngle = 0;
+                var endingAngle = 2 * Math.PI; // 360 degrees is equal to 2Ï€ radians
+                var dx = Math.abs(ev._x - tool.x0),
+                    dy = Math.abs(ev._y - tool.y0),
+                    x = Math.min(ev._x, tool.x0) + (dx / 2),
+                    y = Math.min(ev._y, tool.y0) + (dy / 2),
+                    r = Math.round(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)));
+                var circumference = Math.max(dx, dy);
+                var scaleX = dx / circumference;
+                var scaleY = dy / circumference;
+
+                tool.started = false;
+                img_update();
+            };
         };
 
         // The drawing eraser.
@@ -179,11 +169,9 @@ define([], function () {
 
             // This is called when you release the mouse button.
             this.mouseup = function (ev) {
-                if (tool.started) {
-                    tool.mousemove(ev);
-                    tool.started = false;
-                    img_update();
-                }
+                tool.mousemove(ev);
+                tool.started = false;
+                img_update();
             };
         };
 
@@ -212,11 +200,9 @@ define([], function () {
 
             // This is called when you release the mouse button.
             this.mouseup = function (ev) {
-                if (tool.started) {
-                    tool.mousemove(ev);
-                    tool.started = false;
-                    img_update();
-                }
+                tool.mousemove(ev);
+                tool.started = false;
+                img_update();
             };
         };
 
@@ -226,22 +212,26 @@ define([], function () {
             this.started = false;
 
 
-            function drawArrowhead(locx, locy, angle, sizex, sizey) {
+            function drawArrowhead(ex, ey, angle, sizex, sizey) {
                 var ctx = this;
+
+                ctx.save();
+
                 var hx = sizex / 2;
                 var hy = sizey / 2;
-                ctx.translate((locx), (locy));
+
+                ctx.translate(ex, ey);
                 ctx.rotate(angle);
                 ctx.translate(-hx,-hy);
 
                 ctx.beginPath();
                 ctx.moveTo(0,0);
-                ctx.lineTo(0, 1 * sizey);
-                ctx.lineTo(1 * sizex, 1 * hy);
+                ctx.lineTo(0, sizey);
+                ctx.lineTo(sizex, hy);
                 ctx.closePath();
                 ctx.fill();
 
-                ctx.clear(true);
+                ctx.restore();
             }
 
 
@@ -251,19 +241,10 @@ define([], function () {
             }
 
 
-
             this.mousedown = function (ev) {
-                if (tool.started) {
-                    tool.mousemove(ev);
-                    tool.started = false;
-                    img_update();
-                }
-                else {
-                    tool.started = true;
-                    tool.x0 = ev._x;
-                    tool.y0 = ev._y;
-
-                }
+                tool.started = true;
+                tool.x0 = ev._x;
+                tool.y0 = ev._y;
             };
 
             this.mousemove = function (ev) {
@@ -275,8 +256,8 @@ define([], function () {
                 var sy = tool.y0;
                 var ex = ev._x;
                 var ey = ev._y;
-                context.clearRect(0, 0, canvas.width, canvas.height);
 
+                context.clearRect(0, 0, canvas.width, canvas.height);
                 context.beginPath();
                 context.moveTo(sx, sy);
                 context.lineTo(ex, ey);
@@ -284,11 +265,14 @@ define([], function () {
                 context.closePath();
 
                 var ang = findAngle(sx, sy, ex, ey);
-                context.fillRect(ex, ey, 2, 2);
                 drawArrowhead.call(context, ex, ey, ang, 12, 12);
             };
 
-            this.mouseup = function (ev) {};
+            this.mouseup = function (ev) {
+                tool.mousemove(ev);
+                tool.started = false;
+                img_update();
+            };
         };
     }
 
