@@ -2,6 +2,10 @@ define([
     '/scripts/image-editor/tools.js'
 ], function (ToolKit) {
 
+    var noop = function(f) {
+        return f || function() {};
+    };
+
     function CanvasPaint() {
         var tool;
         var context, canvas, canvaso, contexto;
@@ -35,13 +39,13 @@ define([
             context.strokeStyle = ("#FF0000");
 
 
-            this.tools = new ToolKit(contexto, context, canvas);
+            this.tools = new ToolKit(context, canvas);
             tool = this.tool_change('pencil');
 
             // Attach the mousedown, mousemove and mouseup event listeners.
-            canvas.addEventListener('mousedown', ev_canvas, false);
-            canvas.addEventListener('mousemove', ev_canvas, false);
-            canvas.addEventListener('mouseup',   ev_canvas, false);
+            canvas.addEventListener('mousedown', commonMousePatternHandler, false);
+            canvas.addEventListener('mousemove', commonMousePatternHandler, false);
+            canvas.addEventListener('mouseup',   commonMousePatternHandler, false);
         }.bind(this);
 
         this.tool_change = function (toolName) {
@@ -67,22 +71,36 @@ define([
             eval(script);
         };
 
-        // The general-purpose event handler. This function just determines the mouse
-        // position relative to the canvas element.
-        function ev_canvas(ev) {
-            if (ev.layerX || ev.layerX == 0) { // Firefox
-                ev._x = ev.layerX;
-                ev._y = ev.layerY;
-            } else if (ev.offsetX || ev.offsetX == 0) { // Opera
-                ev._x = ev.offsetX;
-                ev._y = ev.offsetY;
-            }
+        var img_update = function() {
+            contexto.drawImage(canvas, 0, 0);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        };
 
-            // Call the event handler of the tool.
-            var func = tool[ev.type];
-            if (func) {
-                func(ev);
-            }
+        function commonMousePatternHandler(ev) {
+            ev._x = ev.offsetX;
+            ev._y = ev.offsetY;
+
+            var methodsMap = {
+                mousedown: function(e) {
+                    tool.started = true;
+                    tool.x0 = ev._x;
+                    tool.y0 = ev._y;
+                    noop(tool.mousedown.bind(tool))(e);
+                },
+                mousemove: function(e) {
+                    if (tool.started) {
+                        noop(tool.mousemove.bind(tool))(e);
+                    }
+                },
+                mouseup: function(e) {
+                    tool.mousemove(ev);
+                    tool.started = false;
+                    noop(tool.mouseup.bind(tool))(e);
+                    img_update();
+                }
+            };
+
+            methodsMap[ev.type](ev);
         }
     }
 
