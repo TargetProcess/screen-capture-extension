@@ -15,7 +15,7 @@ require([
 
         paintManager.tool_change("pencil");
 
-        var currentValue = 3;
+        var currentValue = 6;
         paintManager.setLineWidth(currentValue, false);
 
         $("#editor .toolbar .button").click(function() {
@@ -24,8 +24,6 @@ require([
             if (!isDisabled) {
                 $("#editor .toolbar .button").removeClass("clicked");
                 $(this).addClass("clicked");
-
-                paintManager.changeColor($(".color").val());
 
                 var dataTool = $(this).data('tool');
                 var toolType = "pencil";

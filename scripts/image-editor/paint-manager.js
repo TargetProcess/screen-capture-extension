@@ -36,8 +36,7 @@ define([
 
 
             tmpContext = tmpCanvas.getContext('2d');
-            tmpContext.strokeStyle = ("#FF0000");
-
+            this.changeColor('rgba(255, 0, 0, 0.55)');
 
             this.tools = new ToolKit(tmpContext, tmpCanvas);
             tool = this.tool_change('pencil');
@@ -54,7 +53,7 @@ define([
         }.bind(this);
 
         this.changeColor = function (color) {
-            tmpContext.strokeStyle = '#' + color;
+            tmpContext.strokeStyle = color;
         };
 
         this.setLineWidth = function (width, allowUndo) {

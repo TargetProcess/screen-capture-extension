@@ -100,12 +100,14 @@ define([], function () {
 
                 ctx.save();
 
+                ctx.fillStyle = ctx.strokeStyle;
+
                 var hx = sizex / 2;
                 var hy = sizey / 2;
 
                 ctx.translate(ex, ey);
                 ctx.rotate(angle);
-                ctx.translate(-hx,-hy);
+                ctx.translate(-hx, -hy);
 
                 ctx.beginPath();
                 ctx.moveTo(0,0);
@@ -137,7 +139,7 @@ define([], function () {
                 context.closePath();
 
                 var ang = findAngle(sx, sy, ex, ey);
-                drawArrowhead.call(context, ex, ey, ang, 12, 12);
+                drawArrowhead.call(context, ex, ey, ang, 16, 16);
             };
         };
     }
