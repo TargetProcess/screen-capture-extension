@@ -6,6 +6,12 @@ define([
     return Class.extend({
 
         init: function (srcCanvas) {
+
+            this.options = {
+                color: 'rgb(255, 0, 0)',
+                font: 'bold 16px Tahoma'
+            };
+
             this.srcCanvas = srcCanvas;
             this.srcContext = srcCanvas.getContext('2d');
 
@@ -17,7 +23,7 @@ define([
             this.srcCanvas.parentNode.appendChild(this.tmpCanvas);
 
             this.tmpContext = this.tmpCanvas.getContext('2d');
-            this.changeColor('rgba(255, 0, 0, 0.55)');
+            this.changeColor(this.options.color);
 
             this.toolKit = new ToolKit(this.tmpContext, this.tmpCanvas);
             this.tool = this.changeTool('pencil');
@@ -26,7 +32,7 @@ define([
         changeTool: function (toolName) {
             var tool = this.tool;
             tool && tool.destroy();
-            tool = this.toolKit.create(toolName);
+            tool = this.toolKit.create(toolName, this.options);
             tool.onFinalize.add(this.applyImage.bind(this));
             return tool;
         },

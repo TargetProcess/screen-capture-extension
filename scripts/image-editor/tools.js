@@ -8,17 +8,18 @@ define([
 
     var ToolBase = Class.extend({
 
-        init: function(context, canvas) {
+        init: function(context, canvas, options) {
             this.context = context;
             this.canvas = canvas;
+            this.options = options;
             this.onFinalize = $.Callbacks();
         }
     });
 
     var ToolDnDBase = ToolBase.extend({
 
-        init: function(context, canvas) {
-            this._super(context, canvas);
+        init: function(context, canvas, options) {
+            this._super(context, canvas, options);
 
             this.subscribeToEvents = 'mousedown mousemove mouseup';
             $(this.canvas)
@@ -156,10 +157,7 @@ define([
         },
 
         mousemove: function (ev) {
-            var tool = this;
             var context = this.context;
-            var canvas = this.canvas;
-
             context.lineTo(ev._x, ev._y);
             context.stroke();
         }
@@ -170,7 +168,7 @@ define([
         drawArrowhead: function(ctx, ex, ey, angle, sizex, sizey) {
             ctx.save();
 
-            ctx.fillStyle = ctx.strokeStyle;
+            ctx.fillStyle = this.options.color;
 
             var hx = sizex / 2;
             var hy = sizey / 2;
@@ -216,22 +214,115 @@ define([
         }
     });
 
-    var Text = ToolDnDBase.extend({
+    var Text = ToolBase.extend({
 
-        mousedown: function (ev) {
+        init: function(context, canvas, options) {
+            this._super(context, canvas, options);
+
+            this.subscribeToEvents = 'click';
+            $(this.canvas)
+                .on(this.subscribeToEvents,
+                    this.commonMousePatternHandler.bind(this));
+        },
+
+        destroy: function() {
+            $(this.canvas)
+                .off(this.subscribeToEvents);
+        },
+
+        commonMousePatternHandler: function(ev) {
             var tool = this;
+            ev._x = ev.offsetX;
+            ev._y = ev.offsetY;
+
+            if (tool.started && !$(ev.target).hasClass('i-role-text-editor')) {
+                tool.onEnter();
+            }
+            else {
+                tool.started = true;
+                tool.x0 = ev._x;
+                tool.y0 = ev._y;
+                noop(tool.onClick).bind(tool)(ev);
+            }
+        },
+
+        onClick: function (ev) {
+            var tool = this;
+
+            this.textBox = $('<div></div>')
+                .addClass('i-role-text-editor')
+                .css({
+                    position:'absolute',
+                    left: tool.x0 + 'px',
+                    top: tool.y0 + 'px',
+                    border: 'dotted 1px red',
+                    color: this.options.color,
+                    font: this.options.font,
+                    padding: '0 0 0 0'
+                })
+                .attr('contenteditable', true)
+                .appendTo($(this.canvas).parent());
+
+            this.textBox.focus();
+
+            this.textBox
+                .on('keydown', function(e) {
+                    if (e.ctrlKey && e.which === 13) {
+                        this.onEnter();
+                    }
+                    else if (e.which === 27) {
+                        this.onEscape();
+                    }
+                }.bind(this));
+        },
+
+        onEnter: function() {
+            var tool = this;
+            var height = this.textBox.height();
+            var text = this.textBox.html();
+            this.textBox.remove();
+
+            var textLines = text
+                .replace(/<div>/gi, '\n')
+                .replace(/<\/div>/gi, '')
+                .replace(/<br>/gi, '')
+                .replace(/<br\/>/gi, '')
+                .split('\n');
+
+            tool.started = false;
+
+            this.drawMultiLineText(textLines, {
+                x: tool.x0,
+                y: tool.y0,
+                dy: height / textLines.length
+            });
+
+            tool.onFinalize.fire();
+        },
+
+        onEscape: function() {
+            this.textBox.remove();
+            this.started = false;
+        },
+
+        drawMultiLineText: function(texts, coords) {
             var context = this.context;
             var canvas = this.canvas;
 
-            var sx = tool.x0;
-            var sy = tool.y0;
+            var sx = coords.x;
+            var sy = coords.y;
+            var dy = coords.dy;
 
             context.clearRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = context.strokeStyle;
-            context.font = 'bold 16px sans-serif';
+            context.fillStyle = this.options.color;
+            context.font = this.options.font;
             context.textBaseline = 'top';
             context.textAlign = 'left';
-            context.fillText('this is text!!!', sx, sy);
+
+            for (var i = 0, delta = 0; i < texts.length; i++) {
+                context.fillText(texts[i], sx, delta + sy);
+                delta += dy;
+            }
         }
     });
 
@@ -250,8 +341,8 @@ define([
     }
 
     ToolKit.prototype = {
-        create: function(toolName) {
-            return new this[toolName](this.context, this.canvas);
+        create: function(toolName, options) {
+            return new this[toolName](this.context, this.canvas, options);
         }
     };
 
