@@ -13,7 +13,7 @@ require([
 
     $(document).ready(function() {
 
-        paintManager.tool_change("pencil");
+        paintManager.changeTool("pencil");
 
         var currentValue = 6;
         paintManager.setLineWidth(currentValue, false);
@@ -38,7 +38,7 @@ require([
                     toolType = dataTool;
                 }
 
-                paintManager.tool_change(toolType);
+                paintManager.changeTool(toolType);
             }
         });
     });
