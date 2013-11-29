@@ -6,13 +6,10 @@ require([
     , '/scripts/image-editor/ui.js'
 ], function(ChromeApi, TPApi, ActionsLogger, PaintManager, UI) {
 
-    var paintManager = new PaintManager();
-    var actionsLogger = new ActionsLogger(paintManager, new UI());
-    paintManager.init(actionsLogger);
-
-
     $(document).ready(function() {
 
+        var paintManager = new PaintManager(document.getElementById('imageView'));
+        var actionsLogger = new ActionsLogger(paintManager, new UI());
         paintManager.changeTool("pencil");
 
         var currentValue = 6;

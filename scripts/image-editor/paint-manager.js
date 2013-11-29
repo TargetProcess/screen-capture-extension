@@ -1,70 +1,61 @@
 define([
+    '/scripts/libs/class.js',
     '/scripts/image-editor/tools.js'
-], function (ToolKit) {
+], function (Class, ToolKit) {
 
-    function CanvasPaint() {
-        var tool;
-        var tmpContext, tmpCanvas, srcCanvas, srcContext;
+    return Class.extend({
 
-         // The active tool instance.
-        this.init = function(actionsLogger) {
-
-            this.actionsLogger = actionsLogger;
-            this.actionsLogger.addScriptWithNoUndo("var canvas, context, canvaso, contexto;\r\n");
-
-            // Find the canvas element.
-            srcCanvas = document.getElementById('imageView');
-            this.actionsLogger.addScriptWithNoUndo("canvaso = document.getElementById('imageView');\r\n");
-
-            // Get the 2D canvas context.
-            srcContext = srcCanvas.getContext('2d');
-            this.actionsLogger.addScriptWithNoUndo("context = canvaso.getContext('2d');\r\n");
+        init: function (srcCanvas) {
+            this.srcCanvas = srcCanvas;
+            this.srcContext = srcCanvas.getContext('2d');
 
             // Add the temporary canvas.
-            tmpCanvas = document.createElement('canvas');
-            tmpCanvas.id = 'imageTemp';
-            tmpCanvas.width = srcCanvas.width;
-            tmpCanvas.height = srcCanvas.height;
-            srcCanvas.parentNode.appendChild(tmpCanvas);
+            this.tmpCanvas = document.createElement('canvas');
+            this.tmpCanvas.id = 'imageTemp';
+            this.tmpCanvas.width = srcCanvas.width;
+            this.tmpCanvas.height = srcCanvas.height;
+            this.srcCanvas.parentNode.appendChild(this.tmpCanvas);
 
-            tmpContext = tmpCanvas.getContext('2d');
+            this.tmpContext = this.tmpCanvas.getContext('2d');
             this.changeColor('rgba(255, 0, 0, 0.55)');
 
-            this.tools = new ToolKit(tmpContext, tmpCanvas);
-            tool = this.changeTool('pencil');
+            this.toolKit = new ToolKit(this.tmpContext, this.tmpCanvas);
+            this.tool = this.changeTool('pencil');
+        },
 
-        }.bind(this);
-
-        this.changeTool = function (toolName) {
+        changeTool: function (toolName) {
+            var tool = this.tool;
             tool && tool.destroy();
-            tool = this.tools.create(toolName);
-            tool.onFinalize.add(applyImage);
+            tool = this.toolKit.create(toolName);
+            tool.onFinalize.add(this.applyImage.bind(this));
             return tool;
-        }.bind(this);
+        },
 
-        this.changeColor = function (color) {
-            tmpContext.strokeStyle = color;
-        };
+        changeColor: function (color) {
+            this.tmpContext.strokeStyle = color;
+        },
 
-        this.setLineWidth = function (width, allowUndo) {
-            tmpContext.lineWidth = parseInt(width, 10);
-            this.actionsLogger.addScriptWithUndoSupport("context.lineWidth = " + width + ";\r\n", allowUndo);
-        }.bind(this);
+        setLineWidth: function (width) {
+            this.tmpContext.lineWidth = parseInt(width, 10);
+        },
 
-        this.RepaintByScript = function (script) {
+        RepaintByScript: function (script) {
+            var tmpContext = this.tmpContext;
+            var srcContext = this.srcContext;
+            var tmpCanvas = this.tmpCanvas;
+
             tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
             srcContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-            tool.started = false;
+            this.tool.started = false;
             srcContext.drawImage(tmpCanvas, 0, 0);
             tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
             eval(script);
-        };
+        },
 
-        var applyImage = function() {
-            srcContext.drawImage(tmpCanvas, 0, 0);
-            tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-        };
-    }
-
-    return CanvasPaint;
+        applyImage: function () {
+            var tc = this.tmpCanvas;
+            this.srcContext.drawImage(tc, 0, 0);
+            this.tmpContext.clearRect(0, 0, tc.width, tc.height);
+        }
+    });
 });
