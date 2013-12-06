@@ -48,7 +48,7 @@
         #editor {
             margin: 0 auto;
             position: relative;
-            width: 582px;
+            width: 620px;
             float: left;
         }
 
@@ -110,6 +110,10 @@
             background-image: url('/images/text.png');
         }
 
+        #editor .toolbar .button.crop {
+            background-image: url('/images/crop.png');
+        }
+
         #editor .toolbar .button.eraser {
             background-image: url('/images/eraser.png');
         }
@@ -141,17 +145,20 @@
         }
 
         #imageTemp {
+            border: 1px solid #000;
             cursor: pointer;
             position: absolute;
-            top: 1px;
-            left: 1px;
+            top: 0px;
+            left: 0px;
         }
     </style>
 
     <script src="scripts/screenshot.js"></script>
     <script src="scripts/libs/jquery-2.0.3.min.js"></script>
+    <script src="scripts/libs/jquery.imgareaselect.js"></script>
     <script src="scripts/class-user-settings.js"></script>
     <script src="scripts/require.js" data-main="scripts/screenshot-main"></script>
+    <link type="text/css" rel="stylesheet" href="css/img-area-select/imgareaselect-default.css" />
 </head>
 <body>
 
@@ -161,6 +168,7 @@
             <input type="button" class="button pencil clicked" data-tool="pencil" title="Use pencil" />
             <input type="button" class="button line" data-tool="line" title="Draw a line" />
             <input type="button" class="button text" data-tool="text" title="input text" />
+            <input type="button" class="button crop" data-tool="crop" title="image crop" />
             <input type="button" class="button arrow" data-tool="arrow" title="Draw an arrow" />
             <input type="button" class="button rectangle" data-tool="rect" title="Draw a rectangle" />
             <input type="button" class="button ellipse" data-tool="circle" title="Draw an ellipse or a circle" />

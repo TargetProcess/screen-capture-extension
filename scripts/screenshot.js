@@ -1,5 +1,5 @@
 function setScreenshotUrl(url) {
-    // document.getElementById('target').src = url;
+
     var canvas = document.getElementById('imageView');
     var context = canvas.getContext('2d');
 

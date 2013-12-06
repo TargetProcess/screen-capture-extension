@@ -11,9 +11,7 @@ require([
         var paintManager = new PaintManager(document.getElementById('imageView'));
         var actionsLogger = new ActionsLogger(paintManager, new UI());
         paintManager.changeTool("pencil");
-
-        var currentValue = 6;
-        paintManager.setLineWidth(currentValue, false);
+        paintManager.setLineWidth(6);
 
         $("#editor .toolbar .button").click(function() {
             var isDisabled = $(this).hasClass("disabled");

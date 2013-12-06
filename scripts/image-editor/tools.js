@@ -13,6 +13,15 @@ define([
             this.canvas = canvas;
             this.options = options;
             this.onFinalize = $.Callbacks();
+            this.onFinalize.add(function() {
+                this.applyImage();
+            }.bind(this));
+        },
+
+        applyImage: function () {
+            var tc = this.canvas;
+            this.srcContext.drawImage(tc, 0, 0);
+            this.context.clearRect(0, 0, tc.width, tc.height);
         }
     });
 
@@ -64,6 +73,9 @@ define([
     });
 
     var Rect = ToolDnDBase.extend({
+
+        name: 'rect',
+
         mousemove: function (ev) {
             var tool = this;
             var x = Math.min(ev._x, tool.x0),
@@ -82,6 +94,9 @@ define([
     });
 
     var Line = ToolDnDBase.extend({
+
+        name: 'line',
+
         mousemove: function (ev) {
             var tool = this;
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -95,6 +110,9 @@ define([
     });
 
     var Circ = ToolDnDBase.extend({
+
+        name: 'circ',
+
         mousemove: function (ev) {
             var tool = this;
             var context = this.context;
@@ -132,6 +150,8 @@ define([
 
     var Eraser = ToolDnDBase.extend({
 
+        name: 'eraser',
+
         mousedown: function (ev) {
             var context = this.context;
             context.beginPath();
@@ -150,6 +170,8 @@ define([
 
     var Pencil = ToolDnDBase.extend({
 
+        name: 'pencil',
+
         mousedown: function (ev) {
             var context = this.context;
             context.beginPath();
@@ -164,6 +186,8 @@ define([
     });
 
     var Arrow = ToolDnDBase.extend({
+
+        name: 'arrow',
 
         drawArrowhead: function(ctx, ex, ey, angle, sizex, sizey) {
             ctx.save();
@@ -215,6 +239,8 @@ define([
     });
 
     var Text = ToolBase.extend({
+
+        name: 'text',
 
         init: function(context, canvas, options) {
             this._super(context, canvas, options);
@@ -326,10 +352,105 @@ define([
         }
     });
 
-    function ToolKit(context, canvas) {
+    var Crop = ToolBase.extend({
+
+        name: 'crop',
+
+        init: function(context, canvas, options) {
+            this._super(context, canvas, options);
+
+            this.started = true;
+            this.rect = {};
+            $(this.canvas).imgAreaSelect({
+                handles: true,
+                onSelectStart: this.createToolTip.bind(this),
+                onSelectEnd: function (img, selection) {
+                    this.rect = selection;
+                }.bind(this)
+            });
+
+            $(document).on('keydown.crop', function(e) {
+                if (e.which === 27) {
+                    this.onEscape();
+                }
+            }.bind(this));
+        },
+
+        destroy: function() {
+            this.started = false;
+            $(document).off('.crop');
+            $(this.canvas).imgAreaSelect({ remove: true });
+        },
+
+        createToolTip: function() {
+            var $tooltip = $('.i-role-img-area-select-box-tooltip');
+            if (!$tooltip.length) {
+                $tooltip = $('<div><a class="i-role-action-crop" style="color:white;" href="#">crop</a></div>');
+                $tooltip
+                    .addClass('i-role-img-area-select-box-tooltip')
+                    .css({
+                        width: '50px',
+                        height: '25px',
+                        'background-color': 'rgba(0,25,0, 0.25)',
+                        left: '1px',
+                        top: '1px',
+                        position: 'absolute',
+                        'text-align': 'center',
+                        color: 'white',
+                        'border-radius': '5px'
+                    });
+
+                $tooltip.on('click', '.i-role-action-crop', this.onEnter.bind(this));
+                $('.i-role-img-area-select-box').append($tooltip);
+            }
+        },
+
+        removeToolTip: function() {
+            $('.i-role-img-area-select-box-tooltip').remove();
+        },
+
+        onEnter: function() {
+            var r = this.rect;
+
+            this.removeToolTip();
+            $(this.canvas).imgAreaSelect({ hide: true });
+
+            var tempCanvas = document.createElement('CANVAS');
+            tempCanvas.width = r.width;
+            tempCanvas.height = r.height;
+            var tempCtx = tempCanvas.getContext('2d');
+            tempCtx.drawImage(
+                this.srcCanvas,
+                r.x1,
+                r.y1,
+                r.width,
+                r.height,
+                0,
+                0,
+                r.width,
+                r.height
+            );
+
+            this.srcCanvas.width = tempCanvas.width;
+            this.srcCanvas.height = tempCanvas.height;
+            this.srcContext.drawImage(tempCanvas, 0, 0);
+
+            this.canvas.width = tempCanvas.width;
+            this.canvas.height = tempCanvas.height;
+        },
+
+        onEscape: function() {
+            $(this.canvas).imgAreaSelect({ hide: true });
+        }
+    });
+
+    function ToolKit(context, canvas, srcContext, srcCanvas) {
         var tools = this;
         this.context = context;
         this.canvas = canvas;
+
+        this.srcContext = srcContext;
+        this.srcCanvas = srcCanvas;
 
         tools.rect = Rect;
         tools.line = Line;
@@ -338,11 +459,15 @@ define([
         tools.pencil = Pencil;
         tools.arrow = Arrow;
         tools.text = Text;
+        tools.crop = Crop;
     }
 
     ToolKit.prototype = {
         create: function(toolName, options) {
-            return new this[toolName](this.context, this.canvas, options);
+            var tool = new this[toolName](this.context, this.canvas, options);
+            tool.srcContext = this.srcContext;
+            tool.srcCanvas = this.srcCanvas;
+            return tool;
         }
     };
 

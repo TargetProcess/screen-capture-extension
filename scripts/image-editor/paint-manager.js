@@ -25,43 +25,35 @@ define([
             this.tmpContext = this.tmpCanvas.getContext('2d');
             this.changeColor(this.options.color);
 
-            this.toolKit = new ToolKit(this.tmpContext, this.tmpCanvas);
-            this.tool = this.changeTool('pencil');
+            this.toolKit = new ToolKit(
+                this.tmpContext,
+                this.tmpCanvas,
+                this.srcContext,
+                this.srcCanvas
+            );
+            this.changeTool('pencil');
         },
 
         changeTool: function (toolName) {
             var tool = this.tool;
             tool && tool.destroy();
-            tool = this.toolKit.create(toolName, this.options);
-            tool.onFinalize.add(this.applyImage.bind(this));
-            return tool;
+            this.tool = this.toolKit.create(toolName, this.options);
+            return this.tool;
         },
 
         changeColor: function (color) {
-            this.tmpContext.strokeStyle = color;
+            this.options.color = color;
+            this
+                .tmpCanvas
+                .getContext('2d')
+                .strokeStyle = color;
         },
 
         setLineWidth: function (width) {
-            this.tmpContext.lineWidth = parseInt(width, 10);
-        },
-
-        RepaintByScript: function (script) {
-            var tmpContext = this.tmpContext;
-            var srcContext = this.srcContext;
-            var tmpCanvas = this.tmpCanvas;
-
-            tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-            srcContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-            this.tool.started = false;
-            srcContext.drawImage(tmpCanvas, 0, 0);
-            tmpContext.clearRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-            eval(script);
-        },
-
-        applyImage: function () {
-            var tc = this.tmpCanvas;
-            this.srcContext.drawImage(tc, 0, 0);
-            this.tmpContext.clearRect(0, 0, tc.width, tc.height);
+            this
+                .tmpCanvas
+                .getContext('2d')
+                .lineWidth = parseInt(width, 10);
         }
     });
 });
