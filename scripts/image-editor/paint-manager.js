@@ -3,57 +3,50 @@ define([
     '/scripts/image-editor/tools.js'
 ], function (Class, ToolKit) {
 
+    var CanvasWrapper = Class.extend({
+        init: function(canvas) {
+            this.canvas = canvas;
+            this.context = canvas.getContext('2d');
+        },
+
+        resize: function(options) {
+            this.canvas.width = options.width;
+            this.canvas.height = options.height;
+
+            this.context = this.canvas.getContext('2d');
+        }
+    });
+
     return Class.extend({
 
         init: function (srcCanvas) {
 
-            this.options = {
-                color: 'rgb(255, 0, 0)',
-                font: 'bold 16px Tahoma'
-            };
-
-            this.srcCanvas = srcCanvas;
-            this.srcContext = srcCanvas.getContext('2d');
-
             // Add the temporary canvas.
-            this.tmpCanvas = document.createElement('canvas');
-            this.tmpCanvas.id = 'imageTemp';
-            this.tmpCanvas.width = srcCanvas.width;
-            this.tmpCanvas.height = srcCanvas.height;
-            this.srcCanvas.parentNode.appendChild(this.tmpCanvas);
+            var tmpCanvas = srcCanvas.cloneNode();
+            tmpCanvas.id = 'imageTemp';
+            srcCanvas.parentNode.appendChild(tmpCanvas);
 
-            this.tmpContext = this.tmpCanvas.getContext('2d');
-            this.changeColor(this.options.color);
 
-            this.toolKit = new ToolKit(
-                this.tmpContext,
-                this.tmpCanvas,
-                this.srcContext,
-                this.srcCanvas
-            );
+            this.toolKit = (new ToolKit(new CanvasWrapper(srcCanvas), new CanvasWrapper(tmpCanvas)))
+                .setFont('bold 16px Tahoma')
+                .setColor('rgb(255, 0, 0)')
+                .setLine(6);
+
             this.changeTool('pencil');
         },
 
         changeTool: function (toolName) {
-            var tool = this.tool;
-            tool && tool.destroy();
-            this.tool = this.toolKit.create(toolName, this.options);
+            (this.tool || { destroy: $.noop }).destroy();
+            (this.tool = this.toolKit.create(toolName));
             return this.tool;
         },
 
         changeColor: function (color) {
-            this.options.color = color;
-            this
-                .tmpCanvas
-                .getContext('2d')
-                .strokeStyle = color;
+            this.toolKit.setColor(color);
         },
 
         setLineWidth: function (width) {
-            this
-                .tmpCanvas
-                .getContext('2d')
-                .lineWidth = parseInt(width, 10);
+            this.toolKit.setLine(width);
         }
     });
 });

@@ -2,42 +2,60 @@ define([
     '/scripts/libs/class.js'
 ], function (Class) {
 
+    var canvas = function(r) {
+        var c = document.createElement('CANVAS');
+        c.width = r.width;
+        c.height = r.height;
+        return c;
+    };
+
     var noop = function(f) {
         return f || function() {};
     };
 
     var ToolBase = Class.extend({
 
-        init: function(context, canvas, options) {
-            this.context = context;
-            this.canvas = canvas;
+        init: function(scene, options) {
+            this.scene = scene;
             this.options = options;
             this.onFinalize = $.Callbacks();
-            this.onFinalize.add(function() {
-                this.applyImage();
-            }.bind(this));
+            this.onFinalize.add(this.applyImage.bind(this));
+        },
+
+        api: function() {
+            var prmCtx = this.scene.primary.context;
+            var slv = this.scene.layer();
+            var slvCtx = this.scene.slave.context;
+
+            slvCtx.exClear = function() {
+                slvCtx.clearRect(0, 0, slv.width, slv.height);
+            };
+
+            slvCtx.exApply = function() {
+                prmCtx.drawImage(slv, 0, 0);
+                slvCtx.exClear();
+            };
+            return slvCtx;
         },
 
         applyImage: function () {
-            var tc = this.canvas;
-            this.srcContext.drawImage(tc, 0, 0);
-            this.context.clearRect(0, 0, tc.width, tc.height);
+            this.api().exApply();
         }
     });
 
     var ToolDnDBase = ToolBase.extend({
 
-        init: function(context, canvas, options) {
-            this._super(context, canvas, options);
+        init: function(scene, options) {
+            this._super(scene, options);
 
             this.subscribeToEvents = 'mousedown mousemove mouseup';
-            $(this.canvas)
+            $(this.scene.layer())
                 .on(this.subscribeToEvents,
                     this.commonMousePatternHandler.bind(this));
         },
 
         destroy: function() {
-            $(this.canvas)
+            $(this.scene.layer())
                 .off(this.subscribeToEvents);
         },
 
@@ -83,13 +101,13 @@ define([
                 w = Math.abs(ev._x - tool.x0),
                 h = Math.abs(ev._y - tool.y0);
 
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.api().exClear();
 
             if (!w || !h) {
                 return;
             }
 
-            this.context.strokeRect(x, y, w, h);
+            this.api().strokeRect(x, y, w, h);
         }
     });
 
@@ -99,24 +117,23 @@ define([
 
         mousemove: function (ev) {
             var tool = this;
-            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-            this.context.beginPath();
-            this.context.moveTo(tool.x0, tool.y0);
-            this.context.lineTo(ev._x, ev._y);
-            this.context.stroke();
-            this.context.closePath();
+            var api = this.api();
+            api.exClear();
+            api.beginPath();
+            api.moveTo(tool.x0, tool.y0);
+            api.lineTo(ev._x, ev._y);
+            api.stroke();
+            api.closePath();
         }
     });
 
     var Circ = ToolDnDBase.extend({
 
-        name: 'circ',
+        name: 'circle',
 
         mousemove: function (ev) {
             var tool = this;
-            var context = this.context;
-            var canvas = this.canvas;
+            var api = this.api();
 
             var dx = Math.abs(ev._x - tool.x0),
                 dy = Math.abs(ev._y - tool.y0),
@@ -124,7 +141,7 @@ define([
                 y = Math.min(ev._y, tool.y0) + Math.round(dy / 2),
                 r = Math.round(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)));
 
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            api.exClear();
 
             var startingAngle = 0;
             var endingAngle = 2 * Math.PI; // 360 degrees is equal to 2Ï€ radians
@@ -137,14 +154,14 @@ define([
                 return;
             }
 
-            context.save();
-            context.translate(x, y);
-            context.scale(scaleX, scaleY);
-            context.beginPath();
-            context.arc(0, 0, r, startingAngle, endingAngle, false);
-            context.stroke();
-            context.closePath();
-            context.restore();
+            api.save();
+            api.translate(x, y);
+            api.scale(scaleX, scaleY);
+            api.beginPath();
+            api.arc(0, 0, r, startingAngle, endingAngle, false);
+            api.stroke();
+            api.closePath();
+            api.restore();
         }
     });
 
@@ -153,18 +170,15 @@ define([
         name: 'eraser',
 
         mousedown: function (ev) {
-            var context = this.context;
-            context.beginPath();
-            context.moveTo(ev._x, ev._y);
+            var api = this.api();
+            api.beginPath();
+            api.moveTo(ev._x, ev._y);
         },
 
         mousemove: function (ev) {
-            var tool = this;
-            var context = this.context;
-            var canvas = this.canvas;
-
-            context.lineTo(ev._x, ev._y);
-            context.stroke();
+            var api = this.api();
+            api.lineTo(ev._x, ev._y);
+            api.stroke();
         }
     });
 
@@ -173,15 +187,15 @@ define([
         name: 'pencil',
 
         mousedown: function (ev) {
-            var context = this.context;
-            context.beginPath();
-            context.moveTo(ev._x, ev._y);
+            var api = this.api();
+            api.beginPath();
+            api.moveTo(ev._x, ev._y);
         },
 
         mousemove: function (ev) {
-            var context = this.context;
-            context.lineTo(ev._x, ev._y);
-            context.stroke();
+            var api = this.api();
+            api.lineTo(ev._x, ev._y);
+            api.stroke();
         }
     });
 
@@ -189,26 +203,26 @@ define([
 
         name: 'arrow',
 
-        drawArrowhead: function(ctx, ex, ey, angle, sizex, sizey) {
-            ctx.save();
+        drawArrowhead: function(api, ex, ey, angle, sizex, sizey) {
+            api.save();
 
-            ctx.fillStyle = this.options.color;
+            api.fillStyle = this.options.color;
 
             var hx = sizex / 2;
             var hy = sizey / 2;
 
-            ctx.translate(ex, ey);
-            ctx.rotate(angle);
-            ctx.translate(-hx, -hy);
+            api.translate(ex, ey);
+            api.rotate(angle);
+            api.translate(-hx, -hy);
 
-            ctx.beginPath();
-            ctx.moveTo(0,0);
-            ctx.lineTo(0, sizey);
-            ctx.lineTo(sizex, hy);
-            ctx.closePath();
-            ctx.fill();
+            api.beginPath();
+            api.moveTo(0,0);
+            api.lineTo(0, sizey);
+            api.lineTo(sizex, hy);
+            api.closePath();
+            api.fill();
 
-            ctx.restore();
+            api.restore();
         },
 
         findAngle: function(sx, sy, ex, ey) {
@@ -218,23 +232,22 @@ define([
 
         mousemove: function (ev) {
             var tool = this;
-            var context = this.context;
-            var canvas = this.canvas;
+            var api = this.api();
 
             var sx = tool.x0;
             var sy = tool.y0;
             var ex = ev._x;
             var ey = ev._y;
 
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.beginPath();
-            context.moveTo(sx, sy);
-            context.lineTo(ex, ey);
-            context.stroke();
-            context.closePath();
+            api.exClear();
+            api.beginPath();
+            api.moveTo(sx, sy);
+            api.lineTo(ex, ey);
+            api.stroke();
+            api.closePath();
 
             var ang = this.findAngle(sx, sy, ex, ey);
-            this.drawArrowhead(context, ex, ey, ang, 16, 16);
+            this.drawArrowhead(api, ex, ey, ang, 16, 16);
         }
     });
 
@@ -242,17 +255,17 @@ define([
 
         name: 'text',
 
-        init: function(context, canvas, options) {
-            this._super(context, canvas, options);
+        init: function(scene, options) {
+            this._super(scene, options);
 
             this.subscribeToEvents = 'click';
-            $(this.canvas)
+            $(this.scene.layer())
                 .on(this.subscribeToEvents,
                     this.commonMousePatternHandler.bind(this));
         },
 
         destroy: function() {
-            $(this.canvas)
+            $(this.scene.layer())
                 .off(this.subscribeToEvents);
         },
 
@@ -287,7 +300,7 @@ define([
                     padding: '0 0 0 0'
                 })
                 .attr('contenteditable', true)
-                .appendTo($(this.canvas).parent());
+                .appendTo($(this.scene.layer()).parent());
 
             this.textBox.focus();
 
@@ -332,21 +345,20 @@ define([
         },
 
         drawMultiLineText: function(texts, coords) {
-            var context = this.context;
-            var canvas = this.canvas;
+            var api = this.api();
 
             var sx = coords.x;
             var sy = coords.y;
             var dy = coords.dy;
 
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = this.options.color;
-            context.font = this.options.font;
-            context.textBaseline = 'top';
-            context.textAlign = 'left';
+            api.exClear();
+            api.fillStyle = this.options.color;
+            api.font = this.options.font;
+            api.textBaseline = 'top';
+            api.textAlign = 'left';
 
             for (var i = 0, delta = 0; i < texts.length; i++) {
-                context.fillText(texts[i], sx, delta + sy);
+                api.fillText(texts[i], sx, delta + sy);
                 delta += dy;
             }
         }
@@ -356,12 +368,12 @@ define([
 
         name: 'crop',
 
-        init: function(context, canvas, options) {
-            this._super(context, canvas, options);
+        init: function(scene, options) {
+            this._super(scene, options);
 
             this.started = true;
             this.rect = {};
-            $(this.canvas).imgAreaSelect({
+            $(this.scene.layer()).imgAreaSelect({
                 handles: true,
                 onSelectStart: this.createToolTip.bind(this),
                 onSelectEnd: function (img, selection) {
@@ -379,7 +391,7 @@ define([
         destroy: function() {
             this.started = false;
             $(document).off('.crop');
-            $(this.canvas).imgAreaSelect({ remove: true });
+            $(this.scene.layer()).imgAreaSelect({ remove: true });
         },
 
         createToolTip: function() {
@@ -413,44 +425,30 @@ define([
             var r = this.rect;
 
             this.removeToolTip();
-            $(this.canvas).imgAreaSelect({ hide: true });
+            $(this.scene.layer()).imgAreaSelect({ hide: true });
 
-            var tempCanvas = document.createElement('CANVAS');
-            tempCanvas.width = r.width;
-            tempCanvas.height = r.height;
-            var tempCtx = tempCanvas.getContext('2d');
-            tempCtx.drawImage(
-                this.srcCanvas,
-                r.x1,
-                r.y1,
-                r.width,
-                r.height,
-                0,
-                0,
-                r.width,
-                r.height
-            );
+            var tmpCnvs = canvas(r);
+            tmpCnvs
+                .getContext('2d')
+                .drawImage(this.scene.canvas(), r.x1, r.y1, r.width, r.height, 0, 0, r.width, r.height);
 
-            this.srcCanvas.width = tempCanvas.width;
-            this.srcCanvas.height = tempCanvas.height;
-            this.srcContext.drawImage(tempCanvas, 0, 0);
-
-            this.canvas.width = tempCanvas.width;
-            this.canvas.height = tempCanvas.height;
+            this.scene.resize(r);
+            this.api().drawImage(tmpCnvs, 0, 0);
+            this.api().exApply();
         },
 
         onEscape: function() {
-            $(this.canvas).imgAreaSelect({ hide: true });
+            $(this.scene.layer()).imgAreaSelect({ hide: true });
         }
     });
 
-    function ToolKit(context, canvas, srcContext, srcCanvas) {
+    function ToolKit(primaryCanvas, slaveCanvas) {
         var tools = this;
-        this.context = context;
-        this.canvas = canvas;
 
-        this.srcContext = srcContext;
-        this.srcCanvas = srcCanvas;
+        this.options = {};
+
+        this.primaryCanvas = primaryCanvas;
+        this.slaveCanvas = slaveCanvas;
 
         tools.rect = Rect;
         tools.line = Line;
@@ -463,11 +461,46 @@ define([
     }
 
     ToolKit.prototype = {
-        create: function(toolName, options) {
-            var tool = new this[toolName](this.context, this.canvas, options);
-            tool.srcContext = this.srcContext;
-            tool.srcCanvas = this.srcCanvas;
-            return tool;
+
+        create: function(toolName) {
+            var self = this;
+            var scene = {
+                primary: this.primaryCanvas,
+                slave: this.slaveCanvas,
+                resize: function(r) {
+                    this.primary.resize(r);
+                    this.slave.resize(r);
+
+                    this.slave.context.font = self.options.font;
+                    this.slave.context.strokeStyle = self.options.color;
+                    this.slave.context.lineWidth = self.options.width;
+                },
+                canvas: function() {
+                    return this.primary.canvas;
+                },
+                layer: function() {
+                    return this.slave.canvas;
+                }
+            };
+            return new this[toolName](scene, this.options);
+        },
+
+        setFont: function(font) {
+            this.options.font = font;
+            this.slaveCanvas.context.font = font;
+            return this;
+        },
+
+        setColor: function(color) {
+            this.options.color = color;
+            this.slaveCanvas.context.strokeStyle = color;
+            return this;
+        },
+
+        setLine: function(width) {
+            this.options.width = width;
+            this.slaveCanvas.context.lineWidth = width;
+            return this;
         }
     };
 
