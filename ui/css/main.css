@@ -1,0 +1,330 @@
+.extension {
+
+    padding: 30px 24px 30px 30px;
+    width: 458px;
+
+    font-family: Geneva, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+
+    background: rgba(0, 0, 0, 0.77);
+
+}
+
+.extension h2 {
+
+    margin-bottom: 18px;
+    font-size: 24px;
+    line-height: 29px;
+    color: #fff;
+
+}
+
+.extension label {
+
+    display: block;
+    padding: 11px 0 12px;
+
+    font-size: 17px;
+    font-weight: bold;
+
+}
+
+.extension input[ type = "text" ] {
+
+    width: 404px;
+    height: 48px;
+    padding: 13px 11px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 3px;
+
+    color: #2d3138;
+    font-size: 18px;
+}
+
+.extension textarea {
+
+    width: 404px;
+    height: 208px;
+    padding: 13px 11px;
+    border: none;
+    border-radius: 3px;
+
+    color: #2d3138;
+    font-size: 18px;
+}
+
+/* Placeholder styling
+----------------------------------------------------------------------------------------------------*/
+
+.fields input[ type = "text" ]::-webkit-input-placeholder,
+.fields textarea::-webkit-input-placeholder {
+
+    color: #d4dae2;
+
+}
+
+.fields input[ type = "text" ]::-moz-placeholder,
+.fields textarea::-moz-placeholder {
+
+    color: #d4dae2;
+    opacity: 1;
+
+}
+
+.fields input[ type = "text" ]:-ms-input-placeholder,
+.fields textarea:-ms-input-placeholder {
+
+    color: #d4dae2;
+
+}
+
+/* Add bug button
+----------------------------------------------------------------------------------------------------*/
+.extension .add-bug {
+
+    position: relative;
+    padding: 16px 151px 15px;
+    margin: 28px 0 23px;
+    border: 1px solid #8c97a7;
+    border-radius: 6px;
+
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 29px;
+    color: #fff;
+    text-decoration: none;
+
+    background: rgb(167,221,101);
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2E3ZGQ2NSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjclIiBzdG9wLWNvbG9yPSIjYTdkZDY1IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMjUlIiBzdG9wLWNvbG9yPSIjYTFkNjYwIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNDklIiBzdG9wLWNvbG9yPSIjOTlkMjYxIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iNzUlIiBzdG9wLWNvbG9yPSIjOTBjYzViIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iODYlIiBzdG9wLWNvbG9yPSIjOGVjOTVkIiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iOTUlIiBzdG9wLWNvbG9yPSIjOGFjNTU5IiBzdG9wLW9wYWNpdHk9IjEiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzhhYzU1YiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=) rgb(167,221,101);
+    background: -moz-linear-gradient(top,  rgba(167,221,101,1) 0%, rgba(167,221,101,1) 7%, rgba(161,214,96,1) 25%, rgba(153,210,97,1) 49%, rgba(144,204,91,1) 75%, rgba(142,201,93,1) 86%, rgba(138,197,89,1) 95%, rgba(138,197,91,1) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(167,221,101,1)), color-stop(7%,rgba(167,221,101,1)), color-stop(25%,rgba(161,214,96,1)), color-stop(49%,rgba(153,210,97,1)), color-stop(75%,rgba(144,204,91,1)), color-stop(86%,rgba(142,201,93,1)), color-stop(95%,rgba(138,197,89,1)), color-stop(100%,rgba(138,197,91,1)));
+    background: -webkit-linear-gradient(top,  rgba(167,221,101,1) 0%,rgba(167,221,101,1) 7%,rgba(161,214,96,1) 25%,rgba(153,210,97,1) 49%,rgba(144,204,91,1) 75%,rgba(142,201,93,1) 86%,rgba(138,197,89,1) 95%,rgba(138,197,91,1) 100%);
+    background: -o-linear-gradient(top,  rgba(167,221,101,1) 0%,rgba(167,221,101,1) 7%,rgba(161,214,96,1) 25%,rgba(153,210,97,1) 49%,rgba(144,204,91,1) 75%,rgba(142,201,93,1) 86%,rgba(138,197,89,1) 95%,rgba(138,197,91,1) 100%);
+    background: -ms-linear-gradient(top,  rgba(167,221,101,1) 0%,rgba(167,221,101,1) 7%,rgba(161,214,96,1) 25%,rgba(153,210,97,1) 49%,rgba(144,204,91,1) 75%,rgba(142,201,93,1) 86%,rgba(138,197,89,1) 95%,rgba(138,197,91,1) 100%);
+    background: linear-gradient(to bottom,  rgba(167,221,101,1) 0%,rgba(167,221,101,1) 7%,rgba(161,214,96,1) 25%,rgba(153,210,97,1) 49%,rgba(144,204,91,1) 75%,rgba(142,201,93,1) 86%,rgba(138,197,89,1) 95%,rgba(138,197,91,1) 100%);
+
+}
+
+
+.extension .add-bug:active {
+
+    top: 2px;
+
+}
+
+
+/* Export to file button
+----------------------------------------------------------------------------------------------------*/
+.extension .export {
+
+    position: relative;
+    padding: 11px 136px 13px;
+    margin-top: 28px;
+    border: 1px solid #e6e9ed;
+    border-radius: 6px;
+
+    font-size: 22px;
+    line-height: 26px;
+    color: #d4dae2;
+    text-decoration: none;
+
+    background: transparent;
+
+}
+
+.extension .export:active {
+
+    top: 2px;
+
+}
+
+.extension .fields > ul > li:first-child {
+
+    position: relative;
+    padding-top: 21px;
+
+}
+
+
+.extension .fields > ul > li:last-child {
+
+    position: relative;
+
+}
+
+.extension .fields > ul > li:first-child:before,
+.extension .fields > ul > li:last-child:before {
+
+    content: '';
+    width: 100%;
+    height: 1px;
+    background: #23262b;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}
+
+/* Palette
+----------------------------------------------------------------------------------------------------*/
+
+.palette {
+
+    padding-bottom: 28px;
+
+}
+
+.palette input[ type = "button" ] {
+
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+
+    background: url(../img/palette-spr.png) no-repeat 0 0;
+
+}
+
+.palette input[ type = "button" ].pencil {
+
+    margin-right: 17px;
+    background-position: 0 0;
+
+}
+
+.palette input[ type = "button" ].arrow {
+
+    margin-right: 14px;
+    background-position: -32px 0;
+
+}
+
+.palette input[ type = "button" ].line {
+
+    margin-right: 10px;
+    background-position: -64px 0;
+
+}
+
+.palette input[ type = "button" ].text {
+
+    margin-right: 7px;
+    background-position: -96px 0;
+
+}
+
+.palette input[ type = "button" ].eraser {
+
+    margin-right: 19px;
+    background-position: -130px 0;
+
+}
+
+.palette input[ type = "button" ].crop {
+
+    margin-right: 16px;
+    background-position: -173px 0;
+
+}
+
+.palette .sp-replacer {
+
+    padding: 0;
+    border: none;
+    border-radius: 7px;
+    vertical-align: top;
+
+}
+
+.palette .sp-dd {
+
+    display: none;
+
+}
+
+.sp-palette {
+
+    max-width: 230px;
+
+}
+
+.sp-preview {
+
+    margin-right: 0;
+    border-color: #fff;
+    width: 36px;
+    height: 36px;
+
+}
+
+.sp-palette-container {
+
+    padding: 13px 15px;
+    border-radius: 7px;
+    margin: 10px 0 0 -112px;
+    border: none;
+    box-shadow: 1px 0 17px rgba(50, 50, 50, 0.75);
+
+    background: #fff;
+
+}
+
+.sp-palette-container:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-bottom-color: #fff;
+    top: -10px;
+    left: 50%;
+    margin-left: -4px;
+}
+
+.sp-container {
+
+    background-color: transparent;
+    border: none;
+    overflow: visible;
+
+}
+
+.sp-replacer .sp-preview-inner {
+
+    border-radius: 7px;
+
+}
+
+.sp-palette .sp-thumb-el {
+
+    border-radius: 5px;
+    width: 36px;
+    height: 36px;
+
+}
+
+.sp-palette .sp-thumb-el span {
+
+    border-radius: 5px;
+
+}
+
+.sp-palette .sp-thumb-el:hover,
+.sp-palette .sp-thumb-el.sp-thumb-active {
+
+    border-color: #000;
+    border-width: 2px;
+
+}
+
+.sp-palette .sp-thumb-dark.sp-thumb-active .sp-thumb-inner,
+.sp-palette .sp-thumb-light.sp-thumb-active .sp-thumb-inner {
+
+    background-image: none;
+
+}
