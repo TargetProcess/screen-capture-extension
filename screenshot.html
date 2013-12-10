@@ -1,231 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Screenshot</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Chrome extension" />
+    <meta name="keywords" content="chrome, extension" />
+    <meta name="author" content="Taucraft" />
 
-    <style>
-        body {
-            border: 0;
-            margin: 0;
-            padding: 0;
-        }
+    <title>Chrome extension</title>
 
-        #dataContainer {
-            float: left;
-            padding-left: 5px;
-            width: 310px;
-        }
-
-        #dataContainer button, #dataContainer input, #dataContainer select, #dataContainer textarea {
-            margin: 0;
-        }
-
-        #dataContainer input {
-            width: 300px;
-        }
-
-        #dataContainer select {
-            width: 304px;
-        }
-
-        #dataContainer textarea {
-            height: 100px;
-            width: 298px;
-        }
-
-        #imageContainer {
-            border: 1px dotted gray;
-            float: left;
-            width: 1200px;
-        }
-
-        #drawing-toolbar {
-            display: inline-block;
-            text-align: center;
-        }
-
-        #editor {
-            margin: 0 auto;
-            position: relative;
-            width: 620px;
-            float: left;
-        }
-
-        #editor .toolbar {
-            height: 50px;
-            width: 100%;
-            background-color: lightgray;
-            text-align: left;
-            overflow: hidden;
-            padding: 10px;
-        }
-
-        #editor .toolbar .color {
-            float: right;
-            width: 50px;
-            background: black none;
-            color: #ffffff;
-            font-family: 'Courier New', monospace;
-        }
-
-        #editor .toolbar .button {
-            margin-top: 2px;
-            background: white no-repeat center;
-            width: 45px;
-            height: 45px;
-            border: 1px solid black;
-            cursor: pointer;
-        }
-
-        #editor .toolbar .button:hover {
-            opacity: 0.7;
-        }
-
-        #editor .toolbar .button.clicked {
-            border-width: 3px;
-        }
-
-        #editor .toolbar .button.rectangle {
-            background-image: url('/images/restangle.png');
-        }
-
-        #editor .toolbar .button.ellipse {
-            background-image: url('/images/ellipse.png');
-        }
-
-        #editor .toolbar .button.pencil {
-            background-image: url('/images/pencil.png');
-        }
-
-        #editor .toolbar .button.line {
-            background-image: url('/images/line.png');
-        }
-
-        #editor .toolbar .button.arrow {
-            background-image: url('/images/arrow.png');
-        }
-
-        #editor .toolbar .button.text {
-            background-image: url('/images/text.png');
-        }
-
-        #editor .toolbar .button.crop {
-            background-image: url('/images/crop.png');
-        }
-
-        #editor .toolbar .button.eraser {
-            background-image: url('/images/eraser.png');
-        }
-
-        #editor .toolbar .button.new {
-            margin-left: 12px;
-            margin-right: 12px;
-            background-image: url('/images/new_file.png');
-        }
-
-        #editor .toolbar .button.undo {
-            background-image: url('/images/undo.png');
-        }
-
-        #editor .toolbar .button.redo {
-            background-image: url('/images/redo.png');
-        }
-
-        #editor .toolbar .button.disabled {
-            opacity: 0.3;
-        }
-
-        #container {
-            position: relative;
-        }
-
-        #imageView {
-            border: 1px solid #000;
-        }
-
-        #imageTemp {
-            border: 1px solid #000;
-            cursor: pointer;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-        }
-    </style>
-
-    <script src="scripts/screenshot.js"></script>
-    <script src="scripts/libs/jquery-2.0.3.min.js"></script>
-    <script src="scripts/libs/jquery.imgareaselect.js"></script>
-    <script src="scripts/class-user-settings.js"></script>
-    <script src="scripts/require.js" data-main="scripts/screenshot-main"></script>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="ui/css/general.css" />
     <link type="text/css" rel="stylesheet" href="css/img-area-select/imgareaselect-default.css" />
+
+    <script type="text/javascript" src="scripts/libs/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="scripts/libs/jquery.imgareaselect.js"></script>
+    <script type="text/javascript" src="ui/js/fancy-select.js"></script>
+    <script type="text/javascript" src="ui/js/spectrum.js"></script>
+    <script type="text/javascript" src="ui/js/jquery.placeholder.js"></script>
+    <script type="text/javascript" src="scripts/screenshot.js"></script>
+    <script type="text/javascript" src="scripts/class-user-settings.js"></script>
+    <script type="text/javascript" src="scripts/require.js" data-main="scripts/screenshot-main"></script>
+
 </head>
 <body>
 
-<div id="drawing-toolbar">
-    <div id="editor">
-        <div class="toolbar">
-            <input type="button" class="button pencil clicked" data-tool="pencil" title="Use pencil" />
-            <input type="button" class="button line" data-tool="line" title="Draw a line" />
-            <input type="button" class="button text" data-tool="text" title="input text" />
-            <input type="button" class="button crop" data-tool="crop" title="image crop" />
-            <input type="button" class="button arrow" data-tool="arrow" title="Draw an arrow" />
-            <input type="button" class="button rectangle" data-tool="rect" title="Draw a rectangle" />
-            <input type="button" class="button ellipse" data-tool="circle" title="Draw an ellipse or a circle" />
-            <input type="button" class="button eraser" data-tool="eraser" title="Use eraser" />
-            <input type="button" class="button new" title="New canvas" />
-            <input type="button" class="button undo" data-tool="undo" title="Undo" />
-            <input type="button" class="button redo disabled" data-tool="redo" title="Redo" />
+<section id="extension" class="extension">
+    <h2>Markup</h2>
+    <section class="palette i-role-editor">
+        <input type="button" class="button pencil clicked" data-tool="pencil" title="Use pencil" />
+        <input type="button" class="button arrow" data-tool="arrow" title="Draw an arrow" />
+        <input type="button" class="button line" data-tool="line" title="Draw a line" />
+        <input type="button" class="button text" data-tool="text" title="input text" />
+        <input type="button" class="button eraser" data-tool="eraser" title="Use eraser" />
+        <input type="button" class="button crop" data-tool="crop" title="Image crop" />
+        <input type="text" id="custom-color" title="Choose color" />
+    </section>
+    <form action="/" name="extension-form" class="fields">
+        <ul>
+            <li>
+                <input
+                    class="i-role-screenshot-name"
+                    name="name"
+                    maxlength="50"
+                    type="text"
+                    placeholder="Enter issue name"
+                    value="" />
+            </li>
+            <li>
+                <textarea
+                    class="i-role-screenshot-desc"
+                    name="description"
+                    maxlength="500"
+                    placeholder="Provide some extra description"></textarea>
+            </li>
+            <li>
+                <label for="project">Project</label>
+                <select id="project" class="i-role-projects" name="project">
+                </select>
+            </li>
+            <li>
+                <label for="severity">Severity</label>
+                <select id="severity" class="i-role-severities" name="severity">
+                </select>
+            </li>
+            <li>
+                <label for="business">Business value</label>
+                <select id="business" class="i-role-priorities" name="business">
+                </select>
+            </li>
+            <li>
+                <input type="button" class="add-bug i-role-trigger-post" value="Add Bug" />
+            </li>
+            <li>
+                <input type="button" class="export" value="Export to File" />
+            </li>
+        </ul>
+    </form>
+</section>
 
-            <input class="color" value="FF0000" title="Color" autocomplete="off" />
-        </div>
-    </div>
+<input type="hidden" id="generatedScriptContent" value="" />
 
-    <input type="hidden" id="generatedScriptContent" value="" />
-</div>
-
-<div id="dataContainer">
-
-    <p>Edit screenshot and post it to <a id="referenceToAccount"
-            href="http://www.targetprocess.com">TargetProcess</a></p>
-
-    <p><input class="i-role-screenshot-name" type="text" value="See error on screenshot..." /></p>
-
-    <p>
-        <textarea class="i-role-screenshot-desc">
-Given ...
-When ...
-Then ...
-        </textarea>
-    </p>
-
-    <p>
-        <select class="i-role-projects">
-            <!-- options go here -->
-        </select>
-    </p>
-
-    <p>
-        <select class="i-role-severities">
-            <!-- options go here -->
-        </select>
-    </p>
-
-    <p>
-        <select class="i-role-priorities">
-            <!-- options go here -->
-        </select>
-    </p>
-
-    <p>
-        <button class="i-role-trigger-post">Post!</button>
-    </p>
-
-</div>
-
-<div id="imageContainer">
-    <div id="container">
-        <!--<img id="target" width="1200" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />-->
+<div id="imageContainer" style="position:absolute;top:0px;left:460px;">
+    <div id="container" style="position: relative">
         <canvas id="imageView" width="1200" height="800"></canvas>
     </div>
 </div>

@@ -8,16 +8,43 @@ require([
 
     $(document).ready(function() {
 
+
+
+        $('#project, #severity, #business').fancySelect();
+
+        // init colorpicker
+        $("#custom-color").spectrum({
+            color: "#fba617",
+            showPalette: true,
+            showPaletteOnly: true,
+            maxPaletteSize: 6,
+            preferredFormat: "hex",
+            palette: [
+                [
+                    "rgb(255, 255, 255)",
+                    "rgb(251, 166, 23)",
+                    "rgb(121, 207, 24)",
+                    "rgb(215, 30, 19)",
+                    "rgb(56, 146, 227)",
+                    "rgb(0, 0, 0)"
+                ]
+            ]
+        });
+
+        $('input[placeholder], textarea[placeholder]').placeholder();
+
+
+
         var paintManager = new PaintManager(document.getElementById('imageView'));
         var actionsLogger = new ActionsLogger(paintManager, new UI());
         paintManager.changeTool("pencil");
         paintManager.setLineWidth(6);
 
-        $("#editor .toolbar .button").click(function() {
+        $(".i-role-editor .button").click(function() {
             var isDisabled = $(this).hasClass("disabled");
 
             if (!isDisabled) {
-                $("#editor .toolbar .button").removeClass("clicked");
+                $(".i-role-editor .button").removeClass("clicked");
                 $(this).addClass("clicked");
 
                 var dataTool = $(this).data('tool');
@@ -68,6 +95,8 @@ require([
             setup
                 .priorities
                 .forEach(createOption.bind($('.i-role-priorities')));
+
+            $('#project, #severity, #business').trigger('update');
 
             $('.i-role-trigger-post').prop('disabled', false);
         });

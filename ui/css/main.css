@@ -231,6 +231,10 @@
 
 }
 
+.palette input[ type = "button" ].clicked {
+    opacity: 0.25;
+}
+
 .palette .sp-replacer {
 
     padding: 0;
@@ -327,4 +331,16 @@
 
     background-image: none;
 
+}
+
+#imageView {
+    border: 1px solid #000;
+}
+
+#imageTemp {
+    border: 1px solid #000;
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
