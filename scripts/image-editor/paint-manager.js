@@ -10,9 +10,8 @@ define([
         },
 
         resize: function(options) {
-            var r = getRatio();
-            this.canvas.width = options.width * r;
-            this.canvas.height = options.height * r;
+            this.canvas.width = options.width;
+            this.canvas.height = options.height;
 
             this.context = this.canvas.getContext('2d');
         }

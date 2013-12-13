@@ -6,7 +6,7 @@ require([
     , '/scripts/image-editor/ui.js'
 ], function(ChromeApi, TPApi, ActionsLogger, PaintManager, UI) {
 
-    $(document).ready(function() {
+    g_ready.done(function() {
 
 
 
