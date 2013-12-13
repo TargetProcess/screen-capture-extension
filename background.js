@@ -40,8 +40,21 @@ function takeScreenshot() {
         });
 }
 
-// Listen for a click on the camera icon.  On that click, take a screenshot.
+// Listen for a click on the camera icon. On that click, take a screenshot
 chrome
     .browserAction
     .onClicked
     .addListener(takeScreenshot);
+
+// Listen for a shortcut. On match - take a screenshot
+chrome
+    .extension
+    .onRequest
+    .addListener(function(r) {
+        if (r.message === 'shortcut-is-fired') {
+            var KEY_Z = 90;
+            if (r.code === KEY_Z) {
+                takeScreenshot();
+            }
+        }
+    });
