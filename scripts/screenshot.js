@@ -18,8 +18,11 @@ function setScreenshotUrl(url) {
         canvas.height = h;
         var context = canvas.getContext('2d');
         var scaleRatio = 1 / r;
+
+        context.save();
         context.scale(scaleRatio, scaleRatio);
         context.drawImage(image, 0, 0);
+        context.restore();
 
         // Add the temporary canvas.
         var tmpCanvas = canvas.cloneNode();

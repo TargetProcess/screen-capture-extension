@@ -19,12 +19,12 @@ define([
 
     return Class.extend({
 
-        init: function (srcCanvas, tmpCanvas) {
+        init: function (srcCanvas, tmpCanvas, options) {
 
             this.toolKit = (new ToolKit(new CanvasWrapper(srcCanvas), new CanvasWrapper(tmpCanvas)))
-                .setFont('bold 16px Tahoma')
-                .setColor('rgb(255, 0, 0)')
-                .setLine(6);
+                .setFont(options.font)
+                .setColor(options.color)
+                .setLine(options.line);
 
             this.changeTool('pencil');
         },

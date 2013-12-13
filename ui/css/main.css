@@ -344,3 +344,8 @@
     top: 0px;
     left: 0px;
 }
+
+/* FEATURE toggling export to file */
+.fields > ul > li:last-child {
+    display: none;
+}

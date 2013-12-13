@@ -8,13 +8,13 @@ require([
 
     g_ready.done(function() {
 
-
+        var color = '#fba617';
 
         $('#project, #severity, #business').fancySelect();
 
         // init colorpicker
         $("#custom-color").spectrum({
-            color: "#fba617",
+            color: color,
             showPalette: true,
             showPaletteOnly: true,
             maxPaletteSize: 6,
@@ -28,7 +28,10 @@ require([
                     "rgb(56, 146, 227)",
                     "rgb(0, 0, 0)"
                 ]
-            ]
+            ],
+            change: function(x) {
+                paintManager.changeColor(x.toString());
+            }
         });
 
         $('input[placeholder], textarea[placeholder]').placeholder();
@@ -37,7 +40,12 @@ require([
 
         var paintManager = new PaintManager(
             document.getElementById('imageView'),
-            document.getElementById('imageTemp')
+            document.getElementById('imageTemp'),
+            {
+                font: 'bold 16px Tahoma',
+                color: color,
+                line: 6
+            }
         );
         var actionsLogger = new ActionsLogger(paintManager, new UI());
         paintManager.changeTool("pencil");
