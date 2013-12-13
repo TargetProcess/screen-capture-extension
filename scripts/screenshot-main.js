@@ -35,7 +35,10 @@ require([
 
 
 
-        var paintManager = new PaintManager(document.getElementById('imageView'));
+        var paintManager = new PaintManager(
+            document.getElementById('imageView'),
+            document.getElementById('imageTemp')
+        );
         var actionsLogger = new ActionsLogger(paintManager, new UI());
         paintManager.changeTool("pencil");
         paintManager.setLineWidth(6);

@@ -10,8 +10,9 @@ define([
         },
 
         resize: function(options) {
-            this.canvas.width = options.width;
-            this.canvas.height = options.height;
+            var r = getRatio();
+            this.canvas.width = options.width * r;
+            this.canvas.height = options.height * r;
 
             this.context = this.canvas.getContext('2d');
         }
@@ -19,13 +20,7 @@ define([
 
     return Class.extend({
 
-        init: function (srcCanvas) {
-
-            // Add the temporary canvas.
-            var tmpCanvas = srcCanvas.cloneNode();
-            tmpCanvas.id = 'imageTemp';
-            srcCanvas.parentNode.appendChild(tmpCanvas);
-
+        init: function (srcCanvas, tmpCanvas) {
 
             this.toolKit = (new ToolKit(new CanvasWrapper(srcCanvas), new CanvasWrapper(tmpCanvas)))
                 .setFont('bold 16px Tahoma')
