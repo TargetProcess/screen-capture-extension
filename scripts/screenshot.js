@@ -10,7 +10,27 @@ function setScreenshotUrl(url) {
 
     localStorage['image-backup'] = url;
     localStorage['image-backup-on'] = 1;
+    var canvasId = 'imageView';
 
+    var fCanvas = new fabric.Canvas(canvasId, {
+        selection: true,
+        perPixelTargetFind: true,
+        targetFindTolerance: 5
+    });
+
+    fabric.Image.fromURL(url, function(img) {
+        var w = img.getWidth();
+        var h = img.getHeight();
+        fCanvas.setDimensions({
+            width: w + 2,
+            height: h + 2
+        });
+        fCanvas.setBackgroundImage(img);
+
+        g_ready.resolve();
+    });
+
+/*
     var r = getRatio();
     var canvas = document.getElementById('imageView');
 
@@ -41,4 +61,5 @@ function setScreenshotUrl(url) {
         image.onload = null;
     };
     image.src = url;
+*/
 }

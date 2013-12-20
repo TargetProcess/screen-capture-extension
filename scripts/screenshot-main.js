@@ -44,6 +44,10 @@ require([
 
 
 
+        return;
+
+
+
         var paintManager = new PaintManager(
             document.getElementById('imageView'),
             document.getElementById('imageTemp'),
