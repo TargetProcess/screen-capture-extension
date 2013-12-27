@@ -4,7 +4,12 @@ function getRatio() {
 
 var g_ready = $.Deferred();
 
+localStorage['image-backup-on'] = null;
+
 function setScreenshotUrl(url) {
+
+    localStorage['image-backup'] = url;
+    localStorage['image-backup-on'] = 1;
 
     var r = getRatio();
     var canvas = document.getElementById('imageView');

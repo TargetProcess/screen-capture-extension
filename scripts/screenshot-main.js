@@ -6,6 +6,12 @@ require([
     , '/scripts/image-editor/ui.js'
 ], function(ChromeApi, TPApi, ActionsLogger, PaintManager, UI) {
 
+    $(function() {
+        if (localStorage['image-backup-on'] != 1) {
+            setScreenshotUrl(localStorage['image-backup']);
+        }
+    });
+
     g_ready.done(function() {
 
         var color = '#fba617';
