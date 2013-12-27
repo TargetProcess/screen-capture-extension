@@ -41,7 +41,7 @@ define([], function() {
                         'Authorization',
                         'Basic ' + btoa(this.login + ':' + this.password)
                     );
-                }
+                }.bind(this)
             };
 
             if (data) {
