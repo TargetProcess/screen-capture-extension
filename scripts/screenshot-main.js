@@ -127,7 +127,9 @@ require([
             severity: $('.i-role-severities').val(),
             priority: $('.i-role-priorities').val(),
             issueName: $('.i-role-screenshot-name').val(),
-            description: $('.i-role-screenshot-desc').val(),
+            description: $('.i-role-screenshot-desc').val()
+                .replace(/\r\n/g, '<br />')
+                .replace(/\n/g, '<br />'),
             base64str: $('#imageView')[0].toDataURL('image/png')
         };
 
