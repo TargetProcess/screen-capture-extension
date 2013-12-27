@@ -81,9 +81,18 @@ define([], function() {
 
         fetchProjects: function() {
             var $result = $.Deferred();
-            this.req('/api/v1/projects?resultInclude=[Id,Name]')
+            this.req("/api/v1/projects?resultInclude=[Id,Name,Process[Id,Practices]]&where=IsActive eq 'true'")
                 .done(function(r) {
-                    $result.resolve(r)
+                    var Items = r.Items.filter(function(item) {
+                        return item
+                            .Process
+                            .Practices
+                            .Items
+                            .some(function(practice) {
+                                return practice.Name === 'Bug Tracking';
+                            });
+                    });
+                    $result.resolve({ Items: Items });
                 });
             return $result;
         },
