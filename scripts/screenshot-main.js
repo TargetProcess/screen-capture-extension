@@ -105,13 +105,13 @@ require([
         .done(function(setup) {
             setup
                 .projects
-                .forEach(createOption.bind($('.i-role-projects')));
+                .forEach(createOption.bind($('.i-role-projects'), settings.get_prop('project')));
             setup
                 .severities
-                .forEach(createOption.bind($('.i-role-severities')));
+                .forEach(createOption.bind($('.i-role-severities'), null));
             setup
                 .priorities
-                .forEach(createOption.bind($('.i-role-priorities')));
+                .forEach(createOption.bind($('.i-role-priorities'), null));
 
             $('#project, #severity, #business').trigger('update');
 
@@ -133,14 +133,17 @@ require([
             base64str: $('#imageView')[0].toDataURL('image/png')
         };
 
+        settings.set_prop('project', data.projectId);
+
         tpApi
             .postBugToTargetProcess(data)
             .done(postSucceeded)
             .fail(postFailed);
     });
 
-    var createOption = function(item) {
-        this.append('<option value="' + item.Id + '">' + item.Name + '</option>');
+    var createOption = function(defaultValue, item) {
+        var isSelected = (item.Id == defaultValue) ? ' selected ': '';
+        this.append('<option ' + isSelected + ' value="' + item.Id + '">' + item.Name + '</option>');
     };
 
     var showOverlay = function($content) {
