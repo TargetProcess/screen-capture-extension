@@ -63,7 +63,7 @@ define([], function() {
 
         fetchSeverities: function() {
             var $result = $.Deferred();
-            this.req('/api/v1/severities?resultInclude=[Id,Name]')
+            this.req('/api/v1/severities?orderByDesc=Id&resultInclude=[Id,Name]')
                 .done(function (r) {
                     $result.resolve(r)
                 });
@@ -72,7 +72,7 @@ define([], function() {
 
         fetchPriorities: function(entityTypeId) {
             var $result = $.Deferred();
-            this.req('/api/v1/priorities?resultInclude=[Id,Name]&where=EntityType.Id eq ' + entityTypeId)
+            this.req('/api/v1/priorities?orderByDesc=Id&resultInclude=[Id,Name]&where=EntityType.Id eq ' + entityTypeId)
                 .done(function (r) {
                     $result.resolve(r)
                 });
