@@ -35,7 +35,7 @@ define([], function() {
                 method: 'GET',
                 url: this.domain + url,
                 dataType: 'json',
-                contentType: 'application/json',
+                contentType: 'application/json; charset=UTF-8',
                 beforeSend: function (xhr) {
                     xhr.setRequestHeader(
                         'Authorization',
