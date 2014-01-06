@@ -118,9 +118,7 @@ require([
             $('.i-role-trigger-post').prop('disabled', false);
         });
 
-    $postTrigger.one('click', function() {
-
-        postProgress();
+    $postTrigger.on('click', function() {
 
         var data = {
             projectId: $('.i-role-projects').val(),
@@ -135,6 +133,24 @@ require([
 
         settings.set_prop('project', data.projectId);
 
+
+        if (!data.issueName) {
+            var VALIDATION_CLASS = 'tp-extension-validation-failed';
+            var fnStopHighlight = function () {
+                $(this).removeClass(VALIDATION_CLASS);
+            };
+            $('.i-role-screenshot-name')
+                .off('.ext-validation')
+                .one('keyup.ext-validation', fnStopHighlight)
+                .one('click.ext-validation', fnStopHighlight)
+                .addClass(VALIDATION_CLASS)
+                .focus();
+
+            return;
+        }
+
+
+        postProgress();
         tpApi
             .postBugToTargetProcess(data)
             .done(postSucceeded)
@@ -165,6 +181,11 @@ require([
         $over.empty().append($content);
     };
 
+    var hideOverlay = function() {
+        var $over = $('.i-role-overlay');
+        $over.remove();
+    };
+
     var postSucceeded = function(r) {
         showOverlay($([
             '<h1 style="position:fixed;top:40%;left:45%;">',
@@ -175,8 +196,21 @@ require([
         ].join('')));
     };
 
-    var postFailed = function() {
-        showOverlay($('<h1 style="position:fixed;top:40%;left:45%;"><p style="color:#fff">Post is failed</p></h1>'));
+    var postFailed = function(r) {
+        var err;
+        try {
+            err = r.responseJSON.Error.Message;
+        }
+        catch(ex) {
+            err = 'Post is failed';
+        }
+
+        var $cont = $('<h1 style="position:fixed;top:40%;left:45%;"></h1>');
+        $cont.append($('<p style="color:#ff0000">' + err + '</p>'));
+        var $tryAgain = $('<p style="color:#ffffff;cursor: pointer">Try again</p>');
+        $tryAgain.click(hideOverlay);
+        $cont.append($tryAgain);
+        showOverlay($cont);
     };
 
     var postProgress = function() {

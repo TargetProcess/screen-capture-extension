@@ -349,3 +349,7 @@
 .fields > ul > li:last-child {
     display: none;
 }
+
+.tp-extension-validation-failed {
+    background-color: pink;
+}

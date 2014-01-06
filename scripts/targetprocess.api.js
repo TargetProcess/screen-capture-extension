@@ -117,8 +117,10 @@ define([], function() {
                     Priority: { Id: priority },
                     Project: { Id: projectId }
                 })
+                .fail($result.reject)
                 .done(function(r) {
                     this.postAttachmentToTargetProcess(r.Id, base64str)
+                        .fail($result.reject)
                         .done($result.resolve.bind($result, r));
                 }.bind(this));
 
@@ -146,6 +148,7 @@ define([], function() {
             var $result = $.Deferred();
 
             var request = new XMLHttpRequest();
+            request.onerror = $result.reject;
             request.onload = $result.resolve;
             request.open('POST', this.domain + '/UploadFile.ashx');
             request.send(form);
