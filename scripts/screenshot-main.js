@@ -16,7 +16,7 @@ require([
 
         var color = '#fba617';
 
-        $('#project, #severity, #business').fancySelect();
+        $('#team, #project, #severity, #business').fancySelect();
 
         // init colorpicker
         $("#custom-color").spectrum({
@@ -107,13 +107,16 @@ require([
                 .projects
                 .forEach(createOption.bind($('.i-role-projects'), settings.get_prop('project')));
             setup
+                .teams
+                .forEach(createOption.bind($('.i-role-teams'), settings.get_prop('team')));
+            setup
                 .severities
                 .forEach(createOption.bind($('.i-role-severities'), null));
             setup
                 .priorities
                 .forEach(createOption.bind($('.i-role-priorities'), null));
 
-            $('#project, #severity, #business').trigger('update');
+            $('#team, #project, #severity, #business').trigger('update');
 
             $('.i-role-trigger-post').prop('disabled', false);
         });
@@ -121,6 +124,7 @@ require([
     $postTrigger.on('click', function() {
 
         var data = {
+            teamId: $('.i-role-teams').val(),
             projectId: $('.i-role-projects').val(),
             severity: $('.i-role-severities').val(),
             priority: $('.i-role-priorities').val(),
@@ -132,6 +136,7 @@ require([
         };
 
         settings.set_prop('project', data.projectId);
+        settings.set_prop('team', data.teamId);
 
 
         if (!data.issueName) {

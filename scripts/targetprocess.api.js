@@ -15,13 +15,15 @@ define([], function() {
             var $dPrs = $dTId.then(this.fetchPriorities.bind(this));
             var $dSev = this.fetchSeverities();
             var $dPrj = this.fetchProjects();
+            var $dTms = this.fetchTeams();
 
             $
-                .when($dTId, $dPrj, $dSev, $dPrs)
-                .then(function(entityTypeId, projects, severities, priorities) {
+                .when($dTId, $dPrj, $dTms, $dSev, $dPrs)
+                .then(function(entityTypeId, projects, teams, severities, priorities) {
                     $result.resolve({
                         entityTypeId: entityTypeId,
                         projects: projects.Items,
+                        teams: teams.Items,
                         severities: severities.Items,
                         priorities: priorities.Items
                     });
@@ -93,6 +95,19 @@ define([], function() {
                                 return practice.Name === 'Bug Tracking';
                             });
                     });
+                    Items.splice(0, 0, { Id: 0, Name: 'No Project' });
+                    $result.resolve({ Items: Items });
+                });
+            return $result;
+        },
+
+        fetchTeams: function() {
+            var $result = $.Deferred();
+            //this.req("/api/v1/teams?resultInclude=[Id,Name,Project[Id]]&where=IsActive eq 'true'")
+            this.req("/api/v1/teams?resultInclude=[Id,Name,Project[Id]]")
+                .done(function(r) {
+                    var Items = r.Items;
+                    Items.splice(0, 0, { Id: 0, Name: 'No Team' });
                     $result.resolve({ Items: Items });
                 });
             return $result;
@@ -100,9 +115,10 @@ define([], function() {
 
         postBugToTargetProcess: function(data) {
 
-            var projectId = data.projectId;
-            var severity = data.severity;
-            var priority = data.priority;
+            var projectId = parseInt(data.projectId, 10);
+            var teamId = parseInt(data.teamId, 10);
+            var severity = parseInt(data.severity, 10);
+            var priority = parseInt(data.priority, 10);
             var issueName = data.issueName;
             var description = data.description;
             var base64str = data.base64str;
@@ -116,7 +132,8 @@ define([], function() {
                     Description: description,
                     Severity: { Id: severity },
                     Priority: { Id: priority },
-                    Project: { Id: projectId }
+                    Project: projectId ? { Id: projectId } : null,
+                    Team: teamId ? { Id: teamId } : null
                 })
                 .fail($result.reject)
                 .done(function(r) {
