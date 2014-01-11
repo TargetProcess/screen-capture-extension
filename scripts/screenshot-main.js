@@ -44,13 +44,8 @@ require([
 
 
 
-        return;
-
-
-
         var paintManager = new PaintManager(
-            document.getElementById('imageView'),
-            document.getElementById('imageTemp'),
+            fabricCanvas,
             {
                 font: 'bold 16px Tahoma',
                 color: color,

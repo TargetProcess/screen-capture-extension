@@ -442,19 +442,33 @@ define([
         }
     });
 
-    function ToolKit(primaryCanvas, slaveCanvas) {
+    function ToolKit(fabricCanvas) {
         var tools = this;
 
         this.options = {};
 
-        this.primaryCanvas = primaryCanvas;
-        this.slaveCanvas = slaveCanvas;
+        this.fabricCanvas = fabricCanvas;
+
+        this.primaryCanvas = null;
+        this.slaveCanvas = null;
 
         tools.rect = Rect;
         tools.line = Line;
         tools.circle = Circ;
         tools.eraser = Eraser;
-        tools.pencil = Pencil;
+        tools.pencil = Class.extend({
+            init: function(scene, options, fabricCanvas) {
+                this.fabricCanvas = fabricCanvas;
+                console.log('pencil');
+                this.fabricCanvas.isDrawingMode = true;
+                this.fabricCanvas.freeDrawingBrush.width = options.width;
+                this.fabricCanvas.freeDrawingBrush.color = options.color;
+            },
+
+            destroy: function() {
+                this.fabricCanvas.isDrawingMode = false;
+            }
+        });
         tools.arrow = Arrow;
         tools.text = Text;
         tools.crop = Crop;
@@ -476,30 +490,27 @@ define([
                     this.slave.context.lineWidth = self.options.width;
                 },
                 canvas: function() {
-                    return this.primary.canvas;
+                    return self.fabricCanvas;
                 },
                 layer: function() {
                     return this.slave.canvas;
                 }
             };
-            return new this[toolName](scene, this.options);
+            return new this[toolName](scene, this.options, this.fabricCanvas);
         },
 
         setFont: function(font) {
             this.options.font = font;
-            this.slaveCanvas.context.font = font;
             return this;
         },
 
         setColor: function(color) {
             this.options.color = color;
-            this.slaveCanvas.context.strokeStyle = color;
             return this;
         },
 
         setLine: function(width) {
             this.options.width = width;
-            this.slaveCanvas.context.lineWidth = width;
             return this;
         }
     };

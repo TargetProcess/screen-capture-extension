@@ -19,9 +19,9 @@ define([
 
     return Class.extend({
 
-        init: function (srcCanvas, tmpCanvas, options) {
+        init: function (fabricCanvas, options) {
 
-            this.toolKit = (new ToolKit(new CanvasWrapper(srcCanvas), new CanvasWrapper(tmpCanvas)))
+            this.toolKit = (new ToolKit(fabricCanvas))
                 .setFont(options.font)
                 .setColor(options.color)
                 .setLine(options.line);
