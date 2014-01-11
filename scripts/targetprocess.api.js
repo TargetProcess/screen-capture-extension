@@ -37,6 +37,7 @@ define([], function() {
                 dataType: 'json',
                 contentType: 'application/json; charset=UTF-8',
                 beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                     xhr.setRequestHeader(
                         'Authorization',
                         'Basic ' + btoa(this.login + ':' + this.password)
