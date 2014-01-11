@@ -22,12 +22,13 @@ function setScreenshotUrl(url) {
         var w = img.getWidth();
         var h = img.getHeight();
         fCanvas.setDimensions({
-            width: w + 2,
-            height: h + 2
+            width: w,
+            height: h
         });
-        fCanvas.setBackgroundImage(img);
 
-        g_ready.resolve();
+        fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas));
+
+        g_ready.resolve(fCanvas);
     });
 
 /*

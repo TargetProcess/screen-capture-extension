@@ -334,11 +334,11 @@
 }
 
 #imageView {
-    border: 1px solid #000;
+    /*border: 1px solid #000;*/
 }
 
 #imageTemp {
-    border: 1px solid #000;
+    /*border: 1px solid #000;*/
     cursor: pointer;
     position: absolute;
     top: 0px;

@@ -12,7 +12,7 @@ require([
         }
     });
 
-    g_ready.done(function() {
+    g_ready.done(function(fabricCanvas) {
 
         var color = '#fba617';
 
