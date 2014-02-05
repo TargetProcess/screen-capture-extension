@@ -449,17 +449,152 @@ define([
 
         this.fabricCanvas = fabricCanvas;
 
+
+        var selectionActivated = false;
+        var isDrawMode = false;
+        this.fabricCanvas.on({
+            'object:selected': function() {
+                selectionActivated = true;
+            },
+            'before:selection:cleared': function() {
+                selectionActivated = false;
+            },
+            'mouse:down': function(evt) {
+                if (!selectionActivated) {
+                    isDrawMode = true;
+                    this.trigger('custom:mousedown', evt.e);
+                }
+            },
+            'mouse:move': function(evt) {
+                if (isDrawMode) {
+                    this.trigger('custom:mousemove', evt.e);
+                }
+            },
+            'mouse:up': function(evt) {
+                if (isDrawMode) {
+                    this.trigger('custom:mouseup', evt.e);
+                    isDrawMode = false;
+                }
+            }
+        });
+
+
         this.primaryCanvas = null;
         this.slaveCanvas = null;
 
-        tools.rect = Rect;
-        tools.line = Line;
+        tools.rect = Class.extend({
+            init: function(scene, options, fabricCanvas) {
+                this.fabricCanvas = fabricCanvas;
+                this.options = options;
+
+                this.start = this.start.bind(this);
+                this.mousemove = this.mousemove.bind(this);
+                this.mouseup = this.mouseup.bind(this);
+
+                this.subscriptions = {
+                    'custom:mousedown': this.start,
+                    'custom:mousemove': this.mousemove,
+                    'custom:mouseup': this.mouseup
+                };
+
+                this.fabricCanvas.on(this.subscriptions);
+            },
+
+            destroy: function() {
+                this.fabricCanvas.off(this.subscriptions);
+            },
+
+            start: function (e) {
+                this.x0 = e.offsetX;
+                this.y0 = e.offsetY;
+
+                this.fabricCanvas.selection = false;
+
+                this.rect = new fabric.Rect({
+                    left: e.offsetX,
+                    top: e.offsetY,
+                    stroke: this.options.color,
+                    strokeWidth: this.options.width,
+                    fill: 'rgba(0, 0, 0, 0)',
+                    width: 1,
+                    height: 1
+                });
+
+                this.fabricCanvas.add(this.rect);
+                this.fabricCanvas.renderAll();
+            },
+
+            mousemove: function (e) {
+                this.rect.set({
+                    width: e.offsetX - this.x0,
+                    height: e.offsetY - this.y0
+                });
+                this.fabricCanvas.renderAll();
+            },
+
+            mouseup: function (ev) {
+                this.fabricCanvas.selection = true;
+            }
+        });
+        tools.line = Class.extend({
+            init: function(scene, options, fabricCanvas) {
+                this.fabricCanvas = fabricCanvas;
+                this.options = options;
+
+                this.start = this.start.bind(this);
+                this.mousemove = this.mousemove.bind(this);
+                this.mouseup = this.mouseup.bind(this);
+
+                this.subscriptions = {
+                    'custom:mousedown': this.start,
+                    'custom:mousemove': this.mousemove,
+                    'custom:mouseup': this.mouseup
+                };
+
+                this.fabricCanvas.on(this.subscriptions);
+            },
+
+            destroy: function() {
+                this.fabricCanvas.off(this.subscriptions);
+            },
+
+            start: function (e) {
+                this.x0 = e.offsetX;
+                this.y0 = e.offsetY;
+
+                this.fabricCanvas.selection = false;
+
+                this.rect = new fabric.Rect({
+                    left: e.offsetX,
+                    top: e.offsetY,
+                    stroke: this.options.color,
+                    strokeWidth: this.options.width,
+                    fill: 'rgba(0, 0, 0, 0)',
+                    width: 1,
+                    height: 1
+                });
+
+                this.fabricCanvas.add(this.rect);
+                this.fabricCanvas.renderAll();
+            },
+
+            mousemove: function (e) {
+                this.rect.set({
+                    width: e.offsetX - this.x0,
+                    height: e.offsetY - this.y0
+                });
+                this.fabricCanvas.renderAll();
+            },
+
+            mouseup: function (ev) {
+                this.fabricCanvas.selection = true;
+            }
+        });;
         tools.circle = Circ;
         tools.eraser = Eraser;
         tools.pencil = Class.extend({
             init: function(scene, options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
-                console.log('pencil');
                 this.fabricCanvas.isDrawingMode = true;
                 this.fabricCanvas.freeDrawingBrush.width = options.width;
                 this.fabricCanvas.freeDrawingBrush.color = options.color;
