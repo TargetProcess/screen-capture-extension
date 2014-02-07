@@ -488,13 +488,13 @@ define([
                 this.options = options;
 
                 this.start = this.start.bind(this);
-                this.mousemove = this.mousemove.bind(this);
-                this.mouseup = this.mouseup.bind(this);
+                this.move = this.move.bind(this);
+                this.stop = this.stop.bind(this);
 
                 this.subscriptions = {
                     'custom:mousedown': this.start,
-                    'custom:mousemove': this.mousemove,
-                    'custom:mouseup': this.mouseup
+                    'custom:mousemove': this.move,
+                    'custom:mouseup': this.stop
                 };
 
                 this.fabricCanvas.on(this.subscriptions);
@@ -510,7 +510,7 @@ define([
 
                 this.fabricCanvas.selection = false;
 
-                this.rect = new fabric.Rect({
+                this.figure = new fabric.Rect({
                     left: e.offsetX,
                     top: e.offsetY,
                     stroke: this.options.color,
@@ -520,19 +520,19 @@ define([
                     height: 1
                 });
 
-                this.fabricCanvas.add(this.rect);
+                this.fabricCanvas.add(this.figure);
                 this.fabricCanvas.renderAll();
             },
 
-            mousemove: function (e) {
-                this.rect.set({
+            move: function (e) {
+                this.figure.set({
                     width: e.offsetX - this.x0,
                     height: e.offsetY - this.y0
                 });
                 this.fabricCanvas.renderAll();
             },
 
-            mouseup: function (ev) {
+            stop: function (ev) {
                 this.fabricCanvas.selection = true;
             }
         });
@@ -542,13 +542,13 @@ define([
                 this.options = options;
 
                 this.start = this.start.bind(this);
-                this.mousemove = this.mousemove.bind(this);
-                this.mouseup = this.mouseup.bind(this);
+                this.move = this.move.bind(this);
+                this.stop = this.stop.bind(this);
 
                 this.subscriptions = {
                     'custom:mousedown': this.start,
-                    'custom:mousemove': this.mousemove,
-                    'custom:mouseup': this.mouseup
+                    'custom:mousemove': this.move,
+                    'custom:mouseup': this.stop
                 };
 
                 this.fabricCanvas.on(this.subscriptions);
@@ -564,32 +564,29 @@ define([
 
                 this.fabricCanvas.selection = false;
 
-                this.rect = new fabric.Rect({
+                this.figure = new fabric.Line(null, {
                     left: e.offsetX,
                     top: e.offsetY,
                     stroke: this.options.color,
-                    strokeWidth: this.options.width,
-                    fill: 'rgba(0, 0, 0, 0)',
-                    width: 1,
-                    height: 1
+                    strokeWidth: this.options.width
                 });
 
-                this.fabricCanvas.add(this.rect);
+                this.fabricCanvas.add(this.figure);
                 this.fabricCanvas.renderAll();
             },
 
-            mousemove: function (e) {
-                this.rect.set({
+            move: function (e) {
+                this.figure.set({
                     width: e.offsetX - this.x0,
                     height: e.offsetY - this.y0
                 });
                 this.fabricCanvas.renderAll();
             },
 
-            mouseup: function (ev) {
+            stop: function (ev) {
                 this.fabricCanvas.selection = true;
             }
-        });;
+        });
         tools.circle = Circ;
         tools.eraser = Eraser;
         tools.pencil = Class.extend({
