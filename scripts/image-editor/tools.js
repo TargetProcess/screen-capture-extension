@@ -576,9 +576,20 @@ define([
             },
 
             move: function (e) {
+                var x1 = this.x0;
+                var y1 = this.y0;
+                var x2 = e.offsetX;
+                var y2 = e.offsetY;
+
+                var angleRadian = Math.atan((y2 - y1) / (x2 - x1));
+                var angleDegree = angleRadian / Math.PI * 180;
+
+                var hypotenuse = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                var k = (x2 >= x1) ? 1 : -1;
+
                 this.figure.set({
-                    width: e.offsetX - this.x0,
-                    height: e.offsetY - this.y0
+                    angle: angleDegree,
+                    width: k * hypotenuse
                 });
                 this.fabricCanvas.renderAll();
             },
@@ -601,7 +612,57 @@ define([
                 this.fabricCanvas.isDrawingMode = false;
             }
         });
-        tools.arrow = Arrow;
+        tools.arrow = Class.extend({
+            init: function (scene, options, fabricCanvas) {
+                this.fabricCanvas = fabricCanvas;
+                this.options = options;
+
+                this.start = this.start.bind(this);
+                this.move = this.move.bind(this);
+                this.stop = this.stop.bind(this);
+
+                this.subscriptions = {
+                    'custom:mousedown': this.start,
+                    'custom:mousemove': this.move,
+                    'custom:mouseup': this.stop
+                };
+
+                this.fabricCanvas.on(this.subscriptions);
+            },
+
+            destroy: function () {
+                this.fabricCanvas.off(this.subscriptions);
+            },
+
+            start: function (e) {
+                this.x0 = e.offsetX;
+                this.y0 = e.offsetY;
+
+                this.fabricCanvas.selection = false;
+
+                this.figure = new fabric.Line(null, {
+                    left: e.offsetX,
+                    top: e.offsetY,
+                    stroke: this.options.color,
+                    strokeWidth: this.options.width
+                });
+
+                this.fabricCanvas.add(this.figure);
+                this.fabricCanvas.renderAll();
+            },
+
+            move: function (e) {
+                this.figure.set({
+                    width: e.offsetX - this.x0,
+                    height: e.offsetY - this.y0
+                });
+                this.fabricCanvas.renderAll();
+            },
+
+            stop: function (ev) {
+                this.fabricCanvas.selection = true;
+            }
+        });
         tools.text = Text;
         tools.crop = Crop;
     }
