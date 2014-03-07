@@ -612,8 +612,9 @@ define([
                 this.fabricCanvas.isDrawingMode = false;
             }
         });
+
         tools.arrow = Class.extend({
-            init: function (scene, options, fabricCanvas) {
+            init: function(scene, options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
                 this.options = options;
 
@@ -630,7 +631,7 @@ define([
                 this.fabricCanvas.on(this.subscriptions);
             },
 
-            destroy: function () {
+            destroy: function() {
                 this.fabricCanvas.off(this.subscriptions);
             },
 
@@ -640,7 +641,7 @@ define([
 
                 this.fabricCanvas.selection = false;
 
-                this.figure = new fabric.Line(null, {
+                this.figure = new fabric.Arrow(null, {
                     left: e.offsetX,
                     top: e.offsetY,
                     stroke: this.options.color,
@@ -652,9 +653,20 @@ define([
             },
 
             move: function (e) {
+                var x1 = this.x0;
+                var y1 = this.y0;
+                var x2 = e.offsetX;
+                var y2 = e.offsetY;
+
+                var angleRadian = Math.atan((y2 - y1) / (x2 - x1));
+                var angleDegree = angleRadian / Math.PI * 180;
+
+                var hypotenuse = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                var k = (x2 >= x1) ? 1 : -1;
+
                 this.figure.set({
-                    width: e.offsetX - this.x0,
-                    height: e.offsetY - this.y0
+                    angle: angleDegree,
+                    width: k * hypotenuse
                 });
                 this.fabricCanvas.renderAll();
             },

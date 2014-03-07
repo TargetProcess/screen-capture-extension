@@ -49,12 +49,12 @@ require([
             {
                 font: 'bold 16px Tahoma',
                 color: color,
-                line: 6
+                line: 1
             }
         );
         var actionsLogger = new ActionsLogger(paintManager, new UI());
         paintManager.changeTool("pencil");
-        paintManager.setLineWidth(6);
+        paintManager.setLineWidth(3);
 
         $(".i-role-editor .button").click(function() {
             var isDisabled = $(this).hasClass("disabled");
