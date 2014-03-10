@@ -90,81 +90,6 @@ define([
         }
     });
 
-    var Rect = ToolDnDBase.extend({
-
-        name: 'rect',
-
-        mousemove: function (ev) {
-            var tool = this;
-            var x = Math.min(ev._x, tool.x0),
-                y = Math.min(ev._y, tool.y0),
-                w = Math.abs(ev._x - tool.x0),
-                h = Math.abs(ev._y - tool.y0);
-
-            this.api().exClear();
-
-            if (!w || !h) {
-                return;
-            }
-
-            this.api().strokeRect(x, y, w, h);
-        }
-    });
-
-    var Line = ToolDnDBase.extend({
-
-        name: 'line',
-
-        mousemove: function (ev) {
-            var tool = this;
-            var api = this.api();
-            api.exClear();
-            api.beginPath();
-            api.moveTo(tool.x0, tool.y0);
-            api.lineTo(ev._x, ev._y);
-            api.stroke();
-            api.closePath();
-        }
-    });
-
-    var Circ = ToolDnDBase.extend({
-
-        name: 'circle',
-
-        mousemove: function (ev) {
-            var tool = this;
-            var api = this.api();
-
-            var dx = Math.abs(ev._x - tool.x0),
-                dy = Math.abs(ev._y - tool.y0),
-                x = Math.min(ev._x, tool.x0) + Math.round(dx / 2),
-                y = Math.min(ev._y, tool.y0) + Math.round(dy / 2),
-                r = Math.round(Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2)));
-
-            api.exClear();
-
-            var startingAngle = 0;
-            var endingAngle = 2 * Math.PI; // 360 degrees is equal to 2Ï€ radians
-
-            var circumference = Math.max(dx, dy);
-            var scaleX = dx / circumference;
-            var scaleY = dy / circumference;
-
-            if (!x || !y || !r || !circumference || !scaleX || !scaleY) {
-                return;
-            }
-
-            api.save();
-            api.translate(x, y);
-            api.scale(scaleX, scaleY);
-            api.beginPath();
-            api.arc(0, 0, r, startingAngle, endingAngle, false);
-            api.stroke();
-            api.closePath();
-            api.restore();
-        }
-    });
-
     var Eraser = ToolDnDBase.extend({
 
         name: 'eraser',
@@ -182,81 +107,15 @@ define([
         }
     });
 
-    var Pencil = ToolDnDBase.extend({
-
-        name: 'pencil',
-
-        mousedown: function (ev) {
-            var api = this.api();
-            api.beginPath();
-            api.moveTo(ev._x, ev._y);
-        },
-
-        mousemove: function (ev) {
-            var api = this.api();
-            api.lineTo(ev._x, ev._y);
-            api.stroke();
-        }
-    });
-
-    var Arrow = ToolDnDBase.extend({
-
-        name: 'arrow',
-
-        drawArrowhead: function(api, ex, ey, angle, sizex, sizey) {
-            api.save();
-
-            api.fillStyle = this.options.color;
-
-            var hx = sizex / 2;
-            var hy = sizey / 2;
-
-            api.translate(ex, ey);
-            api.rotate(angle);
-            api.translate(-hx, -hy);
-
-            api.beginPath();
-            api.moveTo(0,0);
-            api.lineTo(0, sizey);
-            api.lineTo(sizex, hy);
-            api.closePath();
-            api.fill();
-
-            api.restore();
-        },
-
-        findAngle: function(sx, sy, ex, ey) {
-            // make sx and sy at the zero point
-            return Math.atan((ey - sy) / (ex - sx));
-        },
-
-        mousemove: function (ev) {
-            var tool = this;
-            var api = this.api();
-
-            var sx = tool.x0;
-            var sy = tool.y0;
-            var ex = ev._x;
-            var ey = ev._y;
-
-            api.exClear();
-            api.beginPath();
-            api.moveTo(sx, sy);
-            api.lineTo(ex, ey);
-            api.stroke();
-            api.closePath();
-
-            var ang = this.findAngle(sx, sy, ex, ey);
-            this.drawArrowhead(api, ex, ey, ang, 16, 16);
-        }
-    });
-
     var Text = ToolBase.extend({
 
         name: 'text',
 
-        init: function(scene, options) {
+        init: function(scene, options, fabricCanvas) {
+
             this._super(scene, options);
+
+            this.fabricCanvas = fabricCanvas;
 
             this.subscribeToEvents = 'click';
             $(this.scene.layer())
@@ -335,8 +194,6 @@ define([
                 y: tool.y0,
                 dy: height / textLines.length
             });
-
-            tool.onFinalize.fire();
         },
 
         onEscape: function() {
@@ -345,22 +202,19 @@ define([
         },
 
         drawMultiLineText: function(texts, coords) {
-            var api = this.api();
-
             var sx = coords.x;
             var sy = coords.y;
-            var dy = coords.dy;
 
-            api.exClear();
-            api.fillStyle = this.options.color;
-            api.font = this.options.font;
-            api.textBaseline = 'top';
-            api.textAlign = 'left';
+            var fText = new fabric.Text(
+                texts.join('\r\n'),
+                {
+                    left: sx,
+                    top: sy,
+                    fill: this.options.color
+                });
 
-            for (var i = 0, delta = 0; i < texts.length; i++) {
-                api.fillText(texts[i], sx, delta + sy);
-                delta += dy;
-            }
+            this.fabricCanvas.add(fText);
+            this.fabricCanvas.renderAll();
         }
     });
 
@@ -536,6 +390,7 @@ define([
                 this.fabricCanvas.selection = true;
             }
         });
+
         tools.line = Class.extend({
             init: function(scene, options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
@@ -598,8 +453,7 @@ define([
                 this.fabricCanvas.selection = true;
             }
         });
-        tools.circle = Circ;
-        tools.eraser = Eraser;
+
         tools.pencil = Class.extend({
             init: function(scene, options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
@@ -675,8 +529,13 @@ define([
                 this.fabricCanvas.selection = true;
             }
         });
+
         tools.text = Text;
+
+
+
         tools.crop = Crop;
+        tools.eraser = Eraser;
     }
 
     ToolKit.prototype = {
@@ -698,7 +557,7 @@ define([
                     return self.fabricCanvas;
                 },
                 layer: function() {
-                    return this.slave.canvas;
+                    return self.fabricCanvas.upperCanvasEl;
                 }
             };
             return new this[toolName](scene, this.options, this.fabricCanvas);
