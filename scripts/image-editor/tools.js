@@ -107,117 +107,6 @@ define([
         }
     });
 
-    var Text = ToolBase.extend({
-
-        name: 'text',
-
-        init: function(scene, options, fabricCanvas) {
-
-            this._super(scene, options);
-
-            this.fabricCanvas = fabricCanvas;
-
-            this.subscribeToEvents = 'click';
-            $(this.scene.layer())
-                .on(this.subscribeToEvents,
-                    this.commonMousePatternHandler.bind(this));
-        },
-
-        destroy: function() {
-            $(this.scene.layer())
-                .off(this.subscribeToEvents);
-        },
-
-        commonMousePatternHandler: function(ev) {
-            var tool = this;
-            ev._x = ev.offsetX;
-            ev._y = ev.offsetY;
-
-            if (tool.started && !$(ev.target).hasClass('i-role-text-editor')) {
-                tool.onEnter();
-            }
-            else {
-                tool.started = true;
-                tool.x0 = ev._x;
-                tool.y0 = ev._y;
-                noop(tool.onClick).bind(tool)(ev);
-            }
-        },
-
-        onClick: function (ev) {
-            var tool = this;
-
-            this.textBox = $('<div></div>')
-                .addClass('i-role-text-editor')
-                .css({
-                    position:'absolute',
-                    left: tool.x0 + 'px',
-                    top: tool.y0 + 'px',
-                    border: 'dotted 1px red',
-                    color: this.options.color,
-                    font: this.options.font,
-                    padding: '0 0 0 0'
-                })
-                .attr('contenteditable', true)
-                .appendTo($(this.scene.layer()).parent());
-
-            this.textBox.focus();
-
-            this.textBox
-                .on('keydown', function(e) {
-                    if (e.ctrlKey && e.which === 13) {
-                        this.onEnter();
-                    }
-                    else if (e.which === 27) {
-                        this.onEscape();
-                    }
-                }.bind(this));
-        },
-
-        onEnter: function() {
-            var tool = this;
-            var height = this.textBox.height();
-            var text = this.textBox.html();
-            this.textBox.remove();
-
-            var textLines = text
-                .replace(/<div>/gi, '\n')
-                .replace(/<\/div>/gi, '')
-                .replace(/<br>/gi, '')
-                .replace(/<br\/>/gi, '')
-                .split('\n');
-
-            tool.started = false;
-
-            this.drawMultiLineText(textLines, {
-                x: tool.x0,
-                y: tool.y0,
-                dy: height / textLines.length
-            });
-        },
-
-        onEscape: function() {
-            this.textBox.remove();
-            this.started = false;
-        },
-
-        drawMultiLineText: function(texts, coords) {
-            var sx = coords.x;
-            var sy = coords.y;
-
-            var fText = new fabric.Text(
-                texts.join('\r\n'),
-                {
-                    left: sx,
-                    top: sy,
-                    fill: this.options.color
-                });
-
-            this.fabricCanvas.add(fText);
-            this.fabricCanvas.renderAll();
-        }
-    });
-
     var Crop = ToolBase.extend({
 
         name: 'crop',
@@ -309,9 +198,15 @@ define([
         this.fabricCanvas.on({
             'object:selected': function() {
                 selectionActivated = true;
+                this.trigger('custom:selected');
             },
             'before:selection:cleared': function() {
                 selectionActivated = false;
+                this.trigger('custom:unselected');
+            },
+            'selection:cleared': function() {
+                selectionActivated = false;
+                this.trigger('custom:selection-cleared');
             },
             'mouse:down': function(evt) {
                 if (!selectionActivated) {
@@ -530,7 +425,92 @@ define([
             }
         });
 
-        tools.text = Text;
+        tools.text = Class.extend({
+
+            init: function(scene, options, fabricCanvas) {
+                this.fabricCanvas = fabricCanvas;
+                this.options = options;
+
+                this.isEditMode = false;
+
+                $(document).on('keydown', function (e) {
+
+                    if (e.ctrlKey && e.which === 13) {
+                        this.isEditMode && this.onPressEnter();
+                        this.isEditMode = false;
+                    }
+
+                }.bind(this));
+
+                this.subscriptions = {
+
+                    'custom:selected': function(e) {
+                        this.isEditMode = true;
+                    }.bind(this),
+
+                    'custom:selection-cleared': function(e) {
+                        this.isEditMode = false;
+                    }.bind(this),
+
+                    'custom:mouseup': function(e) {
+
+                        if (this.isEditMode) {
+
+                            this.onCompleteEnter(e);
+
+                        }
+                        else {
+
+                            this.onStartEnter(e);
+
+                        }
+
+                    }.bind(this)
+
+                };
+
+                this.fabricCanvas.on(this.subscriptions);
+            },
+
+            destroy: function() {
+                $(document).off('keydown');
+                this.fabricCanvas.off(this.subscriptions);
+            },
+
+            onPressEnter: function() {
+                this.figure.exitEditing();
+                this.fabricCanvas.discardActiveObject();
+            },
+
+            onStartEnter: function (e) {
+
+                this.isEditMode = true;
+
+                var DEFAULT_TEXT = 'NOTE: ...';
+                this.figure = new fabric.IText(DEFAULT_TEXT, {
+                    left: e.offsetX,
+                    top: e.offsetY,
+                    stroke: this.options.color,
+                    strokeWidth: this.options.width,
+                    selectionStart: 6,
+                    selectionEnd: 9
+                });
+
+                this.fabricCanvas.add(this.figure);
+                this.fabricCanvas.setActiveObject(this.figure);
+
+                this.figure.enterEditing();
+                this.figure.initDelayedCursor();
+
+                this.fabricCanvas.renderAll();
+            },
+
+            onCompleteEnter: function (e) {
+
+                this.isEditMode = false;
+
+            }
+        });
 
 
 
