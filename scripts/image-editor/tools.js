@@ -90,29 +90,17 @@ define([
         }
     });
 
-    var Eraser = ToolDnDBase.extend({
-
-        name: 'eraser',
-
-        mousedown: function (ev) {
-            var api = this.api();
-            api.beginPath();
-            api.moveTo(ev._x, ev._y);
-        },
-
-        mousemove: function (ev) {
-            var api = this.api();
-            api.lineTo(ev._x, ev._y);
-            api.stroke();
-        }
-    });
-
     var Crop = ToolBase.extend({
 
         name: 'crop',
 
-        init: function(scene, options) {
+        init: function(scene, options, fabricCanvas) {
             this._super(scene, options);
+
+            this.fabricCanvas = fabricCanvas;
+
+            this.fabricCanvas.selection = false;
+            this.fabricCanvas.skipTargetFind = true;
 
             this.started = true;
             this.rect = {};
@@ -132,6 +120,10 @@ define([
         },
 
         destroy: function() {
+
+            this.fabricCanvas.selection = true;
+            this.fabricCanvas.skipTargetFind = false;
+
             this.started = false;
             $(document).off('.crop');
             $(this.scene.layer()).imgAreaSelect({ remove: true });
@@ -170,14 +162,30 @@ define([
             this.removeToolTip();
             $(this.scene.layer()).imgAreaSelect({ hide: true });
 
-            var tmpCnvs = canvas(r);
-            tmpCnvs
-                .getContext('2d')
-                .drawImage(this.scene.canvas(), r.x1, r.y1, r.width, r.height, 0, 0, r.width, r.height);
+            var b64Image = this.fabricCanvas.toDataURL();
+            fabric.Image.fromURL(b64Image, function(img) {
 
-            this.scene.resize(r);
-            this.api().drawImage(tmpCnvs, 0, 0);
-            this.api().exApply();
+                var tmpCnvs = canvas(r);
+                tmpCnvs
+                    .getContext('2d')
+                    .drawImage(img._element, r.x1, r.y1, r.width, r.height, 0, 0, r.width, r.height);
+
+                var cropB64 = tmpCnvs.toDataURL('image/png');
+
+                var href = location.href;
+
+                var x = ([
+                    href.substr(0, href.indexOf('?')),
+                    '?',
+                    'id=',
+                    (+ new Date()),
+                    '#b64=',
+                    cropB64
+                ].join(''));
+
+                window.open(x);
+
+            });
         },
 
         onEscape: function() {
@@ -550,10 +558,55 @@ define([
             }
         });
 
+        tools.pointer = Class.extend({
 
+            init: function(scene, options, fabricCanvas) {
+                this.fabricCanvas = fabricCanvas;
+                this.options = options;
+
+                this.initialState = {
+                    selection: fabricCanvas.selection,
+                    skipTargetFind: fabricCanvas.skipTargetFind
+                };
+
+                this.fabricCanvas.selection = true;
+                this.fabricCanvas.skipTargetFind = false;
+
+                $(document).on('keydown', function (e) {
+                    var DEL_KEY = 46;
+                    if (e.which === DEL_KEY) {
+                        var objct = this.fabricCanvas.getActiveObject();
+                        var group = this.fabricCanvas.getActiveGroup();
+
+                        var objects = [];
+                        if (group) {
+                            objects = group.getObjects();
+                        }
+                        else if (objct) {
+                            objects = [objct];
+                        }
+
+                        for (var i = 0; i < objects.length; i++) {
+                            objects[i].remove();
+                        }
+
+                        this.fabricCanvas.discardActiveGroup();
+                        this.fabricCanvas.renderAll();
+                    }
+
+                }.bind(this));
+            },
+
+            destroy: function() {
+
+                this.fabricCanvas.selection = this.initialState.selection;
+                this.fabricCanvas.skipTargetFind = this.initialState.skipTargetFind;
+
+                $(document).off('keydown');
+            }
+        });
 
         tools.crop = Crop;
-        tools.eraser = Eraser;
     }
 
     ToolKit.prototype = {
