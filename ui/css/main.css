@@ -361,3 +361,18 @@
 .tp-extension-validation-failed {
     background-color: pink;
 }
+
+.extension.as-panel {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    opacity: 0.85;
+    z-index: 10;
+}
+
+.canvas-container {
+    position:absolute;
+    top:0px;
+    left:0px;
+    /*left:460px;*/
+}

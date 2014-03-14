@@ -27,14 +27,14 @@
 </head>
 <body>
 
-<section id="extension" class="extension">
+<section id="extension" class="extension as-panel collapsed">
     <h2>Markup</h2>
     <section class="palette i-role-editor">
+        <input type="button" class="button eraser" data-tool="pointer" title="Use pointer" />
         <input type="button" class="button pencil clicked" data-tool="pencil" title="Use pencil" />
         <input type="button" class="button arrow" data-tool="arrow" title="Draw an arrow" />
         <input type="button" class="button line" data-tool="line" title="Draw a line" />
         <input type="button" class="button text" data-tool="text" title="input text" />
-        <input type="button" class="button eraser" data-tool="eraser" title="Use eraser" />
         <input type="button" class="button crop" data-tool="crop" title="Image crop" />
         <input type="button" class="button rect" data-tool="rect" title="Draw a rect" />
         <input type="text" id="custom-color" title="Choose color" />
@@ -89,7 +89,7 @@
 
 <input type="hidden" id="generatedScriptContent" value="" />
 
-<div id="imageContainer" style="position:absolute;top:0px;left:460px;">
+<div id="imageContainer" class="canvas-container">
     <div id="container" style="position: relative">
         <canvas id="imageView" width="1200" height="800"></canvas>
     </div>
