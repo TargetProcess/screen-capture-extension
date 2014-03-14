@@ -196,17 +196,17 @@ define([
         var selectionActivated = false;
         var isDrawMode = false;
         this.fabricCanvas.on({
-            'object:selected': function() {
+            'object:selected': function(e) {
                 selectionActivated = true;
-                this.trigger('custom:selected');
+                this.trigger('custom:selected', e);
             },
-            'before:selection:cleared': function() {
+            'before:selection:cleared': function(e) {
                 selectionActivated = false;
-                this.trigger('custom:unselected');
+                this.trigger('custom:unselected', e);
             },
-            'selection:cleared': function() {
+            'selection:cleared': function(e) {
                 selectionActivated = false;
-                this.trigger('custom:selection-cleared');
+                this.trigger('custom:selection-cleared', e);
             },
             'mouse:down': function(evt) {
                 if (!selectionActivated) {
@@ -431,25 +431,42 @@ define([
                 this.fabricCanvas = fabricCanvas;
                 this.options = options;
 
+                this.fabricCanvas.selection = false;
+                this.fabricCanvas.skipTargetFind = true;
+
+                this.isJustStarted = true;
                 this.isEditMode = false;
+                this.completedWithoutMouse = false;
 
                 $(document).on('keydown', function (e) {
 
                     if (e.ctrlKey && e.which === 13) {
                         this.isEditMode && this.onPressEnter();
                         this.isEditMode = false;
+                        this.completedWithoutMouse = true;
                     }
 
                 }.bind(this));
 
                 this.subscriptions = {
 
-                    'custom:selected': function(e) {
-                        this.isEditMode = true;
-                    }.bind(this),
+                    'custom:mousedown': function(e) {
 
-                    'custom:selection-cleared': function(e) {
-                        this.isEditMode = false;
+                        if (this.isJustStarted) {
+                            this.isJustStarted = false;
+                            return;
+                        }
+
+
+                        if (this.completedWithoutMouse === true) {
+                            this.completedWithoutMouse = false;
+                            this.isEditMode = false;
+                        }
+                        else {
+                            this.completedWithoutMouse = true;
+                            this.isEditMode = true;
+                        }
+
                     }.bind(this),
 
                     'custom:mouseup': function(e) {
@@ -457,13 +474,23 @@ define([
                         if (this.isEditMode) {
 
                             this.onCompleteEnter(e);
-
                         }
                         else {
 
                             this.onStartEnter(e);
-
                         }
+
+                    }.bind(this),
+
+                    'custom:selected': function(e) {
+
+                        this.isEditMode = true;
+
+                    }.bind(this),
+
+                    'custom:selection-cleared': function(e) {
+
+                        this.isEditMode = false;
 
                     }.bind(this)
 
@@ -473,12 +500,20 @@ define([
             },
 
             destroy: function() {
+
+                this.fabricCanvas.selection = true;
+                this.fabricCanvas.skipTargetFind = false;
+
                 $(document).off('keydown');
                 this.fabricCanvas.off(this.subscriptions);
             },
 
             onPressEnter: function() {
-                this.figure.exitEditing();
+
+                this.fabricCanvas.trigger(
+                    'before:selection:cleared',
+                    { target: this.figure });
+
                 this.fabricCanvas.discardActiveObject();
             },
 
@@ -488,6 +523,9 @@ define([
 
                 var DEFAULT_TEXT = 'NOTE: ...';
                 this.figure = new fabric.IText(DEFAULT_TEXT, {
+                    fontSize: 24,
+                    fontFamily: 'monospace',
+                    fontWeight: 'normal',
                     left: e.offsetX,
                     top: e.offsetY,
                     stroke: this.options.color,
