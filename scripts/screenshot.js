@@ -26,6 +26,25 @@ function setScreenshotUrl(url) {
             height: h
         });
 
+
+
+        var dpxRatio = window.devicePixelRatio;
+
+        if (dpxRatio !== 1) {
+
+            var c = fCanvas.getElement();
+
+            // Scale the canvas up by two for retina
+            c.setAttribute('width', w * dpxRatio);
+            c.setAttribute('height', h * dpxRatio);
+
+            // finally set the scale of the context
+            c.getContext('2d').scale(dpxRatio, dpxRatio);
+
+        }
+
+
+
         fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas));
 
         g_ready.resolve(fCanvas);
