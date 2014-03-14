@@ -79,7 +79,7 @@ require([
                 paintManager.changeTool(toolType);
             }
         });
-    });
+
 
 
     var DOMAIN = 'http://' + settings.get_prop('domain') + '.tpondemand.com';
@@ -131,7 +131,7 @@ require([
             description: $('.i-role-screenshot-desc').val()
                 .replace(/\r\n/g, '<br />')
                 .replace(/\n/g, '<br />'),
-            base64str: $('#imageView')[0].toDataURL('image/png')
+            base64str: fabricCanvas.toDataURL()
         };
 
         settings.set_prop('project', data.projectId);
@@ -220,4 +220,6 @@ require([
     var postProgress = function() {
         showOverlay($('<h1 style="position:fixed;top:40%;left:45%;"><p style="color:#fff">Post is in progress</p></h1>'));
     };
+
+    });
 });
