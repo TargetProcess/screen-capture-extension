@@ -33,7 +33,7 @@ define([], function() {
             var retVal = this.addScriptWithUndoSupport(script, true);
             //this.UiManager.ButtonFlash();
             //this.UiManager.AllowSubmit();
-            console.log(script);
+            //console.log(script);
             return retVal;
         },
 

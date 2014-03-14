@@ -1,7 +1,3 @@
-function getRatio() {
-    return (window.devicePixelRatio == 2) ? 2 : 1;
-}
-
 var g_ready = $.Deferred();
 
 localStorage['image-backup-on'] = null;
@@ -24,12 +20,16 @@ function setScreenshotUrl(url) {
         var h = img.getHeight();
 
         var dpxRatio = window.devicePixelRatio;
-        img.setWidth(w/dpxRatio);
-        img.setHeight(h/dpxRatio);
+
+        var xw = w / dpxRatio;
+        var xh = h / dpxRatio;
+
+        img.setWidth(xw);
+        img.setHeight(xh);
 
         fCanvas.setDimensions({
-            width: w / dpxRatio,
-            height: h / dpxRatio
+            width: xw,
+            height: xh
         });
 
         fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas));

@@ -9,102 +9,45 @@ define([
         return c;
     };
 
-    var noop = function(f) {
-        return f || function() {};
-    };
+    var DnDBase = Class.extend({
 
-    var ToolBase = Class.extend({
-
-        init: function(scene, options) {
-            this.scene = scene;
+        init: function(options, fabricCanvas) {
+            this.fabricCanvas = fabricCanvas;
             this.options = options;
-            this.onFinalize = $.Callbacks();
-            this.onFinalize.add(this.applyImage.bind(this));
-        },
 
-        api: function() {
-            var prmCtx = this.scene.primary.context;
-            var slv = this.scene.layer();
-            var slvCtx = this.scene.slave.context;
+            this.start = this.start.bind(this);
+            this.move = this.move.bind(this);
+            this.stop = this.stop.bind(this);
 
-            slvCtx.exClear = function() {
-                slvCtx.clearRect(0, 0, slv.width, slv.height);
+            this.subscriptions = {
+                'custom:mousedown': this.start,
+                'custom:mousemove': this.move,
+                'custom:mouseup': this.stop
             };
 
-            slvCtx.exApply = function() {
-                prmCtx.drawImage(slv, 0, 0);
-                slvCtx.exClear();
-            };
-            return slvCtx;
-        },
-
-        applyImage: function () {
-            this.api().exApply();
-        }
-    });
-
-    var ToolDnDBase = ToolBase.extend({
-
-        init: function(scene, options) {
-            this._super(scene, options);
-
-            this.subscribeToEvents = 'mousedown mousemove mouseup';
-            $(this.scene.layer())
-                .on(this.subscribeToEvents,
-                    this.commonMousePatternHandler.bind(this));
+            this.fabricCanvas.on(this.subscriptions);
         },
 
         destroy: function() {
-            $(this.scene.layer())
-                .off(this.subscribeToEvents);
+            this.fabricCanvas.off(this.subscriptions);
         },
 
-        commonMousePatternHandler: function(ev) {
-
-            var tool = this;
-            ev._x = ev.offsetX;
-            ev._y = ev.offsetY;
-
-            var methodsMap = {
-                mousedown: function(e) {
-                    tool.started = true;
-                    tool.x0 = ev._x;
-                    tool.y0 = ev._y;
-                    noop(tool.mousedown).bind(tool)(e);
-                },
-                mousemove: function(e) {
-                    if (tool.started) {
-                        noop(tool.mousemove).bind(tool)(e);
-                    }
-                },
-                mouseup: function(e) {
-                    noop(tool.mouseup).bind(tool)(ev);
-                    tool.started = false;
-                    noop(tool.mouseup).bind(tool)(e);
-
-                    tool.onFinalize.fire();
-                }
-            };
-
-            methodsMap[ev.type](ev);
-        }
+        start: function() {},
+        move: function() {},
+        stop: function() {}
     });
 
-    var Crop = ToolBase.extend({
+    var Crop = Class.extend({
 
         name: 'crop',
 
-        init: function(scene, options, fabricCanvas) {
-            this._super(scene, options);
+        init: function(options, fabricCanvas) {
 
+            this.options = options;
             this.fabricCanvas = fabricCanvas;
 
-            this.fabricCanvas.selection = false;
-            this.fabricCanvas.skipTargetFind = true;
-
-            this.started = true;
             this.rect = {};
-            $(this.scene.layer()).imgAreaSelect({
+            $(this.layer()).imgAreaSelect({
                 handles: true,
                 onSelectStart: this.createToolTip.bind(this),
                 onSelectEnd: function (img, selection) {
@@ -120,13 +63,12 @@ define([
         },
 
         destroy: function() {
-
-            this.fabricCanvas.selection = true;
-            this.fabricCanvas.skipTargetFind = false;
-
-            this.started = false;
             $(document).off('.crop');
-            $(this.scene.layer()).imgAreaSelect({ remove: true });
+            $(this.layer()).imgAreaSelect({ remove: true });
+        },
+
+        layer: function() {
+            return this.fabricCanvas.upperCanvasEl;
         },
 
         createToolTip: function() {
@@ -160,7 +102,7 @@ define([
             var r = this.rect;
 
             this.removeToolTip();
-            $(this.scene.layer()).imgAreaSelect({ hide: true });
+            $(this.layer()).imgAreaSelect({ hide: true });
 
             var b64Image = this.fabricCanvas.toDataURL();
             fabric.Image.fromURL(b64Image, function(img) {
@@ -189,7 +131,7 @@ define([
         },
 
         onEscape: function() {
-            $(this.scene.layer()).imgAreaSelect({ hide: true });
+            $(this.layer()).imgAreaSelect({ hide: true });
         }
     });
 
@@ -197,9 +139,7 @@ define([
         var tools = this;
 
         this.options = {};
-
         this.fabricCanvas = fabricCanvas;
-
 
         var selectionActivated = false;
         var isDrawMode = false;
@@ -236,36 +176,11 @@ define([
         });
 
 
-        this.primaryCanvas = null;
-        this.slaveCanvas = null;
-
-        tools.rect = Class.extend({
-            init: function(scene, options, fabricCanvas) {
-                this.fabricCanvas = fabricCanvas;
-                this.options = options;
-
-                this.start = this.start.bind(this);
-                this.move = this.move.bind(this);
-                this.stop = this.stop.bind(this);
-
-                this.subscriptions = {
-                    'custom:mousedown': this.start,
-                    'custom:mousemove': this.move,
-                    'custom:mouseup': this.stop
-                };
-
-                this.fabricCanvas.on(this.subscriptions);
-            },
-
-            destroy: function() {
-                this.fabricCanvas.off(this.subscriptions);
-            },
+        tools.rect = DnDBase.extend({
 
             start: function (e) {
                 this.x0 = e.offsetX;
                 this.y0 = e.offsetY;
-
-                this.fabricCanvas.selection = false;
 
                 this.figure = new fabric.Rect({
                     left: e.offsetX,
@@ -287,40 +202,14 @@ define([
                     height: e.offsetY - this.y0
                 });
                 this.fabricCanvas.renderAll();
-            },
-
-            stop: function (ev) {
-                this.fabricCanvas.selection = true;
             }
         });
 
-        tools.line = Class.extend({
-            init: function(scene, options, fabricCanvas) {
-                this.fabricCanvas = fabricCanvas;
-                this.options = options;
-
-                this.start = this.start.bind(this);
-                this.move = this.move.bind(this);
-                this.stop = this.stop.bind(this);
-
-                this.subscriptions = {
-                    'custom:mousedown': this.start,
-                    'custom:mousemove': this.move,
-                    'custom:mouseup': this.stop
-                };
-
-                this.fabricCanvas.on(this.subscriptions);
-            },
-
-            destroy: function() {
-                this.fabricCanvas.off(this.subscriptions);
-            },
+        tools.line = DnDBase.extend({
 
             start: function (e) {
                 this.x0 = e.offsetX;
                 this.y0 = e.offsetY;
-
-                this.fabricCanvas.selection = false;
 
                 this.figure = new fabric.Line(null, {
                     left: e.offsetX,
@@ -350,15 +239,11 @@ define([
                     width: k * hypotenuse
                 });
                 this.fabricCanvas.renderAll();
-            },
-
-            stop: function (ev) {
-                this.fabricCanvas.selection = true;
             }
         });
 
         tools.pencil = Class.extend({
-            init: function(scene, options, fabricCanvas) {
+            init: function(options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
                 this.fabricCanvas.isDrawingMode = true;
                 this.fabricCanvas.freeDrawingBrush.width = options.width;
@@ -370,33 +255,11 @@ define([
             }
         });
 
-        tools.arrow = Class.extend({
-            init: function(scene, options, fabricCanvas) {
-                this.fabricCanvas = fabricCanvas;
-                this.options = options;
-
-                this.start = this.start.bind(this);
-                this.move = this.move.bind(this);
-                this.stop = this.stop.bind(this);
-
-                this.subscriptions = {
-                    'custom:mousedown': this.start,
-                    'custom:mousemove': this.move,
-                    'custom:mouseup': this.stop
-                };
-
-                this.fabricCanvas.on(this.subscriptions);
-            },
-
-            destroy: function() {
-                this.fabricCanvas.off(this.subscriptions);
-            },
+        tools.arrow = DnDBase.extend({
 
             start: function (e) {
                 this.x0 = e.offsetX;
                 this.y0 = e.offsetY;
-
-                this.fabricCanvas.selection = false;
 
                 this.figure = new fabric.Arrow(null, {
                     left: e.offsetX,
@@ -426,27 +289,20 @@ define([
                     width: k * hypotenuse
                 });
                 this.fabricCanvas.renderAll();
-            },
-
-            stop: function (ev) {
-                this.fabricCanvas.selection = true;
             }
         });
 
         tools.text = Class.extend({
 
-            init: function(scene, options, fabricCanvas) {
+            init: function(options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
                 this.options = options;
-
-                this.fabricCanvas.selection = false;
-                this.fabricCanvas.skipTargetFind = true;
 
                 this.isJustStarted = true;
                 this.isEditMode = false;
                 this.completedWithoutMouse = false;
 
-                $(document).on('keydown', function (e) {
+                $(document).on('keydown.text', function (e) {
 
                     if (e.ctrlKey && e.which === 13) {
                         this.isEditMode && this.onPressEnter();
@@ -508,11 +364,7 @@ define([
             },
 
             destroy: function() {
-
-                this.fabricCanvas.selection = true;
-                this.fabricCanvas.skipTargetFind = false;
-
-                $(document).off('keydown');
+                $(document).off('.text');
                 this.fabricCanvas.off(this.subscriptions);
             },
 
@@ -560,21 +412,18 @@ define([
 
         tools.pointer = Class.extend({
 
-            init: function(scene, options, fabricCanvas) {
+            init: function(options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
                 this.options = options;
-
-                this.initialState = {
-                    selection: fabricCanvas.selection,
-                    skipTargetFind: fabricCanvas.skipTargetFind
-                };
 
                 this.fabricCanvas.selection = true;
                 this.fabricCanvas.skipTargetFind = false;
 
-                $(document).on('keydown', function (e) {
+                $(document).on('keydown.pointer', function (e) {
                     var DEL_KEY = 46;
-                    if (e.which === DEL_KEY) {
+                    var BSP_KEY = 8;
+
+                    if (e.which === DEL_KEY || e.which === BSP_KEY) {
                         var objct = this.fabricCanvas.getActiveObject();
                         var group = this.fabricCanvas.getActiveGroup();
 
@@ -599,10 +448,10 @@ define([
 
             destroy: function() {
 
-                this.fabricCanvas.selection = this.initialState.selection;
-                this.fabricCanvas.skipTargetFind = this.initialState.skipTargetFind;
+                this.fabricCanvas.selection = false;
+                this.fabricCanvas.skipTargetFind = true;
 
-                $(document).off('keydown');
+                $(document).off('.pointer');
             }
         });
 
@@ -612,26 +461,7 @@ define([
     ToolKit.prototype = {
 
         create: function(toolName) {
-            var self = this;
-            var scene = {
-                primary: this.primaryCanvas,
-                slave: this.slaveCanvas,
-                resize: function(r) {
-                    this.primary.resize(r);
-                    this.slave.resize(r);
-
-                    this.slave.context.font = self.options.font;
-                    this.slave.context.strokeStyle = self.options.color;
-                    this.slave.context.lineWidth = self.options.width;
-                },
-                canvas: function() {
-                    return self.fabricCanvas;
-                },
-                layer: function() {
-                    return self.fabricCanvas.upperCanvasEl;
-                }
-            };
-            return new this[toolName](scene, this.options, this.fabricCanvas);
+            return new this[toolName](this.options, this.fabricCanvas);
         },
 
         setFont: function(font) {

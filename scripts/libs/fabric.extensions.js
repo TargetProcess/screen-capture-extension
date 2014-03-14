@@ -66,7 +66,7 @@
                 var dx = (0.05 * mh);
                 var dy = (0.01 * mh);
 
-                console.log(dx, dy);
+
 
                 ctx.lineTo(x1 - dx, y1 - dy);
 
