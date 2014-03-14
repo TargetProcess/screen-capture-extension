@@ -32,8 +32,8 @@ function setScreenshotUrl(url) {
         var c = fCanvas.getElement();
 
         fCanvas.setDimensions({
-            width: xw,
-            height: xh
+            width: w / dpxRatio,
+            height: h / dpxRatio
         });
 
         // Scale the canvas up by two for retina
