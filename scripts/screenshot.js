@@ -22,28 +22,33 @@ function setScreenshotUrl(url) {
         var w = img.getWidth();
         var h = img.getHeight();
 
-
-
-        var dpxRatio = window.devicePixelRatio;
-
-        var xw = w * dpxRatio;
-        var xh = h * dpxRatio;
-
-        var c = fCanvas.getElement();
+		var dpxRatio = window.devicePixelRatio;
+        img.setWidth(w/dpxRatio);
+        img.setHeight(h/dpxRatio);
 
         fCanvas.setDimensions({
             width: w / dpxRatio,
             height: h / dpxRatio
         });
 
-        // Scale the canvas up by two for retina
-        c.setAttribute('width', xw);
-        c.setAttribute('height', xh);
+        // var dpxRatio = window.devicePixelRatio;
 
-        // finally set the scale of the context
-        c.getContext('2d').scale(dpxRatio, dpxRatio);
+        // var xw = w * dpxRatio;
+        // var xh = h * dpxRatio;
 
+        // var c = fCanvas.getElement();
 
+        // fCanvas.setDimensions({
+        //     width: w / dpxRatio,
+        //     height: h / dpxRatio
+        // });
+
+        // // Scale the canvas up by two for retina
+        // c.setAttribute('width', xw);
+        // c.setAttribute('height', xh);
+
+        // // finally set the scale of the context
+        // c.getContext('2d').scale(dpxRatio, dpxRatio);
 
         fCanvas.setBackgroundImage(img, fCanvas.renderAll.bind(fCanvas));
 
