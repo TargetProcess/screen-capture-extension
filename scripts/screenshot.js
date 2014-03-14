@@ -21,27 +21,27 @@ function setScreenshotUrl(url) {
     fabric.Image.fromURL(url, function(img) {
         var w = img.getWidth();
         var h = img.getHeight();
-        fCanvas.setDimensions({
-            width: w,
-            height: h
-        });
 
 
 
         var dpxRatio = window.devicePixelRatio;
 
-        if (dpxRatio !== 1) {
+        var xw = w * dpxRatio;
+        var xh = h * dpxRatio;
 
-            var c = fCanvas.getElement();
+        var c = fCanvas.getElement();
 
-            // Scale the canvas up by two for retina
-            c.setAttribute('width', w * dpxRatio);
-            c.setAttribute('height', h * dpxRatio);
+        fCanvas.setDimensions({
+            width: xw,
+            height: xh
+        });
 
-            // finally set the scale of the context
-            c.getContext('2d').scale(dpxRatio, dpxRatio);
+        // Scale the canvas up by two for retina
+        c.setAttribute('width', xw);
+        c.setAttribute('height', xh);
 
-        }
+        // finally set the scale of the context
+        c.getContext('2d').scale(dpxRatio, dpxRatio);
 
 
 
