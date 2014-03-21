@@ -28,7 +28,6 @@
 <body>
 
 <section id="extension" class="extension as-panel collapsed">
-    <h2>Markup</h2>
     <section class="palette i-role-editor">
         <input type="button" class="button eraser" data-tool="pointer" title="Use pointer" />
         <input type="button" class="button pencil clicked" data-tool="pencil" title="Use pencil" />
@@ -87,12 +86,21 @@
     </form>
 </section>
 
-<input type="hidden" id="generatedScriptContent" value="" />
-
 <div id="imageContainer" class="canvas-container">
     <div id="container" style="position: relative">
         <canvas id="imageView" width="1200" height="800"></canvas>
     </div>
+</div>
+
+<div id="optionsContainerOverlay" class=""></div>
+<div id="optionsContainer" class="options-container">
+    <table style="padding: 10px">
+        <tr>
+            <td><label for="domain">Domain</label></td>
+            <td><input type="text" id="domain" class="option"/>.tpondemand.com</td>
+            <td><a href="#" id="save">Login</a></td>
+        </tr>
+    </table>
 </div>
 
 </body>

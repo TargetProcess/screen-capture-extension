@@ -1,12 +1,37 @@
 define([], function() {
 
-    var API = function(credentials) {
-        this.domain = credentials.domain;
-        this.login = credentials.login;
-        this.password = credentials.password;
+    var API = function(optionsService) {
+        this.optionsService = optionsService;
     };
 
     API.prototype = {
+
+        auth: function() {
+            var url = '/api/v1/Authentication?format=json';
+            var $result = $.Deferred();
+
+            this.req(url, null, true)
+                .fail(function(r) {
+                    console.log('fail:', r);
+                    if (r.status === 404) {
+                        // retry
+                        this.auth()
+                            .fail($result.reject)
+                            .done($result.resolve);
+                    }
+                    else {
+                        $result.reject(r);
+                    }
+
+                }.bind(this))
+                .done(function(r) {
+                    console.log('done:', r);
+                    this.optionsService.setAuthToken(r.Token);
+                    $result.resolve();
+                }.bind(this));
+
+            return $result;
+        },
 
         setup: function() {
             var $result = $.Deferred();
@@ -32,19 +57,21 @@ define([], function() {
             return $result;
         },
 
-        req: function(url, data) {
+        req: function(url, data, avoidToken) {
+
+            var token = this.optionsService.getAuthToken();
+
             var cfg = {
+
+                url: [
+                    this.optionsService.getFullDomain(),
+                    url,
+                    (avoidToken ? '' : '&token=' + token)
+                ].join(''),
+
                 method: 'GET',
-                url: this.domain + url,
                 dataType: 'json',
-                contentType: 'application/json; charset=UTF-8',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-                    xhr.setRequestHeader(
-                        'Authorization',
-                        'Basic ' + btoa(this.login + ':' + this.password)
-                    );
-                }.bind(this)
+                contentType: 'application/json; charset=UTF-8'
             };
 
             if (data) {
@@ -148,6 +175,7 @@ define([], function() {
         postAttachmentToTargetProcess: function(issueId, base64str) {
 
             // "data:image/png;base64,..."
+            //                        ^^^
             var b64Png = base64str.split(',')[1];
 
             var binary = atob(b64Png);
@@ -168,7 +196,13 @@ define([], function() {
             var request = new XMLHttpRequest();
             request.onerror = $result.reject;
             request.onload = $result.resolve;
-            request.open('POST', this.domain + '/UploadFile.ashx');
+            request.open(
+                'POST',
+                [
+                    this.optionsService.getFullDomain(),
+                    '/UploadFile.ashx'
+                ].join('')
+            );
             request.send(form);
 
             return $result;

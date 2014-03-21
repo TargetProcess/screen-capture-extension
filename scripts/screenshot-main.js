@@ -1,10 +1,39 @@
 require([
     '/scripts/chrome.api.js'
     , '/scripts/targetprocess.api.js'
-    , '/scripts/image-editor/actions-logger.js'
     , '/scripts/image-editor/paint-manager.js'
-    , '/scripts/image-editor/ui.js'
-], function(ChromeApi, TPApi, ActionsLogger, PaintManager, UI) {
+], function(ChromeApi, TPApi, PaintManager) {
+
+
+
+    var OptionsService = function(settings) {
+        this.settings = settings;
+    };
+
+    OptionsService.prototype = {
+
+        getFullDomain: function() {
+            return 'http://' + settings.get_prop('domain') + '.tpondemand.com';
+        },
+
+        getDomain: function() {
+            return this.settings.get_prop('domain');
+        },
+
+        setDomain: function(val) {
+            this.settings.set_prop('domain', val);
+        },
+
+        getAuthToken: function() {
+            return this.settings.get_prop('auth-token');
+        },
+
+        setAuthToken: function(val) {
+            this.settings.set_prop('auth-token', val);
+        }
+    };
+
+
 
     $(function() {
         var hash = location.hash;
@@ -17,85 +46,46 @@ require([
         }
     });
 
-    g_ready.done(function(fabricCanvas) {
 
-        var color = '#fba617';
+    var showOptions = function(optionsService, tpApi) {
 
-        $('#team, #project, #severity, #business').fancySelect();
+        $('#optionsContainer').addClass('view');
+        $('#optionsContainerOverlay')
+            .addClass('overlay')
+            .one('click', function() {
+                $('#optionsContainer').removeClass('view');
+                $('#optionsContainerOverlay').removeClass('overlay');
+            });
 
-        // init colorpicker
-        $("#custom-color").spectrum({
-            color: color,
-            showPalette: true,
-            showPaletteOnly: true,
-            maxPaletteSize: 6,
-            preferredFormat: "hex",
-            palette: [
-                [
-                    "rgb(255, 255, 255)",
-                    "rgb(251, 166, 23)",
-                    "rgb(121, 207, 24)",
-                    "rgb(215, 30, 19)",
-                    "rgb(56, 146, 227)",
-                    "rgb(0, 0, 0)"
-                ]
-            ],
-            change: function(x) {
-                paintManager.changeColor(x.toString());
+        var $domainOption = $('#domain.option');
+        $domainOption.val(optionsService.getDomain());
+
+        var triggerAuth = function() {
+
+            if (!$domainOption.val()) {
+                $domainOption.css('background-color', 'pink');
+                return;
             }
-        });
 
-        $('input[placeholder], textarea[placeholder]').placeholder();
+            optionsService.setDomain($domainOption.val());
+
+            tpApi
+                .auth()
+                .fail(function() {
+                    $('#save').text('Try login again!');
+                })
+                .done(function() {
+                    $('#save').text('Yep! Logged in!');
+                });
+        };
+
+        $('#save')
+            .off('click')
+            .on('click', triggerAuth);
+    };
 
 
-
-        var paintManager = new PaintManager(
-            fabricCanvas,
-            {
-                font: 'bold 16px Tahoma',
-                color: color,
-                line: 1
-            }
-        );
-        var actionsLogger = new ActionsLogger(paintManager, new UI());
-        paintManager.changeTool("pencil");
-        paintManager.setLineWidth(3);
-
-        $(".i-role-editor .button").click(function() {
-            var isDisabled = $(this).hasClass("disabled");
-
-            if (!isDisabled) {
-                $(".i-role-editor .button").removeClass("clicked");
-                $(this).addClass("clicked");
-
-                var dataTool = $(this).data('tool');
-                var toolType = "pencil";
-
-                if (dataTool === 'undo') {
-                    actionsLogger.Undo();
-                }
-                else if (dataTool === 'redo') {
-                    actionsLogger.Redo();
-                }
-                else if (dataTool) {
-                    toolType = dataTool;
-                }
-
-                paintManager.changeTool(toolType);
-            }
-        });
-
-        var DOMAIN = 'http://' + settings.get_prop('domain') + '.tpondemand.com';
-        var LOGIN = settings.get_prop('login');
-        var PASSWORD = settings.get_prop('password');
-
-        var tpApi = new TPApi({
-            domain: DOMAIN,
-            login: LOGIN,
-            password: PASSWORD
-        });
-
-        $('#referenceToAccount').prop('href', DOMAIN);
+    var setupPostParameters = function(optionsService, tpApi, fabricCanvas) {
 
         var $text = $('.i-role-screenshot-name');
         $text.focus();
@@ -196,7 +186,7 @@ require([
         var postSucceeded = function(r) {
             showOverlay($([
                 '<h1 style="position:fixed;top:40%;left:45%;">',
-                '<a style="color:#fff" href="' + DOMAIN + '/RestUI/Board.aspx?#page=bug/' + r.Id + '">',
+                '<a style="color:#fff" href="' + optionsService.getFullDomain() + '/RestUI/Board.aspx?#page=bug/' + r.Id + '">',
                 'Open bug [#' + r.Id + '] in TargetProcess',
                 '</a>',
                 '</h1>'
@@ -223,5 +213,83 @@ require([
         var postProgress = function() {
             showOverlay($('<h1 style="position:fixed;top:40%;left:45%;"><p style="color:#fff">Post is in progress</p></h1>'));
         };
+
+    };
+
+    g_ready.done(function(fabricCanvas) {
+
+        var color = '#fba617';
+
+        $('#team, #project, #severity, #business').fancySelect();
+
+        // init colorpicker
+        $("#custom-color").spectrum({
+            color: color,
+            showPalette: true,
+            showPaletteOnly: true,
+            maxPaletteSize: 6,
+            preferredFormat: "hex",
+            palette: [
+                [
+                    "rgb(255, 255, 255)",
+                    "rgb(251, 166, 23)",
+                    "rgb(121, 207, 24)",
+                    "rgb(215, 30, 19)",
+                    "rgb(56, 146, 227)",
+                    "rgb(0, 0, 0)"
+                ]
+            ],
+            change: function(x) {
+                paintManager.changeColor(x.toString());
+            }
+        });
+
+        $('input[placeholder], textarea[placeholder]').placeholder();
+
+
+
+        var paintManager = new PaintManager(
+            fabricCanvas,
+            {
+                font: 'bold 16px Tahoma',
+                color: color,
+                line: 1
+            }
+        );
+
+        paintManager.setLineWidth(3);
+        paintManager.changeTool("pencil");
+
+        $(".i-role-editor .button").click(function() {
+            var isDisabled = $(this).hasClass("disabled");
+
+            if (!isDisabled) {
+                $(".i-role-editor .button").removeClass("clicked");
+                $(this).addClass("clicked");
+
+                var dataTool = $(this).data('tool');
+                var toolType = dataTool ? dataTool : "pencil";
+                paintManager.changeTool(toolType);
+            }
+        });
+
+        var optionsServiceInstance = new OptionsService(settings);
+
+        var tpApi = new TPApi(optionsServiceInstance);
+
+        if (!optionsServiceInstance.getDomain()) {
+            showOptions(optionsServiceInstance, tpApi);
+        }
+        else {
+            tpApi
+                .auth()
+                .fail(function() {
+                    // navigate to options
+                    showOptions(optionsServiceInstance, tpApi);
+                })
+                .done(function() {
+                    setupPostParameters(optionsServiceInstance, tpApi, fabricCanvas);
+                });
+        }
     });
 });

@@ -389,7 +389,7 @@ define([
                     left: e.offsetX,
                     top: e.offsetY,
                     stroke: this.options.color,
-                    strokeWidth: this.options.width,
+                    strokeWidth: 1,//this.options.width,
                     selectionStart: 6,
                     selectionEnd: 9
                 });
