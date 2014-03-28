@@ -1,31 +1,62 @@
-/*global settings*/
+require([
+    '/scripts/targetprocess.api.js'
+    , '/scripts/options.api.js'
+], function(TPApi, OptionsService) {
 
-// Saves/restore options.
 
-function saveOptions() {
-    var options = $('.option');
-    for (var i = 0; i < options.length; i++) {
-        var option = options[i];
-        settings.set_prop(option.id, option.value);
-    }
+    var optionsService = new OptionsService(settings);
+    var tpApi = new TPApi(optionsService);
 
-    // Update status to let user know options were saved.
-    var $status = $('#status');
-    $status.html('Options saved!');
-    setTimeout(function() {
-        $status.html('');
-    }, 2000);
-}
 
-function restoreOptions() {
-    var options = $('.option');
-    for (var i = 0; i < options.length; i++) {
-        var option = options[i];
-        option.value = settings.get_prop(option.id);
-    }
-}
+    var $saveButton = $('#save');
+    var $domainOption = $('#domain.option');
+    $domainOption.val(optionsService.getDomain());
 
-$(function() {
-    restoreOptions();
-    $('#save').click(saveOptions);
+
+    var triggerAuth = function() {
+
+        $domainOption.css('background-color', '');
+
+        if (!$domainOption.val()) {
+            $domainOption
+                .focus()
+                .css('background-color', 'pink');
+
+            $('.i-role-footer-state').hide();
+            $('.i-role-new-member').show();
+            $saveButton.text('Login');
+            return;
+        }
+
+        optionsService.setDomain($domainOption.val());
+
+        tpApi
+            .auth()
+            .fail(function() {
+                $saveButton.text('Try login again!');
+                $('.i-role-footer-state').hide();
+                $('.i-role-new-member').show();
+            })
+            .done(function() {
+                $saveButton.text('Already logged in!');
+                $('.i-role-footer-state').hide();
+                $('.i-role-logout').show();
+            });
+    };
+
+
+
+    triggerAuth();
+    $saveButton.on('click', triggerAuth);
+
+
+
+    $('.i-role-logout-trigger').on('click', function() {
+        optionsService.setDomain('');
+        optionsService.setAuthToken('');
+        $domainOption.val(optionsService.getDomain());
+        triggerAuth();
+    });
+
+
 });

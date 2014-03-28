@@ -1,38 +1,9 @@
 require([
     '/scripts/chrome.api.js'
     , '/scripts/targetprocess.api.js'
+    , '/scripts/options.api.js'
     , '/scripts/image-editor/paint-manager.js'
-], function(ChromeApi, TPApi, PaintManager) {
-
-
-
-    var OptionsService = function(settings) {
-        this.settings = settings;
-    };
-
-    OptionsService.prototype = {
-
-        getFullDomain: function() {
-            return 'http://' + settings.get_prop('domain') + '.tpondemand.com';
-        },
-
-        getDomain: function() {
-            return this.settings.get_prop('domain');
-        },
-
-        setDomain: function(val) {
-            this.settings.set_prop('domain', val);
-        },
-
-        getAuthToken: function() {
-            return this.settings.get_prop('auth-token');
-        },
-
-        setAuthToken: function(val) {
-            this.settings.set_prop('auth-token', val);
-        }
-    };
-
+], function(ChromeApi, TPApi, OptionsService, PaintManager) {
 
 
     $(function() {
@@ -50,20 +21,30 @@ require([
     var showOptions = function(optionsService, tpApi) {
 
         $('#optionsContainer').addClass('view');
-        $('#optionsContainerOverlay')
-            .addClass('overlay')
+        var $overlay = $('<div></div>').appendTo('body').addClass('overlay');
+        $overlay
             .one('click', function() {
                 $('#optionsContainer').removeClass('view');
-                $('#optionsContainerOverlay').removeClass('overlay');
+                $overlay.remove();
             });
 
+        var $saveButton = $('#save');
         var $domainOption = $('#domain.option');
         $domainOption.val(optionsService.getDomain());
 
+
         var triggerAuth = function() {
 
+            $domainOption.css('background-color', '');
+
             if (!$domainOption.val()) {
-                $domainOption.css('background-color', 'pink');
+                $domainOption
+                    .focus()
+                    .css('background-color', 'pink');
+
+                $('.i-role-footer-state').hide();
+                $('.i-role-new-member').show();
+                $saveButton.text('Login');
                 return;
             }
 
@@ -72,20 +53,42 @@ require([
             tpApi
                 .auth()
                 .fail(function() {
-                    $('#save').text('Try login again!');
+                    $saveButton.text('Try login again!');
+                    $('.i-role-footer-state').hide();
+                    $('.i-role-new-member').show();
                 })
                 .done(function() {
-                    $('#save').text('Yep! Logged in!');
+                    $saveButton.text('Already logged in!');
+                    $('.i-role-footer-state').hide();
+                    $('.i-role-logout').show();
                 });
         };
 
-        $('#save')
-            .off('click')
-            .on('click', triggerAuth);
+
+
+        triggerAuth();
+        $saveButton.on('click', triggerAuth);
+
+
+
+        $('.i-role-logout-trigger').on('click', function() {
+            optionsService.setDomain('');
+            optionsService.setAuthToken('');
+            $domainOption.val(optionsService.getDomain());
+            triggerAuth();
+        });
     };
 
 
     var setupPostParameters = function(optionsService, tpApi, fabricCanvas) {
+
+        $('.post-screenshot-container').addClass('view');
+        var $overlay = $('<div></div>').appendTo('body').addClass('overlay');
+        $overlay
+            .one('click', function() {
+                $('.post-screenshot-container').removeClass('view');
+                $overlay.remove();
+            });
 
         var $text = $('.i-role-screenshot-name');
         $text.focus();
@@ -224,6 +227,7 @@ require([
 
         // init colorpicker
         $("#custom-color").spectrum({
+            className: 'i-role-tool tool-button',
             color: color,
             showPalette: true,
             showPaletteOnly: true,
@@ -247,6 +251,18 @@ require([
         $('input[placeholder], textarea[placeholder]').placeholder();
 
 
+        $('.i-role-open-settings-trigger').click(function() {
+
+            showOptions(optionsService, tpApi);
+
+        });
+
+        $('.i-role-post-form-trigger').click(function() {
+
+            setupPostParameters(optionsService, tpApi, fabricCanvas);
+
+        });
+
 
         var paintManager = new PaintManager(
             fabricCanvas,
@@ -260,11 +276,10 @@ require([
         paintManager.setLineWidth(3);
         paintManager.changeTool("pencil");
 
-        $(".i-role-editor .button").click(function() {
+        $(".i-role-editor .i-role-tool").click(function() {
             var isDisabled = $(this).hasClass("disabled");
-
             if (!isDisabled) {
-                $(".i-role-editor .button").removeClass("clicked");
+                $(".i-role-editor .i-role-tool").removeClass("clicked");
                 $(this).addClass("clicked");
 
                 var dataTool = $(this).data('tool');
@@ -273,22 +288,21 @@ require([
             }
         });
 
-        var optionsServiceInstance = new OptionsService(settings);
+        var optionsService = new OptionsService(settings);
+        var tpApi = new TPApi(optionsService);
 
-        var tpApi = new TPApi(optionsServiceInstance);
-
-        if (!optionsServiceInstance.getDomain()) {
-            showOptions(optionsServiceInstance, tpApi);
+        if (!optionsService.getDomain()) {
+            showOptions(optionsService, tpApi);
         }
         else {
             tpApi
                 .auth()
                 .fail(function() {
                     // navigate to options
-                    showOptions(optionsServiceInstance, tpApi);
+                    showOptions(optionsService, tpApi);
                 })
                 .done(function() {
-                    setupPostParameters(optionsServiceInstance, tpApi, fabricCanvas);
+                    // setupPostParameters(optionsService, tpApi, fabricCanvas);
                 });
         }
     });
