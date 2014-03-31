@@ -10,25 +10,30 @@ define([], function() {
             var url = '/api/v1/Authentication?format=json';
             var $result = $.Deferred();
 
-            this.req(url, null, true)
-                .fail(function(r) {
-                    console.log('fail:', r);
-                    if (r.status === 404) {
-                        // retry
-                        this.auth()
-                            .fail($result.reject)
-                            .done($result.resolve);
-                    }
-                    else {
-                        $result.reject(r);
-                    }
+            if (!this.optionsService.getDomain()) {
+                $result.reject();
+            }
+            else {
+                this.req(url, null, true)
+                    .fail(function(r) {
+                        console.log('fail:', r);
+                        if (r.status === 404) {
+                            // retry
+                            this.auth()
+                                .fail($result.reject)
+                                .done($result.resolve);
+                        }
+                        else {
+                            $result.reject(r);
+                        }
 
-                }.bind(this))
-                .done(function(r) {
-                    console.log('done:', r);
-                    this.optionsService.setAuthToken(r.Token);
-                    $result.resolve();
-                }.bind(this));
+                    }.bind(this))
+                    .done(function(r) {
+                        console.log('done:', r);
+                        this.optionsService.setAuthToken(r.Token);
+                        $result.resolve();
+                    }.bind(this));
+            }
 
             return $result;
         },

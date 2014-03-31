@@ -259,8 +259,14 @@ require([
 
         $('.i-role-post-form-trigger').click(function() {
 
-            setupPostParameters(optionsService, tpApi, fabricCanvas);
-
+            tpApi
+                .auth()
+                .fail(function() {
+                    showOptions(optionsService, tpApi);
+                })
+                .done(function() {
+                    setupPostParameters(optionsService, tpApi, fabricCanvas);
+                });
         });
 
 
