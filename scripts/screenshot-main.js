@@ -20,10 +20,12 @@ require([
 
     var showOptions = function(optionsService, tpApi) {
 
+        $('article').addClass('scale-down');
         $('#optionsContainer').addClass('view');
         var $overlay = $('<div></div>').appendTo('body').addClass('overlay');
         $overlay
             .one('click', function() {
+                $('article').removeClass('scale-down');
                 $('#optionsContainer').removeClass('view');
                 $overlay.remove();
             });
@@ -82,10 +84,12 @@ require([
 
     var setupPostParameters = function(optionsService, tpApi, fabricCanvas) {
 
+        $('article').addClass('scale-down');
         $('.post-screenshot-container').addClass('view');
         var $overlay = $('<div></div>').appendTo('body').addClass('overlay');
         $overlay
             .one('click', function() {
+                $('article').removeClass('scale-down');
                 $('.post-screenshot-container').removeClass('view');
                 $overlay.remove();
             });

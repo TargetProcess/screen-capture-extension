@@ -388,6 +388,7 @@ define([
                     fontWeight: 'normal',
                     left: e.offsetX,
                     top: e.offsetY,
+                    fill: this.options.color,
                     stroke: this.options.color,
                     strokeWidth: 1,//this.options.width,
                     selectionStart: 6,
