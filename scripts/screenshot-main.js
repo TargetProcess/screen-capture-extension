@@ -286,14 +286,39 @@ require([
         paintManager.setLineWidth(3);
         paintManager.changeTool("pencil");
 
-        $(".i-role-editor .i-role-tool").click(function() {
-            var isDisabled = $(this).hasClass("disabled");
-            if (!isDisabled) {
-                $(".i-role-editor .i-role-tool").removeClass("clicked");
-                $(this).addClass("clicked");
+        $(".i-role-editor .i-role-tool").click(function () {
 
-                var dataTool = $(this).data('tool');
-                var toolType = dataTool ? dataTool : "pencil";
+            $(".i-role-editor .i-role-tool").removeClass("clicked");
+            $(this).addClass("clicked");
+
+            var toolType = $(this).data('tool') || 'pencil';
+            paintManager.changeTool(toolType);
+        });
+
+        $('nav').on('wheel', function(e) {
+
+            var $currTool = $('.i-role-tool.clicked');
+
+            var $newToolHolder;
+            var $currToolHolder = $currTool.closest('.i-tool-holder');
+            if (e.originalEvent.wheelDelta < 0) {
+                $newToolHolder = $currToolHolder.prev('.i-tool-holder');
+            }
+            else {
+                $newToolHolder = $currToolHolder.next('.i-tool-holder');
+            }
+
+            console.log($newToolHolder);
+
+            if ($newToolHolder.length) {
+                $currTool.removeClass('clicked');
+                $currToolHolder.removeClass('clicked');
+
+                var $newTool = $newToolHolder.find('.i-role-tool');
+                $newToolHolder.addClass('clicked');
+                $newTool.addClass('clicked');
+
+                var toolType = $newTool.data('tool') || 'pencil';
                 paintManager.changeTool(toolType);
             }
         });

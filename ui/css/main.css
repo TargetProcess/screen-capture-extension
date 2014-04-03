@@ -229,6 +229,16 @@
     opacity: 0.25;
 }
 
+.i-tool-holder.clicked {
+    /*-webkit-transform: scale(1.5, 1.5);*/
+    /*-webkit-transition-timing-function: ease-out;*/
+    /*-webkit-transition-duration: 250ms;*/
+
+    margin-top: 3px;
+    margin-bottom: 3px;
+    background-color: #ffffcc;
+}
+
 .tool-button.rect {
 
     background: none;

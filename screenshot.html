@@ -49,11 +49,11 @@
 
         nav {
             position: fixed;
-            left: -16em;
+            left: -4em;
             top: 0;
             bottom: 0;
             background-color: #654;
-            border-right: 50px solid #765;
+            border-right: 25px solid #765;
             box-shadow: 4px 0 5px rgba(0, 0, 0, 0.2);
             z-index: 1;
             cursor: pointer;
@@ -64,7 +64,7 @@
             content: ' ';
             width: 0;
             height: 0;
-            right: -70px;
+            right: -45px;
             top: 50%;
             border-width: 15px 10px;
             border-style: solid;
@@ -72,7 +72,7 @@
         }
 
         nav ul {
-            width: 14em;
+            /*width: 14em;*/
             list-style-type: none;
             margin: 0;
             padding: 1em;
@@ -126,13 +126,13 @@
 <!-- menu -->
 <nav>
     <ul class="palette i-role-editor">
-        <li><input type="button" class="i-role-tool tool-button button eraser" data-tool="pointer" title="Use pointer" /></li>
-        <li><input type="button" class="i-role-tool tool-button button pencil clicked" data-tool="pencil" title="Use pencil" /></li>
-        <li><input type="button" class="i-role-tool tool-button button arrow" data-tool="arrow" title="Draw an arrow" /></li>
-        <li><input type="button" class="i-role-tool tool-button button line" data-tool="line" title="Draw a line" /></li>
-        <li><input type="button" class="i-role-tool tool-button button text" data-tool="text" title="input text" /></li>
-        <li><input type="button" class="i-role-tool tool-button button crop" data-tool="crop" title="Image crop" /></li>
-        <li><input type="button" class="i-role-tool tool-button button rect" data-tool="rect" title="Draw a rect" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button eraser" data-tool="pointer" title="Use pointer" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button pencil clicked" data-tool="pencil" title="Use pencil" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button arrow" data-tool="arrow" title="Draw an arrow" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button line" data-tool="line" title="Draw a line" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button text" data-tool="text" title="input text" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button crop" data-tool="crop" title="Image crop" /></li>
+        <li class="i-tool-holder"><input type="button" class="i-role-tool tool-button button rect" data-tool="rect" title="Draw a rect" /></li>
         <li><input type="text" id="custom-color" title="Choose color" /></li>
 
         <li><hr/></li>
