@@ -282,11 +282,21 @@ define([
                 var angleDegree = angleRadian / Math.PI * 180;
 
                 var hypotenuse = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                var k = (x2 >= x1) ? 1 : -1;
+
+                var r = (x2 >= x1);
+                var l = !r;
+                var b = (y2 >= y1);
+                var t = !b;
+
+                var sector = 0;
+                (b && r) && (sector = 0);
+                (b && l) && (sector = -180);
+                (t && l) && (sector = 180);
+                (t && r) && (sector = -360);
 
                 this.figure.set({
-                    angle: angleDegree,
-                    width: k * hypotenuse
+                    angle: angleDegree - sector,
+                    width: hypotenuse
                 });
                 this.fabricCanvas.renderAll();
             }
