@@ -288,16 +288,18 @@
 
 .sp-palette-container {
 
-    padding: 13px 15px;
-    border-radius: 7px;
-    margin: 10px 0 0 -112px;
     border: none;
-    box-shadow: 1px 0 17px rgba(50, 50, 50, 0.75);
+    padding: 0;
+    /*padding: 13px 15px;*/
+    /*border-radius: 7px;*/
+    /*margin: 10px 0 0 -112px;*/
+    /*border: none;*/
+    /*box-shadow: 1px 0 17px rgba(50, 50, 50, 0.75);*/
 
-    background: #fff;
+    /*background: #fff;*/
 
 }
-
+/*
 .sp-palette-container:before {
     content: "";
     display: block;
@@ -310,6 +312,8 @@
     left: 50%;
     margin-left: -4px;
 }
+
+*/
 
 .sp-container {
 

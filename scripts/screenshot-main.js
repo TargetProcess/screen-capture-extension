@@ -225,13 +225,14 @@ require([
 
     g_ready.done(function(fabricCanvas) {
 
-        var color = '#fba617';
+        var color = "rgb(215, 30, 19)";
 
         $('#team, #project, #severity, #business').fancySelect();
 
         // init colorpicker
         $("#custom-color").spectrum({
             className: 'i-role-tool tool-button',
+            appendTo: 'nav',
             color: color,
             showPalette: true,
             showPaletteOnly: true,
@@ -284,7 +285,7 @@ require([
         );
 
         paintManager.setLineWidth(3);
-        paintManager.changeTool("pencil");
+        paintManager.changeTool($('.i-role-tool.clicked').data('tool'));
 
         $(".i-role-editor .i-role-tool").click(function () {
 
@@ -307,8 +308,6 @@ require([
             else {
                 $newToolHolder = $currToolHolder.next('.i-tool-holder');
             }
-
-            console.log($newToolHolder);
 
             if ($newToolHolder.length) {
                 $currTool.removeClass('clicked');
