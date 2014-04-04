@@ -175,53 +175,70 @@
 .palette {
 
     padding-bottom: 28px;
+    height: 100%;
+
+}
+
+.opts-button,
+.post-button,
+.tool-button {
+
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+
+    background: url(../tools-icons/icons.png) no-repeat 0 0;
 
 }
 
 .tool-button {
+    margin-top: 7px;
+}
 
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border: none;
+.post-button {
+    background-position: -46px -35px;
+}
 
-    background: url(../img/palette-spr.png) no-repeat 0 0;
-
+.opts-button {
+    background-position: -48px -569px;
+    position: fixed;
+    bottom: 1em;
 }
 
 .tool-button.pencil {
 
-    background-position: 0 0;
+    background-position: -48px -150px;
 
 }
 
 .tool-button.arrow {
 
-    background-position: -32px 0;
+    background-position: -48px -206px;
 
 }
 
 .tool-button.line {
 
-    background-position: -64px 0;
+    background-position: -48px -264px;
 
 }
 
 .tool-button.text {
 
-    background-position: -96px 0;
+    background-position: -48px -632px;
 
 }
 
-.tool-button.eraser {
+.tool-button.pointer {
 
-    background-position: -130px 0;
+    background-position: -48px -92px;
 
 }
 
 .tool-button.crop {
 
-    background-position: -173px 0;
+    background-position: -48px -322px;
 
 }
 
@@ -230,19 +247,12 @@
 }
 
 .i-tool-holder.clicked {
-    /*-webkit-transform: scale(1.5, 1.5);*/
-    /*-webkit-transition-timing-function: ease-out;*/
-    /*-webkit-transition-duration: 250ms;*/
-
-    margin-top: 3px;
-    margin-bottom: 3px;
-    background-color: #ffffcc;
+    /* do nothing */
 }
 
 .tool-button.rect {
 
-    background: none;
-    border: solid 2px gray;
+    background-position: -48px -383px;
 
 }
 

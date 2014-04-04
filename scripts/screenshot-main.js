@@ -301,7 +301,7 @@ require([
 
             var $newToolHolder;
             var $currToolHolder = $currTool.closest('.i-tool-holder');
-            if (e.originalEvent.wheelDelta < 0) {
+            if (e.originalEvent.wheelDelta > 0) {
                 $newToolHolder = $currToolHolder.prev('.i-tool-holder');
             }
             else {
