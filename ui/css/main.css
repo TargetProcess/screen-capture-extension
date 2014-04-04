@@ -202,7 +202,7 @@
 
 .opts-button {
     background-position: -48px -569px;
-    position: fixed;
+    position: absolute;
     bottom: 1em;
 }
 
