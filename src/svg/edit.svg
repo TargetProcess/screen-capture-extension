@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: "Sketch Internal" 3.0 (7561) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice 2</title>
+    <description>Created with "Sketch Internal".</description>
+    <defs></defs>
+    <g id="Panel" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="[panel]-editor" sketch:type="MSLayerGroup" transform="translate(-10.000000, -97.000000)" fill="#ff5400">
+            <g id="[pencil]" transform="translate(0.000000, 96.000000)" sketch:type="MSShapeGroup">
+                <path d="M25.6329956,25.5220337 C25.8123934,25.4520532 26.424689,26.3759653 27.3130493,27.2825317 C28.1927937,28.1803056 28.9814453,28.8205964 28.9814453,29.0219115 C28.9814453,29.4265135 23.6466064,30.9373169 23.6466064,30.9373169 C23.6466064,30.9373169 25.2759399,25.6613159 25.6329956,25.5220337 Z M26.4927979,24.5131836 C26.4927979,24.5131836 27.328064,25.9605107 27.9199219,26.5523686 C28.4867961,27.1192428 29.9689941,27.9893799 29.9689941,27.9893799 L40.5270996,16.4005127 C40.5270996,16.4005127 40.1057195,14.7803667 39.5561523,14.3516846 C39.0866358,13.9854448 37.4698486,14.0157471 37.4698486,14.0157471 L26.4927979,24.5131836 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

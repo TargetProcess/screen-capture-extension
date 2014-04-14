@@ -1,0 +1,155 @@
+$grey-color: #8C97A6;
+
+.popover {
+
+    box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.20);
+    border-radius: 0;
+    max-width: none;
+    margin: 0;
+
+    .popover-content {
+        padding: 12px 14px;
+    }
+
+    label {
+        font-size: 14px;
+        color: $grey-color;
+        line-height: 17px;
+    }
+
+    .form-control {
+        border-radius: 3px;
+        border: 1px solid $grey-color;
+        padding: 7px 8px;
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .form-control::placeholder {
+        color: #D1D3D6;
+    }
+
+    .btn {
+        border: 0;
+        border-radius: 5px;
+        background: #95D54E;
+        font-size: 14px;
+        line-height: 17px;
+        height: 36px;
+    }
+
+    .form-color {
+        label {
+            display: block;
+            cursor: pointer;
+        }
+        label:hover {
+            opacity: 0.5;
+        }
+        input {
+            display: none;
+        }
+    }
+
+    .fancy-select {
+        font-weight: normal;
+        text-transform: none;
+        .options, .trigger, .trigger.open {
+            width: 100%;
+            border-radius: 3px;
+            background: #FFFFFF;
+            border: 1px solid $grey-color;
+            padding: 7px 8px;
+            font-size: 12px;
+            line-height: 15px;
+            box-shadow: none !important;
+
+            &:after {
+                top: 12px;
+            }
+        }
+
+        .options.open {
+            top: 35px;
+        }
+
+        .options {
+            li,
+            li.selected {
+                color: $grey-color;
+            }
+
+            li.selected {
+                background: $grey-color;
+                color: #ffffff;
+            }
+
+            .hover {
+                background-color: $grey-color;
+                color: #000000;
+            }
+        }
+
+        .trigger:after {
+            @extend .glyphicon;
+            content: "\e114";
+            border: none;
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 10px;
+            color: $grey-color;
+            font-weight: normal;
+        }
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    .form-add {
+        .form-group:first-of-type {
+            margin-bottom: 14px;
+        }
+    }
+
+    .form-settings {
+        .checkbox label {
+            font-size: 12px
+        }
+
+        .popover-content:first-of-type {
+            border-bottom: 1px solid #D1D3D6;
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .popover-content:nth-of-type(2) {
+            padding-bottom: 17px;
+            label {
+                padding-bottom: 7px;
+                font-weight: normal;
+            }
+        }
+
+
+        .domain-control {
+            display: flex;
+
+            input {
+                flex-grow: 1;
+            }
+
+            span {
+                flex-grow: 0;
+                flex-shrink: 0;
+                vertical-align: middle;
+                padding: 7px 2px;
+                font-size: 12px;
+                line-height: 15px;
+                color: $grey-color;
+            }
+        }
+    }
+
+}

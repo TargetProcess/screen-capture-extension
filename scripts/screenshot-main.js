@@ -1,22 +1,18 @@
 require([
-    '/scripts/chrome.api.js'
-    , '/scripts/targetprocess.api.js'
-    , '/scripts/options.api.js'
-    , '/scripts/image-editor/paint-manager.js'
+    '/scripts/chrome.api.js', '/scripts/targetprocess.api.js', '/scripts/options.api.js',
+    '/scripts/image-editor/paint-manager.js'
 ], function(ChromeApi, TPApi, OptionsService, PaintManager) {
-
+    'use strict';
 
     $(function() {
         var hash = location.hash;
         var key = '#b64=';
         if (0 === hash.indexOf(key)) {
             setScreenshotUrl(hash.substr(key.length));
-        }
-        else if (localStorage['image-backup-on'] != 1) {
+        } else if (localStorage['image-backup-on'] != 1) {
             setScreenshotUrl(localStorage['image-backup']);
         }
     });
-
 
     var showOptions = function(optionsService, tpApi) {
 
@@ -33,7 +29,6 @@ require([
         var $saveButton = $('#save');
         var $domainOption = $('#domain.option');
         $domainOption.val(optionsService.getDomain());
-
 
         var triggerAuth = function() {
 
@@ -66,12 +61,8 @@ require([
                 });
         };
 
-
-
         triggerAuth();
         $saveButton.on('click', triggerAuth);
-
-
 
         $('.i-role-logout-trigger').on('click', function() {
             optionsService.setDomain('');
@@ -80,7 +71,6 @@ require([
             triggerAuth();
         });
     };
-
 
     var setupPostParameters = function(optionsService, tpApi, fabricCanvas) {
 
@@ -137,10 +127,9 @@ require([
             settings.set_prop('project', data.projectId);
             settings.set_prop('team', data.teamId);
 
-
             if (!data.issueName) {
                 var VALIDATION_CLASS = 'tp-extension-validation-failed';
-                var fnStopHighlight = function () {
+                var fnStopHighlight = function() {
                     $(this).removeClass(VALIDATION_CLASS);
                 };
                 $('.i-role-screenshot-name')
@@ -153,7 +142,6 @@ require([
                 return;
             }
 
-
             postProgress();
             tpApi
                 .postBugToTargetProcess(data)
@@ -162,7 +150,7 @@ require([
         });
 
         var createOption = function(defaultValue, item) {
-            var isSelected = (item.Id == defaultValue) ? ' selected ': '';
+            var isSelected = (item.Id == defaultValue) ? ' selected ' : '';
             this.append('<option ' + isSelected + ' value="' + item.Id + '">' + item.Name + '</option>');
         };
 
@@ -193,7 +181,8 @@ require([
         var postSucceeded = function(r) {
             showOverlay($([
                 '<h1 style="position:fixed;top:40%;left:45%;">',
-                '<a style="color:#fff" href="' + optionsService.getFullDomain() + '/RestUI/Board.aspx?#page=bug/' + r.Id + '">',
+                '<a style="color:#fff" href="' + optionsService.getFullDomain() +
+                '/RestUI/Board.aspx?#page=bug/' + r.Id + '">',
                 'Open bug [#' + r.Id + '] in TargetProcess',
                 '</a>',
                 '</h1>'
@@ -204,8 +193,7 @@ require([
             var err;
             try {
                 err = r.responseJSON.Error.Message;
-            }
-            catch(ex) {
+            } catch (ex) {
                 err = 'Post is failed';
             }
 
@@ -218,7 +206,9 @@ require([
         };
 
         var postProgress = function() {
-            showOverlay($('<h1 style="position:fixed;top:40%;left:45%;"><p style="color:#fff">Post is in progress</p></h1>'));
+            showOverlay($(
+                '<h1 style="position:fixed;top:40%;left:45%;"><p style="color:#fff">Post is in progress</p></h1>'
+            ));
         };
 
     };
@@ -255,7 +245,6 @@ require([
 
         $('input[placeholder], textarea[placeholder]').placeholder();
 
-
         $('.i-role-open-settings-trigger').click(function() {
 
             showOptions(optionsService, tpApi);
@@ -274,10 +263,8 @@ require([
                 });
         });
 
-
         var paintManager = new PaintManager(
-            fabricCanvas,
-            {
+            fabricCanvas, {
                 font: 'bold 16px Tahoma',
                 color: color,
                 line: 1
@@ -287,7 +274,7 @@ require([
         paintManager.setLineWidth(3);
         paintManager.changeTool($('.i-role-tool.clicked').data('tool'));
 
-        $(".i-role-editor .i-role-tool").click(function () {
+        $(".i-role-editor .i-role-tool").click(function() {
 
             $(".i-role-editor .i-role-tool").removeClass("clicked");
             $(this).addClass("clicked");
@@ -304,8 +291,7 @@ require([
             var $currToolHolder = $currTool.closest('.i-tool-holder');
             if (e.originalEvent.wheelDelta > 0) {
                 $newToolHolder = $currToolHolder.prev('.i-tool-holder');
-            }
-            else {
+            } else {
                 $newToolHolder = $currToolHolder.next('.i-tool-holder');
             }
 
@@ -327,8 +313,7 @@ require([
 
         if (!optionsService.getDomain()) {
             showOptions(optionsService, tpApi);
-        }
-        else {
+        } else {
             tpApi
                 .auth()
                 .fail(function() {

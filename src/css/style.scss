@@ -1,0 +1,36 @@
+@import "dist/vendor/bootstrap-sass-official/vendor/assets/stylesheets/bootstrap";
+
+@import 'tools';
+@import 'popover';
+@import 'figures';
+
+body {
+    font-family: 'Lucida Grande';
+    overflow: hidden; // to prevent scroll on MacOS
+    -webkit-font-smoothing: antialiased;
+}
+
+.editor {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.editor__tools {
+    display: flex;
+    background: #2C2C2C;
+    flex-grow: 0;
+    width: 64px;
+}
+
+.editor__area {
+    background: #F7F7F5;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+

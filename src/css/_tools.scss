@@ -1,0 +1,135 @@
+.tools {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.tools__panel {
+    display: flex;
+    flex-direction: column;
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tools__separator {
+    flex-grow: 1;
+}
+
+.tools__item {
+    height: 44px;
+    overflow: visible;
+
+    &.tools__item-add {
+        height: 52px;
+
+        > .tools__trigger {
+            height: 52px;
+            padding: 3px 0 5px;
+        }
+    }
+
+    &.tools__item-color {
+
+        .icon-svg-color {
+            margin: 10px auto;
+            height: 24px;
+            width: 32px;
+            // background: none;
+            border-radius: 14px;
+            /* [selector] color: */
+            border: 1px solid #FFFFFF;
+            box-shadow: inset 0px 0px 2px 0px #2D3138;
+            background-image: none;
+        }
+    }
+
+
+    .tools__trigger {
+        user-select: none;
+        overflow: hidden;
+        display: block;
+        cursor: pointer;
+        line-height: 0;
+        // overflow: hidden;
+        // text-indent: -9999px;
+        // white-space: nowrap;
+        width: 64px;
+        height: 44px;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        background: transparent;
+        color: transparent;
+
+        &:hover,
+        &:focus,
+        &.focus {
+            outline: 0;
+            background-color: #4A4A4A;
+        }
+    }
+
+
+    .icon {
+        display: block;
+        margin: auto;
+    }
+}
+
+.tools__item-add {
+    .popover {
+        min-width: 420px;
+    }
+}
+
+.tools__item-color {
+
+    .icon-svg-color_orange {
+        background: #F9A530;
+    }
+
+    .icon-svg-color_black {
+        background: #4A4A4A;
+    }
+
+    .icon-svg-color_blue {
+        background: #3E94E0;
+    }
+
+    .icon-svg-color_red {
+        background: #D52220;
+    }
+
+    .icon-svg-color_green {
+        background: #7CCD2F;
+    }
+
+    .icon-svg-color_white {
+        background: #ffffff;
+
+    }
+
+    .popover {
+        padding: 0;
+
+        .icon-svg-color {
+            box-shadow: none;
+        }
+        .icon-svg-color_white {
+            border-color: #ECECEC;
+        }
+
+        .popover-content {
+            padding: 3px 17px 7px;
+        }
+    }
+}
+
+.tools__item-settings {
+    .popover {
+        width: 320px;
+    }
+
+}

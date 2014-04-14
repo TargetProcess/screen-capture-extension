@@ -1,0 +1,32 @@
+{
+  "name": "targetprocess-chrome-extension",
+  "version": "0.0.0",
+  "homepage": "https://github.com/TargetProcess/targetprocess-chrome-extension",
+  "authors": [
+    "Aliaksei Shytkin <e79eas@gmail.com>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.1.1",
+    "fancyselect": "*",
+    "bootstrap-sass-official": "~3.1.1"
+  },
+  "overrides": {
+    "fancyselect": {
+      "main": [
+        "fancySelect.js",
+        "fancySelect.css"
+      ]
+    }
+  }
+}

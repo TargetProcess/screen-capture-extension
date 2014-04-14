@@ -3,15 +3,17 @@
     "version": "0.0.9",
     "manifest_version": 2,
     "description": "Post bugs to TP3 with screenshot in one click!",
+
     "browser_action": {
         "default_icon": "images/icons/icon.png",
-//        "default_popup": "popup.html"
         "default_title": "Take a screen shot and post to TP!"
     },
-
     "background": {
         "persistent": true,
-        "scripts": ["background.js"]
+        "scripts": [
+            "scripts/background.js",
+            "scripts/chromereload.js"
+        ]
     },
 
     "options_page": "options.html",
@@ -28,12 +30,12 @@
         "48": "images/icons/icon48.png",
         "128": "images/icons/icon128.png"
     },
-    "content_scripts": [
-        {
-            "matches": ["http://*/*", "https://*/*", "ftp://*/*"],
-            "js": ["keyboard_handler.js"],
-            "run_at": "document_start",
-            "all_frames": true
-        }
-    ]
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*", "ftp://*/*"],
+        "js": [
+            "scripts/keyboard_handler.js"
+        ],
+        "run_at": "document_start",
+        "all_frames": true
+    }]
 }

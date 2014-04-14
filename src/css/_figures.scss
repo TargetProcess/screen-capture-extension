@@ -1,0 +1,21 @@
+.figure {
+    position: absolute;
+}
+
+.figure-rectangle {
+    border-radius: 8px;
+    border: 3px solid #F9A530;
+}
+
+.figure-comment {
+    border-radius: 8px;
+    background: rgba(74, 74, 74, .9);
+    font-size: 14px;
+    color: #FFFFFF;
+    line-height: 17px;
+    padding: 10px 13px 15px;
+}
+
+.figure-comment__signature {
+    font-size: 11px;
+}

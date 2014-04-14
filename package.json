@@ -1,0 +1,36 @@
+{
+  "name": "targetprocess-chrome-extension",
+  "version": "0.0.0",
+  "description": "Capture screen shot and create bug in your Targetprocess account.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TargetProcess/targetprocess-chrome-extension"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TargetProcess/targetprocess-chrome-extension/issues"
+  },
+  "homepage": "https://github.com/TargetProcess/targetprocess-chrome-extension",
+  "devDependencies": {
+    "tiny-lr": "0.0.5",
+    "gulp-load-plugins": "^0.5.0",
+    "gulp": "^3.6.0",
+    "gulp-plumber": "^0.5.6",
+    "gulp-livereload": "^1.2.0",
+    "gulp-jade": "^0.4.2",
+    "express": "^3.5.1",
+    "gulp-size": "^0.3.0",
+    "gulp-util": "^2.2.14",
+    "gulp-bower-files": "^0.2.1",
+    "gulp-inject": "^0.4.1",
+    "gulp-ruby-sass": "^0.4.1",
+    "css-sprite": "^0.7.0-beta2",
+    "gulp.spritesmith": "^0.3.0",
+    "gulp-autoprefixer": "0.0.7"
+  }
+}
