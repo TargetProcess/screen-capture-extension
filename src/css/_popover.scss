@@ -90,17 +90,17 @@ $grey-color: #8C97A6;
             }
         }
 
-        .trigger:after {
-            @extend .glyphicon;
-            content: "\e114";
-            border: none;
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            font-size: 10px;
-            color: $grey-color;
-            font-weight: normal;
-        }
+        // .trigger:after {
+        //     @extend .glyphicon;
+        //     content: "\e114";
+        //     border: none;
+        //     position: absolute;
+        //     right: 20px;
+        //     top: 10px;
+        //     font-size: 10px;
+        //     color: $grey-color;
+        //     font-weight: normal;
+        // }
     }
 
     .form-group {

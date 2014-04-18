@@ -32,7 +32,7 @@
 
     &.tools__item-color {
 
-        .icon-svg-color {
+        .icon-color {
             margin: 10px auto;
             height: 24px;
             width: 32px;
@@ -86,27 +86,27 @@
 
 .tools__item-color {
 
-    .icon-svg-color_orange {
+    .icon-color_orange {
         background: #F9A530;
     }
 
-    .icon-svg-color_black {
+    .icon-color_black {
         background: #4A4A4A;
     }
 
-    .icon-svg-color_blue {
+    .icon-color_blue {
         background: #3E94E0;
     }
 
-    .icon-svg-color_red {
+    .icon-color_red {
         background: #D52220;
     }
 
-    .icon-svg-color_green {
+    .icon-color_green {
         background: #7CCD2F;
     }
 
-    .icon-svg-color_white {
+    .icon-color_white {
         background: #ffffff;
 
     }
@@ -114,10 +114,10 @@
     .popover {
         padding: 0;
 
-        .icon-svg-color {
+        .icon-color {
             box-shadow: none;
         }
-        .icon-svg-color_white {
+        .icon-color_white {
             border-color: #ECECEC;
         }
 

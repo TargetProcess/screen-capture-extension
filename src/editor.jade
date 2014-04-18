@@ -23,7 +23,7 @@ html(xmlns='http://www.w3.org/1999/html')
                         - var v = 'add'
                         li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
                             button.tools__trigger(type="button")
-                                i(class="icon icon-svg-" + v)
+                                i(class="icon icon-" + v)
 
                             .popover.right
                                 .arrow
@@ -61,22 +61,22 @@ html(xmlns='http://www.w3.org/1999/html')
 
                                         button.btn.btn-success.bnt-lg.btn-block(type="submit") Add Issue
 
-                        - for v in ['cursor', 'pencil', 'arrow', 'line', 'square', 'circle', 'text', 'crop']
-                            li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
+                        - for v in ['cursor', 'pencil', 'arrow', 'line', 'rect', 'circle', 'text', 'crop']
+                            li(class="tools__item tools__item-" + v + " i-role-tool i-role-tool-" + v, data-name=v)
                                 button.tools__trigger(type="button")
-                                    i(class="icon icon-svg-" + v)
+                                    i(class="icon icon-" + v)
 
                         - var v = 'color'
                         li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
                             button.tools__trigger(type="button")
-                                i(class="icon icon-svg-" + v + " icon-svg-color_orange")
+                                i(class="icon icon-" + v + " icon-color_orange", data-color="orange")
                             .popover.right
                                 .arrow
                                 .popover-content
                                     form.form-color(action="#")
                                         - for v in ['orange', 'black', 'blue', 'red', 'green', 'white']
                                             label
-                                                i(class="icon icon-svg-color icon-svg-color_" + v)
+                                                i(class="icon icon-color icon-color_" + v)
                                                 input(type="radio", name="color", value=v)
 
                     .tools__separator
@@ -84,7 +84,7 @@ html(xmlns='http://www.w3.org/1999/html')
                         - var v = 'settings'
                         li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
                             button.tools__trigger(type="button")
-                                i(class="icon icon-svg-" + v)
+                                i(class="icon icon-" + v)
                                 //- | #{v}
 
 
@@ -110,53 +110,29 @@ html(xmlns='http://www.w3.org/1999/html')
 
             .editor__area
 
-                img(src="img/screen.png")
+                canvas#imageView(width=200, height=200)
 
-                .figure.figure-rectangle(data-color="orange",style="top: 200px; left: 600px; height: 100px; width: 200px;")
-                .figure.figure-comment(style="top: 310px; left: 600px;")
-                    .figure-comment__text Maybe links?
-                    .figure-comment__signature by Alex Tsayun
+                //- img(src="img/screen.png")
+
+                //- .figure.figure-rectangle(data-color="orange",style="top: 200px; left: 600px; height: 100px; width: 200px;")
+                //- .figure.figure-comment(style="top: 310px; left: 600px;")
+                //-     .figure-comment__text Maybe links?
+                //-     .figure-comment__signature by Alex Tsayun
                 
 
         // build:js release/scripts.js 
         // inject:js 
         // endinject 
         // endbuild 
+
         script(type='text/javascript').
-            $('.i-role-tool-add .tools__trigger').click(function(){
-                var $trigger = $(this);
-                //- debugger;
-                var $popover = $trigger.next();
-                
-                $popover.css('top', $trigger[0].getBoundingClientRect().top + 5);
-                $popover.css('left', $trigger[0].getBoundingClientRect().right - 7);
-                $popover.find('.arrow').css('top', 22);
-                $popover.toggle();
 
-                $popover.find('select').fancySelect();
+            require.config({
+                baseUrl: './scripts/',
+                paths: {
+                    'Class': 'libs/class'
+                }
             });
 
-            $('.i-role-tool-color .tools__trigger').click(function(){
-                var $trigger = $(this);
-                //- debugger;
-                var $popover = $trigger.next();
-                    
-                $popover.css('top', $trigger[0].getBoundingClientRect().top - 37);
-                $popover.css('left', $trigger[0].getBoundingClientRect().right - 7);
-                $popover.find('.arrow').css('top', 59);
-                $popover.toggle();
-            });
+            require(['editor'])
 
-            $('.i-role-tool-settings .tools__trigger').click(function(){
-                var $trigger = $(this);
-                //- debugger;
-                var $popover = $trigger.next();
-                //- debugger;
-                //- $popover.css('top', 550);
-                $popover.css('top', 'auto');
-                $popover.css('bottom', 5);
-                $popover.css('left', $trigger[0].getBoundingClientRect().right - 7);
-                $popover.find('.arrow').css('top', 'auto');
-                $popover.find('.arrow').css('bottom', '6px');
-                $popover.toggle();
-            });

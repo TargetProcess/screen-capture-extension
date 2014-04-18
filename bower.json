@@ -1,32 +1,47 @@
 {
-  "name": "targetprocess-chrome-extension",
-  "version": "0.0.0",
-  "homepage": "https://github.com/TargetProcess/targetprocess-chrome-extension",
-  "authors": [
-    "Aliaksei Shytkin <e79eas@gmail.com>"
-  ],
-  "moduleType": [
-    "globals"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "bootstrap": "~3.1.1",
-    "fancyselect": "*",
-    "bootstrap-sass-official": "~3.1.1"
-  },
-  "overrides": {
-    "fancyselect": {
-      "main": [
-        "fancySelect.js",
-        "fancySelect.css"
-      ]
+    "name": "targetprocess-chrome-extension",
+    "version": "0.0.0",
+    "homepage": "https://github.com/TargetProcess/targetprocess-chrome-extension",
+    "authors": [
+        "Aliaksei Shytkin <e79eas@gmail.com>"
+    ],
+    "moduleType": [
+        "globals"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "bootstrap": "~3.1.1",
+        "fancyselect": "*",
+        "bootstrap-sass-official": "~3.1.1",
+        "fabric": "~1.4.5",
+        "imgareaselect": "~0.9.10",
+        "q": "1.0.1",
+        "requirejs": "~2.1.11"
+    },
+    "overrides": {
+        "fancyselect": {
+            "main": [
+                "fancySelect.js",
+                "fancySelect.css"
+            ]
+        },
+        "q": {
+            "main": [
+                "q.js"
+            ]
+        },
+        "imgareaselect": {
+            "main": [
+                "jquery.imgareaselect.dev.js",
+                "distfiles/css/imgareaselect-default.css"
+            ]
+        }
     }
-  }
 }

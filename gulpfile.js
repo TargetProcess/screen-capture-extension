@@ -34,7 +34,8 @@ gulp.task('html', function() {
         .pipe(gp.inject(gp.bowerFiles({
             read: false
         }), {
-            ignorePath: 'dist/'
+            ignorePath: 'dist/',
+            addRootSlash: false
         }))
         .pipe(gulp.dest('dist/'))
         .pipe(gp.lr())
@@ -52,7 +53,29 @@ gulp.task('css', function() {
         .pipe(gp.size());
 });
 
-var spritesmith = require('gulp.spritesmith');
+gulp.task('js', function() {
+
+    return gulp.src('src/scripts/**/*.js')
+        .pipe(gulp.dest('dist/scripts'))
+        .pipe(gp.lr())
+        .pipe(gp.size());
+});
+
+gulp.task('manifest', function() {
+
+    return gulp.src('src/manifest.json')
+        .pipe(gulp.dest('dist'))
+        .pipe(gp.lr())
+        .pipe(gp.size());
+});
+
+gulp.task('images', function() {
+
+    return gulp.src('src/img/**.*')
+        .pipe(gulp.dest('dist/img'))
+        .pipe(gp.lr())
+        .pipe(gp.size());
+});
 
 gulp.task('sprites', function() {
 
@@ -64,7 +87,7 @@ gulp.task('sprites', function() {
     // spriteData.img.pipe(gulp.dest('dist/css'));
     // spriteData.css.pipe(gulp.dest('dist/css'));
 
-    return gulp.src('src/**/*.png')
+    return gulp.src('src/icons/*.png')
         .pipe(sprite({
             base64: true,
             style: 'icons.css',
@@ -93,10 +116,11 @@ gulp.task('watch', function() {
         }
         gulp.watch('src/**/*.scss', ['css']);
         gulp.watch('src/*.jade', ['html']);
+        // gulp.watch('src/*.jade', ['html']);
         // gulp.watch('*.html', ['html']);
-        // gulp.watch('scripts/*.js', ['js']);
+        gulp.watch('src/scripts/**/*.js', ['js']);
     });
 });
 
-gulp.task('build', ['html', 'css', 'sprites']);
+gulp.task('build', ['html', 'css', 'sprites', 'js', 'manifest', 'images']);
 gulp.task('default', ['build', 'server', 'watch']);

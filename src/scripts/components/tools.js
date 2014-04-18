@@ -1,6 +1,10 @@
+/*globals fabric */
 define([
-    '/scripts/libs/class.js'
-], function (Class) {
+    'Class',
+    '../libs/fabric.extensions'
+], function(Class) {
+
+    'use strict';
 
     var canvas = function(r) {
         var c = document.createElement('CANVAS');
@@ -50,7 +54,7 @@ define([
             $(this.layer()).imgAreaSelect({
                 handles: true,
                 onSelectStart: this.createToolTip.bind(this),
-                onSelectEnd: function (img, selection) {
+                onSelectEnd: function(img, selection) {
                     this.rect = selection;
                 }.bind(this)
             });
@@ -64,7 +68,9 @@ define([
 
         destroy: function() {
             $(document).off('.crop');
-            $(this.layer()).imgAreaSelect({ remove: true });
+            $(this.layer()).imgAreaSelect({
+                remove: true
+            });
         },
 
         layer: function() {
@@ -102,7 +108,9 @@ define([
             var r = this.rect;
 
             this.removeToolTip();
-            $(this.layer()).imgAreaSelect({ hide: true });
+            $(this.layer()).imgAreaSelect({
+                hide: true
+            });
 
             var b64Image = this.fabricCanvas.toDataURL();
             fabric.Image.fromURL(b64Image, function(img) {
@@ -119,8 +127,7 @@ define([
                 var x = ([
                     href.substr(0, href.indexOf('?')),
                     '?',
-                    'id=',
-                    (+ new Date()),
+                    'id=', Number(new Date()),
                     '#b64=',
                     cropB64
                 ].join(''));
@@ -131,12 +138,13 @@ define([
         },
 
         onEscape: function() {
-            $(this.layer()).imgAreaSelect({ hide: true });
+            $(this.layer()).imgAreaSelect({
+                hide: true
+            });
         }
     });
 
-    function ToolKit(fabricCanvas) {
-        var tools = this;
+    var ToolKit = function(fabricCanvas) {
 
         this.options = {};
         this.fabricCanvas = fabricCanvas;
@@ -175,10 +183,9 @@ define([
             }
         });
 
+        this.rect = DnDBase.extend({
 
-        tools.rect = DnDBase.extend({
-
-            start: function (e) {
+            start: function(e) {
                 this.x0 = e.offsetX;
                 this.y0 = e.offsetY;
 
@@ -196,7 +203,7 @@ define([
                 this.fabricCanvas.renderAll();
             },
 
-            move: function (e) {
+            move: function(e) {
                 this.figure.set({
                     width: e.offsetX - this.x0,
                     height: e.offsetY - this.y0
@@ -205,9 +212,9 @@ define([
             }
         });
 
-        tools.line = DnDBase.extend({
+        this.line = DnDBase.extend({
 
-            start: function (e) {
+            start: function(e) {
                 this.x0 = e.offsetX;
                 this.y0 = e.offsetY;
 
@@ -222,7 +229,7 @@ define([
                 this.fabricCanvas.renderAll();
             },
 
-            move: function (e) {
+            move: function(e) {
                 var x1 = this.x0;
                 var y1 = this.y0;
                 var x2 = e.offsetX;
@@ -242,7 +249,7 @@ define([
             }
         });
 
-        tools.pencil = Class.extend({
+        this.pencil = Class.extend({
             init: function(options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
                 this.fabricCanvas.isDrawingMode = true;
@@ -255,9 +262,9 @@ define([
             }
         });
 
-        tools.arrow = DnDBase.extend({
+        this.arrow = DnDBase.extend({
 
-            start: function (e) {
+            start: function(e) {
                 this.x0 = e.offsetX;
                 this.y0 = e.offsetY;
 
@@ -272,7 +279,7 @@ define([
                 this.fabricCanvas.renderAll();
             },
 
-            move: function (e) {
+            move: function(e) {
                 var x1 = this.x0;
                 var y1 = this.y0;
                 var x2 = e.offsetX;
@@ -289,10 +296,18 @@ define([
                 var t = !b;
 
                 var sector = 0;
-                (b && r) && (sector = 0);
-                (b && l) && (sector = -180);
-                (t && l) && (sector = 180);
-                (t && r) && (sector = -360);
+                if (b && r) {
+                    (sector = 0);
+                }
+                if (b && l) {
+                    (sector = -180);
+                }
+                if (t && l) {
+                    (sector = 180);
+                }
+                if (t && r) {
+                    (sector = -360);
+                }
 
                 this.figure.set({
                     angle: angleDegree - sector,
@@ -302,7 +317,7 @@ define([
             }
         });
 
-        tools.text = Class.extend({
+        this.text = Class.extend({
 
             init: function(options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
@@ -312,10 +327,12 @@ define([
                 this.isEditMode = false;
                 this.completedWithoutMouse = false;
 
-                $(document).on('keydown.text', function (e) {
+                $(document).on('keydown.text', function(e) {
 
                     if (e.ctrlKey && e.which === 13) {
-                        this.isEditMode && this.onPressEnter();
+                        if (this.isEditMode) {
+                            this.onPressEnter();
+                        }
                         this.isEditMode = false;
                         this.completedWithoutMouse = true;
                     }
@@ -324,19 +341,17 @@ define([
 
                 this.subscriptions = {
 
-                    'custom:mousedown': function(e) {
+                    'custom:mousedown': function() {
 
                         if (this.isJustStarted) {
                             this.isJustStarted = false;
                             return;
                         }
 
-
                         if (this.completedWithoutMouse === true) {
                             this.completedWithoutMouse = false;
                             this.isEditMode = false;
-                        }
-                        else {
+                        } else {
                             this.completedWithoutMouse = true;
                             this.isEditMode = true;
                         }
@@ -348,21 +363,20 @@ define([
                         if (this.isEditMode) {
 
                             this.onCompleteEnter(e);
-                        }
-                        else {
+                        } else {
 
                             this.onStartEnter(e);
                         }
 
                     }.bind(this),
 
-                    'custom:selected': function(e) {
+                    'custom:selected': function() {
 
                         this.isEditMode = true;
 
                     }.bind(this),
 
-                    'custom:selection-cleared': function(e) {
+                    'custom:selection-cleared': function() {
 
                         this.isEditMode = false;
 
@@ -380,14 +394,14 @@ define([
 
             onPressEnter: function() {
 
-                this.fabricCanvas.trigger(
-                    'before:selection:cleared',
-                    { target: this.figure });
+                this.fabricCanvas.trigger('before:selection:cleared', {
+                    target: this.figure
+                });
 
                 this.fabricCanvas.discardActiveObject();
             },
 
-            onStartEnter: function (e) {
+            onStartEnter: function(e) {
 
                 this.isEditMode = true;
 
@@ -400,7 +414,7 @@ define([
                     top: e.offsetY,
                     fill: this.options.color,
                     stroke: this.options.color,
-                    strokeWidth: 1,//this.options.width,
+                    strokeWidth: 1, //this.options.width,
                     selectionStart: 6,
                     selectionEnd: 9
                 });
@@ -414,14 +428,14 @@ define([
                 this.fabricCanvas.renderAll();
             },
 
-            onCompleteEnter: function (e) {
+            onCompleteEnter: function() {
 
                 this.isEditMode = false;
 
             }
         });
 
-        tools.pointer = Class.extend({
+        this.pointer = Class.extend({
 
             init: function(options, fabricCanvas) {
                 this.fabricCanvas = fabricCanvas;
@@ -430,7 +444,7 @@ define([
                 this.fabricCanvas.selection = true;
                 this.fabricCanvas.skipTargetFind = false;
 
-                $(document).on('keydown.pointer', function (e) {
+                $(document).on('keydown.pointer', function(e) {
                     var DEL_KEY = 46;
                     var BSP_KEY = 8;
 
@@ -441,8 +455,7 @@ define([
                         var objects = [];
                         if (group) {
                             objects = group.getObjects();
-                        }
-                        else if (objct) {
+                        } else if (objct) {
                             objects = [objct];
                         }
 
@@ -466,13 +479,15 @@ define([
             }
         });
 
-        tools.crop = Crop;
-    }
+        this.crop = Crop;
+    };
 
     ToolKit.prototype = {
 
         create: function(toolName) {
-            return new this[toolName](this.options, this.fabricCanvas);
+            if (this[toolName]) {
+                return new(this[toolName])(this.options, this.fabricCanvas);
+            }
         },
 
         setFont: function(font) {
