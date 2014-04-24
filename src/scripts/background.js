@@ -1,34 +1,30 @@
-/*globals chrome, Q */
+/*globals chrome, Q, Promise */
 /*eslint quotes:[0, "single"], no-global-strict: 0 */
 
 'use strict';
 
 var getImageData = function() {
-    debugger;
-    var defer = Q.defer();
-
-    chrome
-        .tabs
-        .captureVisibleTab(null, defer.resolve());
-
-    return defer.promise;
+    return new Promise(function(resolve) {
+        chrome
+            .tabs
+            .captureVisibleTab(null, resolve);
+    });
 };
 
 var openEditorTab = function() {
-    debugger
-    var url = chrome.extension.getURL('editor.html?id=' + Number(new Date()));
-    var defer = Q.defer();
-    chrome
-        .tabs
-        .create({
-            url: url
-        }, defer.resolve);
 
-    return defer.promise;
+    var url = chrome.extension.getURL('editor.html?id=' + Number(new Date()));
+    return new Promise(function(resolve) {
+        chrome
+            .tabs
+            .create({
+                url: url
+            }, resolve);
+    });
 };
 
 var openImageInEditor = function(imageData, editorTab) {
-    debugger
+
     chrome
         .tabs
         .onUpdated
@@ -41,8 +37,8 @@ var openImageInEditor = function(imageData, editorTab) {
                 var views = chrome.extension.getViews();
                 for (var i = 0; i < views.length; i++) {
                     var view = views[i];
-                    if (view.location.href === viewTabUrl) {
-                        view.setScreenshotUrl(imageData);
+                    if (view.location.href === editorTab.url) {
+                        view.screenshotUrl = imageData;
                         break;
                     }
                 }
@@ -53,9 +49,11 @@ var openImageInEditor = function(imageData, editorTab) {
 
 var takeScreenshot = function() {
 
-    Q
+    Promise
         .all([getImageData(), openEditorTab()])
-        .spread(openImageInEditor);
+        .then(function(values) {
+            openImageInEditor(values[0], values[1]);
+        });
 };
 
 // Listen for a click on the camera icon. On that click, take a screenshot

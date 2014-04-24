@@ -13,6 +13,7 @@ gp.lr = gp.livereload.bind(null, livereload);
 var sprite = require('css-sprite').stream;
 
 var express = require('express');
+var httpProxy = require('http-proxy');
 
 gulp.task('js', function() {
 
@@ -24,12 +25,17 @@ gulp.task('js', function() {
 
 });
 
+var locals = {
+    env: 'dev'
+};
+
 gulp.task('html', function() {
 
     return gulp.src('src/*.jade')
         .pipe(gp.plumber())
         .pipe(gp.jade({
-            pretty: false
+            pretty: false,
+            locals: locals
         }))
         .pipe(gp.inject(gp.bowerFiles({
             read: false
@@ -59,6 +65,14 @@ gulp.task('js', function() {
         .pipe(gulp.dest('dist/scripts'))
         .pipe(gp.lr())
         .pipe(gp.size());
+});
+
+gulp.task('jsx', function() {
+    return gulp.src('src/scripts/**/*.jsx')
+        .pipe(gp.plumber())
+        .pipe(gp.react())
+        .pipe(gulp.dest('dist/scripts'))
+        .pipe(gp.lr());
 });
 
 gulp.task('manifest', function() {
@@ -105,6 +119,14 @@ gulp.task('server', function() {
         app.use(express.static(path.resolve(__dirname, 'dist')));
     });
 
+    var apiProxy = httpProxy.createProxyServer();
+
+    app.all('/targetprocess/*', function(req, res) {
+        apiProxy.web(req, res, {
+            target: 'http://shitkin:80'
+        });
+    });
+
     app.listen(8080);
     gp.util.log('Started at http://0.0.0.0:8080');
 });
@@ -119,8 +141,10 @@ gulp.task('watch', function() {
         // gulp.watch('src/*.jade', ['html']);
         // gulp.watch('*.html', ['html']);
         gulp.watch('src/scripts/**/*.js', ['js']);
+        gulp.watch('src/scripts/**/*.jsx', ['jsx']);
+        gulp.watch('src/manifest.json', ['manifest']);
     });
 });
 
-gulp.task('build', ['html', 'css', 'sprites', 'js', 'manifest', 'images']);
+gulp.task('build', ['html', 'css', 'sprites', 'jsx', 'js', 'manifest', 'images']);
 gulp.task('default', ['build', 'server', 'watch']);

@@ -3,8 +3,8 @@ html(xmlns='http://www.w3.org/1999/html')
     head
         meta(charset='UTF-8')
         title Screenshot editor
-        //- - if (env === 'dev')
-        script(src="http://localhost:35729/livereload.js")
+        - if (env === 'dev')
+            script(src="http://localhost:35729/livereload.js")
 
         // build:css release/style.css 
 
@@ -16,101 +16,101 @@ html(xmlns='http://www.w3.org/1999/html')
     body
 
         .editor
-            nav.editor__tools(role="navigation")
-                div.tools
+            //- nav.editor__tools(role="navigation")
+            //-     div.tools
 
-                    ul(class="tools__panel")
-                        - var v = 'add'
-                        li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
-                            button.tools__trigger(type="button")
-                                i(class="icon icon-" + v)
+            //-         ul(class="tools__panel")
+            //-             - var v = 'add'
+            //-             li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
+            //-                 button.tools__trigger(type="button")
+            //-                     i(class="icon icon-" + v)
 
-                            .popover.right
-                                .arrow
-                                .popover-content
-                                    form.form-add(action="#")
-                                        .form-group
-                                            input.form-control(type="text", placeholder="Name")
-                                        .form-group
-                                            textarea.form-control(placeholder="Description", rows="7")
-                                        .form-group
-                                            select.form-control
-                                                option Select me
-                                                option Not, me
-                                                option I am the best option
-                                                option Don't trust them, they are lying
+            //-                 .popover.right
+            //-                     .arrow
+            //-                     .popover-content
+            //-                         form.form-add(action="#")
+            //-                             .form-group
+            //-                                 input.form-control(type="text", placeholder="Name")
+            //-                             .form-group
+            //-                                 textarea.form-control(placeholder="Description", rows="7")
+            //-                             .form-group
+            //-                                 select.form-control
+            //-                                     option Select me
+            //-                                     option Not, me
+            //-                                     option I am the best option
+            //-                                     option Don't trust them, they are lying
 
-                                        .form-group
-                                            select.form-control
-                                                option Select me
-                                                option Not, me
-                                                option I am the best option
-                                                option Don't trust them, they are lying
-                                        .form-group
-                                            select.form-control
-                                                option Select me
-                                                option Not, me
-                                                option I am the best option
-                                                option Don't trust them, they are lying
-                                        .form-group
-                                            select.form-control
-                                                option Select me
-                                                option Not, me
-                                                option I am the best option
-                                                option Don't trust them, they are lying
+            //-                             .form-group
+            //-                                 select.form-control
+            //-                                     option Select me
+            //-                                     option Not, me
+            //-                                     option I am the best option
+            //-                                     option Don't trust them, they are lying
+            //-                             .form-group
+            //-                                 select.form-control
+            //-                                     option Select me
+            //-                                     option Not, me
+            //-                                     option I am the best option
+            //-                                     option Don't trust them, they are lying
+            //-                             .form-group
+            //-                                 select.form-control
+            //-                                     option Select me
+            //-                                     option Not, me
+            //-                                     option I am the best option
+            //-                                     option Don't trust them, they are lying
 
-                                        button.btn.btn-success.bnt-lg.btn-block(type="submit") Add Issue
+            //-                             button.btn.btn-success.bnt-lg.btn-block(type="submit") Add Issue
 
-                        - for v in ['cursor', 'pencil', 'arrow', 'line', 'rect', 'circle', 'text', 'crop']
-                            li(class="tools__item tools__item-" + v + " i-role-tool i-role-tool-" + v, data-name=v)
-                                button.tools__trigger(type="button")
-                                    i(class="icon icon-" + v)
+            //-             - for v in ['cursor', 'pencil', 'arrow', 'line', 'rect', 'circle', 'text', 'crop']
+            //-                 li(class="tools__item tools__item-" + v + " i-role-tool i-role-tool-" + v, data-name=v)
+            //-                     button.tools__trigger(type="button")
+            //-                         i(class="icon icon-" + v)
 
-                        - var v = 'color'
-                        li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
-                            button.tools__trigger(type="button")
-                                i(class="icon icon-" + v + " icon-color_orange", data-color="orange")
-                            .popover.right
-                                .arrow
-                                .popover-content
-                                    form.form-color(action="#")
-                                        - for v in ['orange', 'black', 'blue', 'red', 'green', 'white']
-                                            label
-                                                i(class="icon icon-color icon-color_" + v)
-                                                input(type="radio", name="color", value=v)
+            //-             - var v = 'color'
+            //-             li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
+            //-                 button.tools__trigger(type="button")
+            //-                     i(class="icon icon-" + v + " icon-color_orange", data-color="orange")
+            //-                 .popover.right
+            //-                     .arrow
+            //-                     .popover-content
+            //-                         form.form-color(action="#")
+            //-                             - for v in ['orange', 'black', 'blue', 'red', 'green', 'white']
+            //-                                 label
+            //-                                     i(class="icon icon-color icon-color_" + v)
+            //-                                     input(type="radio", name="color", value=v)
 
-                    .tools__separator
-                    ul(class="tools__panel")
-                        - var v = 'settings'
-                        li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
-                            button.tools__trigger(type="button")
-                                i(class="icon icon-" + v)
-                                //- | #{v}
+            //-         .tools__separator
+            //-         ul(class="tools__panel")
+            //-             - var v = 'settings'
+            //-             li(class="tools__item tools__item-" + v + " i-role-tool-" + v)
+            //-                 button.tools__trigger(type="button")
+            //-                     i(class="icon icon-" + v)
+            //-                     //- | #{v}
 
 
-                            .popover.right
-                                .arrow
-                                form.form-settings(action="#")
-                                    .popover-content
-                                        .checkbox
-                                            label
-                                                input(type="checkbox") 
-                                                | Pin panel
+            //-                 .popover.right
+            //-                     .arrow
+            //-                     form.form-settings(action="#")
+            //-                         .popover-content
+            //-                             .checkbox
+            //-                                 label
+            //-                                     input(type="checkbox") 
+            //-                                     | Pin panel
 
-                                    .popover-content
-                                        .form-group
-                                            label Targetprocess Account
-                                            .domain-control
-                                                input.form-control(type="text", placeholder="account")
-                                                span .tpondemand.com
+            //-                         .popover-content
+            //-                             .form-group
+            //-                                 label Targetprocess Account
+            //-                                 .domain-control
+            //-                                     input.form-control(type="text", placeholder="account")
+            //-                                     span .tpondemand.com
 
-                                        button.btn.btn-success.bnt-lg.btn-block(type="submit") Login
+            //-                             button.btn.btn-success.bnt-lg.btn-block(type="submit") Login
                 
 
 
-            .editor__area
+            //- .editor__area
 
-                canvas#imageView(width=200, height=200)
+            //-     canvas#imageView(width=200, height=200)
 
                 //- img(src="img/screen.png")
 
@@ -125,14 +125,6 @@ html(xmlns='http://www.w3.org/1999/html')
         // endinject 
         // endbuild 
 
-        script(type='text/javascript').
+        script(type='text/javascript', src="scripts/main.js")
 
-            require.config({
-                baseUrl: './scripts/',
-                paths: {
-                    'Class': 'libs/class'
-                }
-            });
-
-            require(['editor'])
 

@@ -20,6 +20,7 @@
 .tools__item {
     height: 44px;
     overflow: visible;
+    display: flex;
 
     &.tools__item-add {
         height: 52px;
@@ -71,11 +72,19 @@
         }
     }
 
+    &.selected {
+        .tools__trigger {
+            background: red;
+        }
+    }
+
 
     .icon {
         display: block;
         margin: auto;
     }
+
+
 }
 
 .tools__item-add {
