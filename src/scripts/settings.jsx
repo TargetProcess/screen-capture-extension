@@ -23,7 +23,7 @@ define(['./settings-form', './popover'], function(Form, Popover){
                         <i className="icon icon-settings"></i>
                     </button>
                     <Popover ref="popover">
-                        <Form />
+                        <Form restApi={this.props.restApi} />
                     </Popover>
                 </li>
             );

@@ -1,13 +1,19 @@
-/*globals Q */
 define(['Class'], function(Class) {
+
     'use strict';
 
     return Class.extend({
 
         init: function() {
-            this.endpoint = '/targetprocess/api/v1';
-            this.endpointUpload = '/targetprocess/UploadFile.ashx';
+
+            this.endpointApi = 'api/v1';
+            this.endpointUpload = 'UploadFile.ashx';
             this.authToken = null;
+            this.host = 'http://localhost:8080/targetprocess';
+        },
+
+        setHost: function(value) {
+            this.host = value;
         },
 
         auth: function() {
@@ -15,9 +21,10 @@ define(['Class'], function(Class) {
         },
 
         get: function(path) {
+
             return Q($.ajax({
                 type: 'get',
-                url: this.endpoint + '/' + path,
+                url: this.host + '/' + this.endpointApi + '/' + path,
                 data: {
                     format: 'json'
                 }
@@ -25,9 +32,10 @@ define(['Class'], function(Class) {
         },
 
         post: function(path, data) {
+
             return Q($.ajax({
                 type: 'post',
-                url: this.endpoint + '/' + path,
+                url: this.host + '/' + this.endpointApi + '/' + path,
                 contentType: 'application/json; charset=UTF-8',
                 dataType: 'json',
                 data: JSON.stringify(data)
@@ -35,6 +43,7 @@ define(['Class'], function(Class) {
         },
 
         postAttach: function(entityData, fileData) {
+
             var b64Png = fileData.split(',')[1];
 
             var binary = atob(b64Png);
@@ -57,24 +66,8 @@ define(['Class'], function(Class) {
             var request = new XMLHttpRequest();
             request.onerror = defer.reject;
             request.onload = defer.resolve;
-            request.open('POST', this.endpointUpload);
+            request.open('POST', this.host + '/' + this.endpointUpload);
             request.send(form);
-
-            return defer.promise;
-        },
-
-        create: function(entityTypeName, data) {
-            var defer = Q.defer();
-
-            $.ajax({
-                type: 'post',
-                url: this.endpoint + '/' + entityTypeName,
-                data: JSON.stringify(data),
-                // dataType: 'json',
-                contentType: 'application/json'
-            }).then(function() {
-                defer.resolve();
-            });
 
             return defer.promise;
         }

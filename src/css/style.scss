@@ -22,7 +22,9 @@ body {
     display: flex;
     background: #2C2C2C;
     flex-grow: 0;
+    flex-shrink: 0;
     width: 64px;
+    overflow-y: scroll;
 }
 
 .editor__area {
@@ -31,5 +33,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: scroll;
 }
 

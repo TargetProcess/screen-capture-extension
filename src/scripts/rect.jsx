@@ -40,7 +40,8 @@ define(['./draw-tool'], function(Class){
         select: function() {
             this.props.paintManager.selectTool('rect');
         },
-        render: function(){
+
+        render: function() {
 
             return (
                 <li className={"tools__item tools__item-rect " + this.props.className}>

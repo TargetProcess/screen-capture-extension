@@ -8,5 +8,5 @@ require.config({
 
 require(['editor'], function(Editor) {
     'use strict';
-    React.renderComponent(Editor(), $('.editor')[0]);
+    React.renderComponent(Editor(), $('.main')[0]);
 });

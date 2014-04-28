@@ -1,10 +1,12 @@
-define(['./popover'], function(Popover){
+define([], function() {
+
+    var storage = window.localStorage;
 
     return React.createClass({
 
         getInitialState: function() {
             return {
-                color: 'orange',
+                color: storage.getItem('color') || 'blue',
                 colors: ['orange', 'black', 'blue', 'red', 'green', 'white']
             };
         },
@@ -14,43 +16,25 @@ define(['./popover'], function(Popover){
         },
 
         selectColor: function(e) {
-            var value = $(e.currentTarget).prev().css('backgroundColor');
 
-            var tool = this.props.paintManager.selectedTool;
-            this.props.paintManager.options.color = value;
+            var value = e.currentTarget.value;
+
+            this.props.paintManager.setColor(value);
             this.setState({
-                color: e.currentTarget.value
+                color: value
             });
-
-            this.props.paintManager.selectTool(tool);
-            this.refs.popover.hide();
+            storage.setItem('color', value);
         },
 
         componentDidMount: function() {
-            // this.props.paintManager.options.color = $(e.currentTarget).prev().css('backgroundColor');
+            this.props.paintManager.setColor(this.state.color);
         },
 
-        render: function(){
+        render: function() {
 
             return (
                 <li className="tools__item tools__item-color">
-                    <button className="tools__trigger" onClick={this.togglePopover}>
-                        <i className={"icon icon-color icon-color_" + this.state.color}></i>
-                    </button>
-
-                    <Popover ref="popover">
-                        <form className="form-color">
-                            {this.state.colors.map(function(v){
-                                var className = "icon icon-color icon-color_" + v;
-                                return (
-                                    <label key={v}>
-                                        <i className={className}></i>
-                                        <input type="radio" name="color" value={v} onChange={this.selectColor} />
-                                    </label>
-                                );
-                            }.bind(this))}
-                        </form>
-                    </Popover>
+                    <input className="tools__trigger" type="color" onChange={this.selectColor} defaultValue={this.state.color} />
                 </li>
             );
         }

@@ -1,27 +1,43 @@
 define(['rest-api'], function(RestApi) {
 
+    var storage = window.localStorage;
+
     return React.createClass({
 
         getInitialState: function() {
             return {
-                accountName: '',
+                accountName: storage.getItem('accountName') || '',
+                host: '',
                 isLogged: false,
-                status: 'ready',
-                restApi: new RestApi()
+                status: 'ready'
             };
         },
 
         doLogin: function(e) {
+
             e.preventDefault();
-            this.login();
+            var accountName = $(this.getDOMNode()).find('[name=login]').val();
+
+            this.login(accountName);
         },
 
-        login: function() {
+        login: function(accountName) {
+
+            if (!accountName) {
+                return;
+            }
+
+            storage.setItem('accountName', accountName);
+            var host = 'https://' + accountName + '.tpondemand.com';
+
             this.setState({
+                accountName: accountName,
+                host: host,
                 status: 'pending'
             });
 
-            this.state.restApi.auth().then(function(data, status, res){
+            this.props.restApi.setHost(host);
+            this.props.restApi.auth().then(function(data, status, res){
                 this.setState({
                     status: 'success'
                 });
@@ -34,7 +50,7 @@ define(['rest-api'], function(RestApi) {
         },
 
         componentDidMount: function() {
-            this.login();
+            // this.login();
         },
 
         render: function() {
@@ -51,7 +67,7 @@ define(['rest-api'], function(RestApi) {
             } else {
                 loginForm = (
                     <div className="domain-control">
-                        <input className="form-control" name="login" type="text" placeholder="account"  value={this.state.accountName} />
+                        <input className="form-control" name="login" type="text" placeholder="account"  defaultValue={this.state.accountName} />
                         <span>.tpondemand.com</span>
                     </div>
                 );

@@ -15,18 +15,8 @@ var sprite = require('css-sprite').stream;
 var express = require('express');
 var httpProxy = require('http-proxy');
 
-gulp.task('js', function() {
-
-    return gulp.src('scripts/**/*.js')
-        .pipe(gp.plumber())
-        .pipe(gulp.dest('scripts'));
-    // .pipe(gp.lr())
-    // .pipe(gp.size())
-
-});
-
 var locals = {
-    env: 'dev'
+    env: 'prod'
 };
 
 gulp.task('html', function() {
@@ -92,14 +82,6 @@ gulp.task('images', function() {
 });
 
 gulp.task('sprites', function() {
-
-    // var spriteData = gulp.src('src/svg/edit.png').pipe(spritesmith({
-    //     // engine: 'canvas',
-    //     imgName: 'sprite.png',
-    //     cssName: 'sprite.css'
-    // }));
-    // spriteData.img.pipe(gulp.dest('dist/css'));
-    // spriteData.css.pipe(gulp.dest('dist/css'));
 
     return gulp.src('src/icons/*.png')
         .pipe(sprite({

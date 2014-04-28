@@ -90,29 +90,24 @@ define(['Class'], function(Class){
 
             var DEFAULT_TEXT = '...';
 
-            var group = new fabric.Group([], {
-              left: e.offsetX,
-              top: e.offsetY
-            });
-
             this.figure = new fabric.IText(DEFAULT_TEXT, {
-                fontSize: 14,
+                fontSize: 28,
                 fontFamily: 'Lucida Grande, sans-serif',
                 fontWeight: 'normal',
                 left: e.offsetX,
                 top: e.offsetY,
+                lineHeight: 1.5,
                 // fill: this.options.color,
                 // stroke: '#ffffff',
-                fill: '#ffffff',
+                fill: this.options.color,
                 strokeWidth: this.options.width,
                 selectionStart: 0,
                 selectionEnd: 3,
-                backgroundColor: 'rgba(74, 74, 74, .9)',
+                // backgroundColor: 'rgba(74, 74, 74, .9)',
                 // padding: 15
 
             });
 
-            // group.addWithUpdate(this.figure);
 
             this.fabricCanvas.add(this.figure);
             this.fabricCanvas.setActiveObject(this.figure);

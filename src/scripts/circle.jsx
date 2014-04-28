@@ -9,14 +9,9 @@ define(['./draw-tool'], function(Class){
             this.figure = new fabric.Circle({
                 left: e.offsetX,
                 top: e.offsetY,
-                // hasBorders: 1,
-                stroke: '#ff5400',
-                // radius: 4
                 fill: false,
-                strokeWidth: 4,
-                // fill: 'rgba(0, 0, 0, 0)',
-                // width: 1,
-                // height: 1
+                stroke: this.options.color,
+                strokeWidth: this.options.width
             });
 
             this.fabricCanvas.add(this.figure);

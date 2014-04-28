@@ -6,8 +6,10 @@
     },
 
     "globals": {
-        "$": true,
-        "console": false
+        "$": false,
+        "console": false,
+        "fabric": false,
+        "Q": false
     },
 
     "rules": {

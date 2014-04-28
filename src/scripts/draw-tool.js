@@ -21,13 +21,17 @@ define(['Class'], function(Class) {
         },
 
         disable: function() {
-            this.saveState(this.figure);
+            // this.saveState(this.figure);
             this.fabricCanvas.off(this.subscriptions);
         },
 
         start: function() {},
         move: function() {},
-        stop: function() {}
+        stop: function() {
+            if (this.figure) {
+                this.saveState(this.figure);
+            }
+        }
     });
 
 });
