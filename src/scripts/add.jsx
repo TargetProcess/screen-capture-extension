@@ -1,4 +1,4 @@
-define(['./add-form', './popover'], function(Form, Popover) {
+define(['./add-form2', './popover'], function(Form, Popover) {
 
     return React.createClass({
 
@@ -10,7 +10,7 @@ define(['./add-form', './popover'], function(Form, Popover) {
 
         toggleBubble: function() {
             this.refs.popover.toggle(this.getDOMNode());
-            this.refs.form.loadFields();
+            // this.refs.form.loadFields();
         },
 
         render: function() {

@@ -17,6 +17,7 @@ define([
         },
 
         start: function(canvasId, url) {
+
             return Q
                 .when(this.initCanvas(canvasId))
                 .then(this.setImageAsBackground.bind(this, url))
@@ -34,34 +35,28 @@ define([
 
         saveState: function() {
 
-            var nextState = this.canvas.toDataURL();
+            var state = this.tools[this.selectedTool].getState ? this.tools[this.selectedTool].getState() : null;
 
-            if (this.currentState) {
-                this.states.push({state: this.currentState, tool: this.selectedTool});
+            this.states.push({
+                state: state,
+                tool: this.selectedTool
+            });
+
+            if (this.onStateAdded) {
+                this.onStateAdded();
             }
-            this.currentState = nextState;
         },
 
         undo: function() {
 
             var state = this.states.pop();
-            state = state ? state.state : this.initialState;
+            if (state && this.tools[state.tool].undo) {
+                this.tools[state.tool].undo(state.state);
+            }
 
-            this.currentState = null;
-
-            this.canvas.clear();
-            fabric.Image.fromURL(state, function(img) {
-                this.canvas.setDimensions({
-                    width: img.width,
-                    height: img.height
-                });
-                this.canvas.setBackgroundImage(img);
-                this.canvas.renderAll();
-            }.bind(this));
-        },
-
-        onToolSelected: function(f) {
-            this.cb = f;
+            if (this.onUndo) {
+                this.onUndo();
+            }
         },
 
         selectTool: function(name) {
@@ -74,7 +69,9 @@ define([
             if (this.tools[this.selectedTool]) {
                 this.tools[this.selectedTool].enable(this.options, this.canvas);
                 this.tools[this.selectedTool].saveState = this.saveState.bind(this);
-                this.cb(this.selectedTool);
+                if (this.onToolSelected) {
+                    this.onToolSelected(this.selectedTool);
+                }
             }
         },
 
@@ -131,6 +128,7 @@ define([
         },
 
         setColor: function(value) {
+
             this.options.color = value;
             this.selectTool(this.selectedTool);
         },
@@ -168,9 +166,9 @@ define([
 
             this.canvas = new fabric.Canvas(id, {
                 selection: false,
-                skipTargetFind: true,
-                perPixelTargetFind: true,
-                targetFindTolerance: 5
+                // skipTargetFind: true,
+                // targetFindTolerance: 5,
+                // perPixelTargetFind: true
             });
 
             return this.canvas;

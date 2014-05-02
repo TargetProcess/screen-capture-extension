@@ -9,7 +9,8 @@
         "$": false,
         "console": false,
         "fabric": false,
-        "Q": false
+        "Q": false,
+        "React": false
     },
 
     "rules": {

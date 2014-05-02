@@ -9,9 +9,11 @@ define([
     './arrow',
     './text',
     './color',
+    './cursor',
+    './undo',
     './paint-manager',
     './rest-api'
-], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, PaintManager, RestApi){
+], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, PaintManager, RestApi){
 
     var storage = window.localStorage;
     var imageUrl = window.screenshotUrl || storage.getItem('imageUrl') || 'img/screen.png';
@@ -38,13 +40,13 @@ define([
 
         componentDidMount: function() {
 
-            this.state.paintManager.onToolSelected(function(name) {
+            this.state.paintManager.onToolSelected = function(name) {
 
                 this.setState({
                     selectedTool: name
                 });
                 storage.setItem('tool', name);
-            }.bind(this));
+            }.bind(this);
 
             this.loadImage(imageUrl);
         },
@@ -57,6 +59,8 @@ define([
                         <nav className="tools">
                             <ul className="tools__panel">
                                 <Add paintManager={this.state.paintManager} restApi={this.state.restApi} />
+                                <Undo paintManager={this.state.paintManager} />
+                                <Cursor className={this.state.selectedTool === 'cursor' ? 'selected' : ''} paintManager={this.state.paintManager} />
 
                                 <Pencil className={this.state.selectedTool === 'pencil' ? 'selected' : ''} paintManager={this.state.paintManager} />
                                 <Arrow className={this.state.selectedTool === 'arrow' ? 'selected' : ''} paintManager={this.state.paintManager} />

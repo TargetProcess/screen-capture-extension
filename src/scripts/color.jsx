@@ -6,13 +6,8 @@ define([], function() {
 
         getInitialState: function() {
             return {
-                color: storage.getItem('color') || 'blue',
-                colors: ['orange', 'black', 'blue', 'red', 'green', 'white']
+                color: storage.getItem('color') || ('#' + Math.round(Math.random() * 255*255*255).toString(16))
             };
-        },
-
-        togglePopover: function() {
-            this.refs.popover.toggle(this.getDOMNode());
         },
 
         selectColor: function(e) {

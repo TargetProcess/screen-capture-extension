@@ -1,4 +1,6 @@
-define(['./draw-tool'], function(Class) {
+define(['./draw-tool', './button-tool'], function(Class, Button) {
+
+    'use strict';
 
     var Tool = Class.extend({
 
@@ -10,7 +12,8 @@ define(['./draw-tool'], function(Class) {
                 left: e.offsetX,
                 top: e.offsetY,
                 stroke: this.options.color,
-                strokeWidth: this.options.width
+                strokeWidth: this.options.width,
+                selectable: false
             });
 
             this.fabricCanvas.add(this.figure);
@@ -18,6 +21,7 @@ define(['./draw-tool'], function(Class) {
         },
 
         move: function(e) {
+
             var x1 = this.x0;
             var y1 = this.y0;
             var x2 = e.offsetX;
@@ -33,30 +37,21 @@ define(['./draw-tool'], function(Class) {
                 angle: angleDegree,
                 width: k * hypotenuse
             });
+
+            this.figure.setCoords();
             this.fabricCanvas.renderAll();
         }
     });
 
     return React.createClass({
 
-        componentDidMount: function() {
-            this.props.paintManager.registerTool('line', new Tool());
-        },
-
-        select: function() {
-            this.props.paintManager.selectTool('line');
-        },
-
-
         render: function() {
-
-            return (
-                <li className={"tools__item tools__item-line " + this.props.className}>
-                    <button className="tools__trigger" onClick={this.select}>
-                        <i className="icon icon-line"></i>
-                    </button>
-                </li>
-            );
+            return Button({
+                name: 'line',
+                className: this.props.className,
+                paintManager: this.props.paintManager,
+                tool: new Tool()
+            });
         }
     });
 });

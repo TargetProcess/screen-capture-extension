@@ -17,15 +17,23 @@ define(['rest-api'], function(RestApi) {
 
             e.preventDefault();
             var accountName = $(this.getDOMNode()).find('[name=login]').val();
+            if (this.state.status === 'success') {
+                this.logout();
+            } else {
+                this.login(accountName);
+            }
 
-            this.login(accountName);
+        },
+
+        logout: function(e) {
+            Q.when(this.props.restApi.logout()).then(function() {
+                this.setState({
+                    status: 'ready'
+                });
+            }.bind(this));
         },
 
         login: function(accountName) {
-
-            if (!accountName) {
-                return;
-            }
 
             storage.setItem('accountName', accountName);
             var host = 'https://' + accountName + '.tpondemand.com';
@@ -36,17 +44,25 @@ define(['rest-api'], function(RestApi) {
                 status: 'pending'
             });
 
-            this.props.restApi.setHost(host);
+            // this.props.restApi.setHost(host);
             this.props.restApi.auth().then(function(data, status, res){
+
+                if (this.props.onLogin) {
+                    this.props.onLogin();
+                } else {
+                    this.setState({
+                        status: 'success'
+                    });
+                }
+
+            }.bind(this))
+            .catch(function(e){
                 this.setState({
-                    status: 'success'
+                    status: 'failure',
+                    alert: 'Can\'t log in'
                 });
             }.bind(this))
-            .catch(function(){
-                this.setState({
-                    status: 'failure'
-                });
-            }.bind(this));
+            .done();
         },
 
         componentDidMount: function() {
@@ -67,7 +83,7 @@ define(['rest-api'], function(RestApi) {
             } else {
                 loginForm = (
                     <div className="domain-control">
-                        <input className="form-control" name="login" type="text" placeholder="account"  defaultValue={this.state.accountName} />
+                        <input className="form-control" name="login" type="text" placeholder="account" required defaultValue={this.state.accountName} />
                         <span>.tpondemand.com</span>
                     </div>
                 );
@@ -76,18 +92,12 @@ define(['rest-api'], function(RestApi) {
 
             return (
                 <form className="form-settings" action="#" onSubmit={this.doLogin} style={this.state.status === 'pending' ? {opacity: 0.5} : {}}>
-                    <div className="popover-content">
-                        <div className="checkbox">
-                            <label><input type="checkbox" />Pin panel</label>
-                        </div>
-                    </div>
-                    <div className="popover-content">
+                        {this.state.alert ? <div className="alert alert-danger">{this.state.alert}</div> : ''}
                         <div className="form-group">
                             <label>Targetprocess Account</label>
                             {loginForm}
                         </div>
-                        {this.state.status !== 'success' ? <button className="btn btn-success btn-lg btn-block" type="submit">Login</button> : ''}
-                    </div>
+                        {this.state.status !== 'success' ? <button className="btn btn-success btn-lg btn-block" type="submit">Login</button> : <button className="btn btn-primary btn-lg btn-block" type="submit">Logout</button>}
                 </form>
             );
         }

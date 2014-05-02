@@ -1,10 +1,11 @@
-define(['./draw-tool'], function(Class){
+define(['./draw-tool', './button-tool'], function(Class, Button) {
+
+    'use strict';
 
     var Tool = Class.extend({
 
-        name: 'rect',
-
         start: function(e) {
+
             this.x0 = e.offsetX;
             this.y0 = e.offsetY;
 
@@ -13,9 +14,8 @@ define(['./draw-tool'], function(Class){
                 top: e.offsetY,
                 stroke: this.options.color,
                 strokeWidth: this.options.width,
-                fill: 'rgba(0, 0, 0, 0)',
-                width: 1,
-                height: 1
+                fill: false,
+                selectable: false
             });
 
             this.fabricCanvas.add(this.figure);
@@ -23,33 +23,25 @@ define(['./draw-tool'], function(Class){
         },
 
         move: function(e) {
+
             this.figure.set({
                 width: e.offsetX - this.x0,
                 height: e.offsetY - this.y0
             });
+            this.figure.setCoords();
             this.fabricCanvas.renderAll();
         }
     });
 
     return React.createClass({
 
-        componentDidMount: function() {
-            this.props.paintManager.registerTool('rect', new Tool());
-        },
-
-        select: function() {
-            this.props.paintManager.selectTool('rect');
-        },
-
         render: function() {
-
-            return (
-                <li className={"tools__item tools__item-rect " + this.props.className}>
-                    <button className="tools__trigger" onClick={this.select}>
-                        <i className="icon icon-rect"></i>
-                    </button>
-                </li>
-            );
+            return Button({
+                name: 'rect',
+                className: this.props.className,
+                paintManager: this.props.paintManager,
+                tool: new Tool()
+            });
         }
     });
 });

@@ -11,9 +11,9 @@ define([], function(){
         },
 
         toggle: function(trigger, flag) {
-            // debugger;
+
             var visible = !this.state.visible;
-            // console.log(trigger, visible);
+
             this.setState({
                 visible: visible,
                 trigger: trigger,
@@ -39,7 +39,11 @@ define([], function(){
             });
         },
 
-        alignTo: function(el) {
+        alignTo: function(trigger) {
+
+            var el = trigger;
+
+            if (!trigger) return;
 
             var triggerRect = el.getBoundingClientRect();
             var thisRect = this.getDOMNode().getBoundingClientRect();
@@ -80,7 +84,6 @@ define([], function(){
 
             this.setState({
                 visible: this.state.visible,
-                trigger: this.state.trigger,
                 arrowStyle: {
                     top: arrowTop
                 },
@@ -107,6 +110,19 @@ define([], function(){
                     });
                 }
             }.bind(this));
+
+            var observer = new MutationObserver(function(mutations) {
+                // console.log('chhhaa');
+                this.alignTo(this.state.trigger);
+            }.bind(this));
+
+            var config = {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true
+            };
+            observer.observe(this.getDOMNode(), config);
         },
 
         render: function() {

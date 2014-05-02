@@ -1,4 +1,5 @@
-$grey-color: #8C97A6;
+$grey-color: $text-color;
+$black-color: #0e2e33;
 
 .popover {
 
@@ -8,16 +9,23 @@ $grey-color: #8C97A6;
     margin: 0;
     top: auto;
     left: auto;
+    max-height: calc(100vh - 6px);
+    color: $text-color;
+    // overflow: hidden;
 
-    // background: #2C2C2C;
+    & li > a {
+        color: $black-color;
+    }
+
 
     .popover-content {
         padding: 12px 14px;
+        max-height: 100vh;
+        // overflow-y: scroll;
     }
 
     label {
         font-size: 14px;
-        color: $grey-color;
         line-height: 17px;
     }
 
@@ -30,13 +38,13 @@ $grey-color: #8C97A6;
     }
 
     .form-control::placeholder {
-        color: #D1D3D6;
+        color: #d1d3d6;
     }
 
-    .btn {
+    .btn-success {
         border: 0;
         border-radius: 5px;
-        background: #95D54E;
+        background: #95d54e;
         font-size: 14px;
         line-height: 17px;
         height: 36px;
@@ -55,57 +63,57 @@ $grey-color: #8C97A6;
         }
     }
 
-    .fancy-select {
-        font-weight: normal;
-        text-transform: none;
-        .options, .trigger, .trigger.open {
-            width: 100%;
-            border-radius: 3px;
-            background: #FFFFFF;
-            border: 1px solid $grey-color;
-            padding: 7px 8px;
-            font-size: 12px;
-            line-height: 15px;
-            box-shadow: none !important;
+    // .fancy-select {
+    //     font-weight: normal;
+    //     text-transform: none;
+    //     .options, .trigger, .trigger.open {
+    //         width: 100%;
+    //         border-radius: 3px;
+    //         background: #ffffff;
+    //         border: 1px solid $grey-color;
+    //         padding: 7px 8px;
+    //         font-size: 12px;
+    //         line-height: 15px;
+    //         box-shadow: none !important;
 
-            &:after {
-                top: 12px;
-            }
-        }
+    //         &:after {
+    //             top: 12px;
+    //         }
+    //     }
 
-        .options.open {
-            top: 35px;
-        }
+    //     .options.open {
+    //         top: 35px;
+    //     }
 
-        .options {
-            li,
-            li.selected {
-                color: $grey-color;
-            }
+    //     .options {
+    //         li,
+    //         li.selected {
+    //             color: $grey-color;
+    //         }
 
-            li.selected {
-                background: $grey-color;
-                color: #ffffff;
-            }
+    //         li.selected {
+    //             background: $grey-color;
+    //             color: #ffffff;
+    //         }
 
-            .hover {
-                background-color: $grey-color;
-                color: #000000;
-            }
-        }
+    //         .hover {
+    //             background-color: $grey-color;
+    //             color: #000000;
+    //         }
+    //     }
 
-        // .trigger:after {
-        //     @extend .glyphicon;
-        //     content: "\e114";
-        //     border: none;
-        //     position: absolute;
-        //     right: 20px;
-        //     top: 10px;
-        //     font-size: 10px;
-        //     color: $grey-color;
-        //     font-weight: normal;
-        // }
-    }
+    //     // .trigger:after {
+    //     //     @extend .glyphicon;
+    //     //     content: "\e114";
+    //     //     border: none;
+    //     //     position: absolute;
+    //     //     right: 20px;
+    //     //     top: 10px;
+    //     //     font-size: 10px;
+    //     //     color: $grey-color;
+    //     //     font-weight: normal;
+    //     // }
+    // }
 
     .form-group {
         margin-bottom: 10px;
@@ -123,7 +131,7 @@ $grey-color: #8C97A6;
         }
 
         .popover-content:first-of-type {
-            border-bottom: 1px solid #D1D3D6;
+            border-bottom: 1px solid #d1d3d6;
             padding-top: 8px;
             padding-bottom: 8px;
         }

@@ -1,4 +1,6 @@
-define(['Class'], function(Class){
+define(['./draw-tool', './button-tool'], function(Class, Button) {
+
+    'use strict';
 
     var Tool = Class.extend({
 
@@ -11,8 +13,7 @@ define(['Class'], function(Class){
             this.completedWithoutMouse = false;
 
             $(document).on('keydown.text', function(e) {
-
-                if (e.ctrlKey && e.which === 13) {
+                if (e.metaKey && e.which === 13) {
                     if (this.isEditMode) {
                         this.onPressEnter();
                     }
@@ -96,18 +97,14 @@ define(['Class'], function(Class){
                 fontWeight: 'normal',
                 left: e.offsetX,
                 top: e.offsetY,
-                lineHeight: 1.5,
-                // fill: this.options.color,
-                // stroke: '#ffffff',
+                lineHeight: 1,
                 fill: this.options.color,
                 strokeWidth: this.options.width,
                 selectionStart: 0,
                 selectionEnd: 3,
-                // backgroundColor: 'rgba(74, 74, 74, .9)',
-                // padding: 15
-
+                selectable: false,
+                editable: true
             });
-
 
             this.fabricCanvas.add(this.figure);
             this.fabricCanvas.setActiveObject(this.figure);
@@ -115,38 +112,34 @@ define(['Class'], function(Class){
             this.figure.enterEditing();
             this.figure.initDelayedCursor();
 
+            this.figure.setCoords();
             this.fabricCanvas.renderAll();
         },
 
         onCompleteEnter: function() {
 
             this.isEditMode = false;
+            this.figure.exitEditing();
+            // this.figure.set({
+            //     editable: false,
+            //     selectable: false
+            // });
 
-            this.saveState(this.figure);
-
+            this.figure.setCoords();
+            this.fabricCanvas.renderAll();
+            this.saveState();
         }
     });
 
-
     return React.createClass({
 
-        componentDidMount: function() {
-            this.props.paintManager.registerTool('text', new Tool());
-        },
-
-        select: function() {
-            this.props.paintManager.selectTool('text');
-        },
-
-        render: function(){
-
-            return (
-                <li className={"tools__item tools__item-text " + this.props.className}>
-                    <button className="tools__trigger" onClick={this.select}>
-                        <i className="icon icon-text"></i>
-                    </button>
-                </li>
-            );
+        render: function() {
+            return Button({
+                name: 'text',
+                className: this.props.className,
+                paintManager: this.props.paintManager,
+                tool: new Tool()
+            });
         }
     });
 });

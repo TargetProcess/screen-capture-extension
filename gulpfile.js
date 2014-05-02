@@ -16,7 +16,7 @@ var express = require('express');
 var httpProxy = require('http-proxy');
 
 var locals = {
-    env: 'prod'
+    env: 'dev'
 };
 
 gulp.task('html', function() {

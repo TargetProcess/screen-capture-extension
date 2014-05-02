@@ -1,0 +1,17 @@
+
+
+
+
+$color-bug: #d86464;
+$color-request: #ffc600;
+$color-userstory: #6498d8;
+
+$types: bug request userstory;
+$colors: (bug: $color-bug, request: $color-request, userstory: $color-userstory);
+
+@function entity-color($type) {
+    @return map-get($colors, $type);
+}
+
+$select-color: #4a90e2;
+$text-color: #8c97a6;

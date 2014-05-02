@@ -1,8 +1,11 @@
-define(['./draw-tool', 'libs/fabric/arrow'], function(Class) {
+define(['./draw-tool', './button-tool', './libs/fabric/arrow'], function(Class, Button) {
+
+    'use strict';
 
     var Tool = Class.extend({
 
         start: function(e) {
+
             this.x0 = e.offsetX;
             this.y0 = e.offsetY;
 
@@ -10,7 +13,8 @@ define(['./draw-tool', 'libs/fabric/arrow'], function(Class) {
                 left: e.offsetX,
                 top: e.offsetY,
                 stroke: this.options.color,
-                strokeWidth: this.options.width
+                strokeWidth: this.options.width,
+                selectable: false
             });
 
             this.fabricCanvas.add(this.figure);
@@ -18,6 +22,7 @@ define(['./draw-tool', 'libs/fabric/arrow'], function(Class) {
         },
 
         move: function(e) {
+
             var x1 = this.x0;
             var y1 = this.y0;
             var x2 = e.offsetX;
@@ -51,29 +56,20 @@ define(['./draw-tool', 'libs/fabric/arrow'], function(Class) {
                 angle: angleDegree - sector,
                 width: hypotenuse
             });
+
+            this.figure.setCoords();
             this.fabricCanvas.renderAll();
         }
     });
-
     return React.createClass({
 
-        componentDidMount: function() {
-            this.props.paintManager.registerTool('arrow', new Tool());
-        },
-
-        select: function() {
-            this.props.paintManager.selectTool('arrow');
-        },
-
-        render: function(){
-
-            return (
-                <li className={"tools__item tools__item-arrow " + this.props.className}>
-                    <button className="tools__trigger" onClick={this.select}>
-                        <i className="icon icon-arrow"></i>
-                    </button>
-                </li>
-            );
+        render: function() {
+            return Button({
+                name: 'arrow',
+                className: this.props.className,
+                paintManager: this.props.paintManager,
+                tool: new Tool()
+            });
         }
     });
 });

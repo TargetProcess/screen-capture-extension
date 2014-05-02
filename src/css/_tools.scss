@@ -36,7 +36,6 @@
         user-select: none;
         overflow: hidden;
         display: block;
-        cursor: pointer;
         line-height: 0;
         // overflow: hidden;
         // text-indent: -9999px;
@@ -53,13 +52,17 @@
         &:focus,
         &.focus {
             outline: 0;
-            background-color: #4A4A4A;
+            background-color: #4a4a4a;
+        }
+
+        &[disabled] {
+            opacity: 0.1;
         }
     }
 
     &.selected {
         .tools__trigger {
-            background: red;
+            background: $select-color;
         }
     }
 
@@ -73,6 +76,8 @@
 }
 
 .tools__item-add {
+    margin-bottom: 16px;
+
     .popover {
         min-width: 420px;
     }
@@ -100,31 +105,31 @@
 
             padding: 0;
             border-radius: 14px;
-            border: 1px solid #FFFFFF;
-            box-shadow: inset 0px 0px 2px 0px #2D3138;
+            border: 1px solid #ffffff;
+            box-shadow: inset 0px 0px 2px 0px #2d3138;
         }
 
     }
 
 
     .icon-color_orange {
-        background: #F9A530;
+        background: #f9a530;
     }
 
     .icon-color_black {
-        background: #4A4A4A;
+        background: #4a4a4a;
     }
 
     .icon-color_blue {
-        background: #3E94E0;
+        background: #3e94e0;
     }
 
     .icon-color_red {
-        background: #D52220;
+        background: #d52220;
     }
 
     .icon-color_green {
-        background: #7CCD2F;
+        background: #7ccd2f;
     }
 
     .icon-color_white {
@@ -139,7 +144,7 @@
             box-shadow: none;
         }
         .icon-color_white {
-            border-color: #ECECEC;
+            border-color: #ececec;
         }
 
         .popover-content {
