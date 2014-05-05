@@ -1,4 +1,5 @@
 define(['Class', './button-tool'], function(Class, Button) {
+    'use strict';
 
     var Tool = Class.extend({
 
@@ -128,7 +129,7 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         render: function() {
             return Button({
-                name: "crop",
+                name: 'crop',
                 className: this.props.className,
                 paintManager: this.props.paintManager,
                 tool: new Tool()

@@ -2,94 +2,55 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
 
     'use strict';
 
+    var DEFAULT_TEXT = '...';
+
     var Tool = Class.extend({
 
         enable: function(options, fabricCanvas) {
+
             this.fabricCanvas = fabricCanvas;
             this.options = options;
 
-            this.isJustStarted = true;
-            this.isEditMode = false;
-            this.completedWithoutMouse = false;
-
-            $(document).on('keydown.text', function(e) {
-                if (e.metaKey && e.which === 13) {
-                    if (this.isEditMode) {
-                        this.onPressEnter();
-                    }
-                    this.isEditMode = false;
-                    this.completedWithoutMouse = true;
-                }
-
-            }.bind(this));
-
+            var isBlur = false;
             this.subscriptions = {
 
-                'custom:mousedown': function() {
+                'object:modified': function(e) {
+                    this.saveState(e);
+                }.bind(this),
 
-                    if (this.isJustStarted) {
-                        this.isJustStarted = false;
+                'text:editing:entered': function(e) {
+                    this.figure = e.target;
+                }.bind(this),
+
+                'text:editing:exited': function() {
+                    isBlur = true;
+                    this.blur();
+                }.bind(this),
+
+                'custom:mousedown': function(e) {
+                    if (isBlur) {
+                        isBlur = false;
                         return;
                     }
-
-                    if (this.completedWithoutMouse === true) {
-                        this.completedWithoutMouse = false;
-                        this.isEditMode = false;
-                    } else {
-                        this.completedWithoutMouse = true;
-                        this.isEditMode = true;
-                    }
-
-                }.bind(this),
-
-                'custom:mouseup': function(e) {
-
-                    if (this.isEditMode) {
-
-                        this.onCompleteEnter(e);
-                    } else {
-
-                        this.onStartEnter(e);
-                    }
-
-                }.bind(this),
-
-                'custom:selected': function() {
-
-                    this.isEditMode = true;
-
-                }.bind(this),
-
-                'custom:selection-cleared': function() {
-
-                    this.isEditMode = false;
-
+                    this.start(e);
                 }.bind(this)
-
             };
 
             this.fabricCanvas.on(this.subscriptions);
         },
 
         disable: function() {
-            $(document).off('.text');
+
+            this.fabricCanvas.forEachObject(function(o) {
+                o.selectable = false;
+            });
+            this.fabricCanvas.selection = false;
+            this.fabricCanvas.discardActiveObject();
+
             this.fabricCanvas.off(this.subscriptions);
         },
 
-        onPressEnter: function() {
-
-            this.fabricCanvas.trigger('before:selection:cleared', {
-                target: this.figure
-            });
-
-            this.fabricCanvas.discardActiveObject();
-        },
-
-        onStartEnter: function(e) {
-
-            this.isEditMode = true;
-
-            var DEFAULT_TEXT = '...';
+        start: function(e) {
 
             this.figure = new fabric.IText(DEFAULT_TEXT, {
                 fontSize: 28,
@@ -116,19 +77,39 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
             this.fabricCanvas.renderAll();
         },
 
-        onCompleteEnter: function() {
+        blur: function() {
 
-            this.isEditMode = false;
-            this.figure.exitEditing();
-            // this.figure.set({
-            //     editable: false,
-            //     selectable: false
-            // });
+            var figure = this.figure;
+            if (!figure.text ||
+                (figure.originalState.text === DEFAULT_TEXT && figure.text === figure.originalState.text)) {
 
-            this.figure.setCoords();
+                this.fabricCanvas.remove(figure);
+            } else {
+                this.saveState();
+            }
+        },
+
+        getState: function() {
+
+            var obj = this.figure;
+            return {
+                object: obj,
+                state: obj.originalState.text === DEFAULT_TEXT ? 'initial' : _.clone(obj.originalState)
+            };
+        },
+
+        undo: function(state) {
+            if (state.state === 'initial') {
+                this.fabricCanvas.remove(state.object);
+
+            } else {
+                state.object.set(state.state);
+                state.object.setCoords();
+
+            }
             this.fabricCanvas.renderAll();
-            this.saveState();
         }
+
     });
 
     return React.createClass({

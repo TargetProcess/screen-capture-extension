@@ -1,8 +1,11 @@
 define(['./draw-tool', './button-tool'], function(Class, Button) {
 
+    'use strict';
+
     var Tool = Class.extend({
 
         start: function(e) {
+
             this.x0 = e.offsetX;
             this.y0 = e.offsetY;
 
@@ -21,11 +24,21 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
         },
 
         move: function(e) {
+
             this.figure.set({
                 radius: Math.abs(e.offsetX - this.x0) / 2
             });
             this.figure.setCoords(); // for selection
             this.fabricCanvas.renderAll();
+        },
+
+        stop: function() {
+
+            if (this.figure.radius) {
+                this.saveState();
+            } else {
+                this.fabricCanvas.remove(this.figure);
+            }
         }
     });
 
@@ -33,7 +46,7 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
 
         render: function() {
             return Button({
-                name: "circle",
+                name: 'circle',
                 className: this.props.className,
                 paintManager: this.props.paintManager,
                 tool: new Tool()

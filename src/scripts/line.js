@@ -40,6 +40,13 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
 
             this.figure.setCoords();
             this.fabricCanvas.renderAll();
+        },
+
+        stop: function() {
+
+            if (this.figure && this.figure.width) {
+                this.saveState();
+            }
         }
     });
 

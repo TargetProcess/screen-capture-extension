@@ -61,6 +61,7 @@ define(['./draw-tool', './button-tool', './libs/fabric/arrow'], function(Class, 
             this.fabricCanvas.renderAll();
         }
     });
+
     return React.createClass({
 
         render: function() {

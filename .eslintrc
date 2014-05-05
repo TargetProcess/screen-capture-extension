@@ -10,7 +10,8 @@
         "console": false,
         "fabric": false,
         "Q": false,
-        "React": false
+        "React": false,
+        "_": false
     },
 
     "rules": {
