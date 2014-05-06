@@ -1,5 +1,7 @@
-define(['./add-form-generated'], function(GeneratedForm){
+define(['./add-form-generated', './settings-form'], function(GeneratedForm, LoginForm){
+
     'use strict';
+
     return React.createClass({
 
         getInitialState: function() {
@@ -16,16 +18,34 @@ define(['./add-form-generated'], function(GeneratedForm){
         },
 
         componentDidMount: function() {
-            this.props.restApi.getForms(this.state.items)
+
+            if (this.props.restApi.isLogged()) {
+                this.getForms();
+            }
+
+            this.props.restApi.onAuth = function(){
+                this.getForms();
+            }.bind(this);
+        },
+
+        getForms: function() {
+            this.props.restApi
+            .getForms(this.state.items)
             .then(function(forms){
                 forms[0].active = true;
                 this.setState({
                     forms: forms
                 });
-            }.bind(this));
+            }.bind(this))
+            .done();
         },
 
         render: function() {
+
+            if (!this.props.restApi.isLogged()) {
+                return (<LoginForm restApi={this.props.restApi} />);
+            }
+
             return (
                 <div className="row">
                     <div className="col-sm-3 column-selector">

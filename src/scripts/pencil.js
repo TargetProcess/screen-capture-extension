@@ -23,6 +23,7 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         stop: function(e) {
 
+            e.path.selectable = false;
             this.getState = function() {
                 return e.path;
             };

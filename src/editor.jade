@@ -2,12 +2,11 @@ doctype html
 html(xmlns='http://www.w3.org/1999/html')
     head
         meta(charset='UTF-8')
-        title Screenshot editor
+        title Screenshot editor-
         - if (env === 'dev')
             script(src="http://localhost:35729/livereload.js")
 
         // build:css release/style.css 
-
         // inject:css 
         // endinject 
         link(rel='stylesheet', href='css/icons.css')
@@ -15,12 +14,11 @@ html(xmlns='http://www.w3.org/1999/html')
         // endbuild 
     body
         .main
-
         // build:js release/scripts.js 
         // inject:js 
         // endinject 
         // endbuild 
 
-        script(type='text/javascript', src="scripts/main.js")
+        script(type='text/javascript', src="vendor/requirejs/require.js", data-main="scripts/main.js")
 
 

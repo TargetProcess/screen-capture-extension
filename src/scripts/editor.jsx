@@ -52,7 +52,6 @@ define([
         },
 
         render: function() {
-
             return (
                 <div className="editor">
                     <div className="editor__tools">

@@ -17,13 +17,17 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "~3.1.1",
+    "ladda-bootstrap": "~0.1.0",
+    "jquery": "*",
     "fancyselect": "*",
     "fabric": "~1.4.5",
     "imgareaselect": "~0.9.10",
     "q": "1.0.1",
     "react": "~0.10.0",
     "lodash": "~2.4.1",
+
+    "bootstrap-sass-official": "~3.1.1",
+
     "requirejs": "~2.1.11"
   },
   "overrides": {
@@ -42,6 +46,11 @@
       "main": [
         "jquery.imgareaselect.dev.js",
         "distfiles/css/imgareaselect-default.css"
+      ]
+    },
+    "react": {
+      "main": [
+        "react-with-addons.js"
       ]
     }
   }

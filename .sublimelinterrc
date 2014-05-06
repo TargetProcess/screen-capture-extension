@@ -8,6 +8,9 @@
         },
         "jshint": {
             "excludes": ["*/node_modules/**","*/bower_components/**","*/vendor/**"]
+        },
+        "scss": {
+            "excludes": ["*/node_modules/**","*/bower_components/**","*/vendor/**"]
         }
     }
 }

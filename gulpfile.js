@@ -21,15 +21,18 @@ var locals = {
 
 gulp.task('html', function() {
 
+    var bowerFiles = gp.bowerFiles({
+        read: false
+    })
+    .pipe(gp.filter('!requirejs/**'));
+
     return gulp.src('src/*.jade')
         .pipe(gp.plumber())
         .pipe(gp.jade({
-            pretty: false,
+            pretty: true,
             locals: locals
         }))
-        .pipe(gp.inject(gp.bowerFiles({
-            read: false
-        }), {
+        .pipe(gp.inject(bowerFiles, {
             ignorePath: 'dist/',
             addRootSlash: false
         }))
@@ -42,7 +45,10 @@ gulp.task('css', function() {
 
     return gulp.src('src/css/style.scss')
         .pipe(gp.plumber())
-        .pipe(gp.rubySass())
+        .pipe(gp.rubySass({
+            loadPath: ['dist/vendor/bootstrap-sass-official/vendor/assets/stylesheets'],
+            sourcemap: true
+        }))
         .pipe(gp.autoprefixer())
         .pipe(gulp.dest('dist/css'))
         .pipe(gp.lr())

@@ -10,6 +10,12 @@ define(['Class'], function(Class) {
             this.endpointUpload = 'UploadFile.ashx';
             this.authToken = null;
             this.host = 'http://localhost:8080/targetprocess';
+            this.hostName = 'localhost/targetprocess';
+        },
+
+        setOnDemandAccount: function(name) {
+            this.host = 'https://' +  name + '.tpondemand.com';
+            this.hostName = name + '.tpondemand.com';
         },
 
         setHost: function(value) {
@@ -21,9 +27,28 @@ define(['Class'], function(Class) {
         },
 
         auth: function() {
-            return this.get('Authentication').then(function(data) {
-                this.authToken = data.Token;
-            }.bind(this));
+            return this
+                .get('Authentication')
+                .then(function(data) {
+                    this.authToken = data.Token;
+                    if (this.onAuth) {
+                        this.onAuth();
+                    }
+                }.bind(this));
+        },
+
+        getCurrentUser: function() {
+            return this
+                .get('context.asmx')
+                .then(function(data) {
+                    var userData = data.LoggedUser;
+                    var user = {
+                        name: [userData.FirstName, userData.LastName].join(' ').trim(),
+                        avatarSrc: this.host + '/avatar.ashx?UserId=' + userData.Id + '&size=100'
+                    };
+
+                    return user;
+                }.bind(this));
         },
 
         logout: function() {
@@ -38,7 +63,14 @@ define(['Class'], function(Class) {
                 data: {
                     format: 'json'
                 }
-            }));
+            }))
+            .catch(function(err) {
+                if (!err.status) {
+                    throw new Error('Unknown error');
+                } else {
+                    throw new Error(err.statusText);
+                }
+            });
         },
 
         post: function(path, data) {
@@ -75,7 +107,22 @@ define(['Class'], function(Class) {
 
             var request = new XMLHttpRequest();
             request.onerror = defer.reject;
-            request.onload = defer.resolve;
+            request.onload = function() {
+                if (request.status === 200) {
+                    var attachData = JSON.parse(request.responseText).items[0];
+                    var attach = {
+                        name: attachData[2],
+                        url: attachData[4],
+                        thumbnailUrl: attachData[5]
+                    };
+                    defer.resolve(attach);
+                } else {
+                    defer.reject(new Error('Status code was ' + request.status));
+                }
+            };
+            request.onprogress = function onprogress(event) {
+                defer.notify(event.loaded / event.total);
+            };
             request.open('POST', this.host + '/' + this.endpointUpload);
             request.send(form);
 
@@ -148,6 +195,8 @@ define(['Class'], function(Class) {
                 })
             })).then(function(data) {
                 return data[0].dataItem.data;
+            }, function(data) {
+                throw new Error(data.responseJSON.Message);
             });
         }
     });

@@ -5,11 +5,13 @@ define(['rest-api'], function(RestApi) {
     return React.createClass({
 
         getInitialState: function() {
+
             return {
                 accountName: storage.getItem('accountName') || '',
                 host: '',
                 isLogged: false,
-                status: 'ready'
+                status: 'ready',
+                user: null
             };
         },
 
@@ -26,79 +28,110 @@ define(['rest-api'], function(RestApi) {
         },
 
         logout: function(e) {
-            Q.when(this.props.restApi.logout()).then(function() {
-                this.setState({
-                    status: 'ready'
+            var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
+            loader.start();
+            Q
+                .when(this.props.restApi.logout())
+                .then(function() {
+                    this.setState({
+                        isLogged: false,
+                        status: 'ready'
+                    });
+                }.bind(this))
+                .done(function() {
+                    loader.stop();
                 });
-            }.bind(this));
         },
 
         login: function(accountName) {
 
             storage.setItem('accountName', accountName);
-            var host = 'https://' + accountName + '.tpondemand.com';
 
             this.setState({
-                accountName: accountName,
-                host: host,
-                status: 'pending'
+                status: 'pending',
+                statusText: ''
             });
 
-            // this.props.restApi.setHost(host);
-            this.props.restApi.auth().then(function(data, status, res){
+            var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
+            loader.start();
 
-                if (this.props.onLogin) {
-                    this.props.onLogin();
-                } else {
+            // this.props.restApi.setOnDemandAccount(accountName);
+
+            Q
+                .when(this.props.restApi.auth())
+                .then(this.props.restApi.getCurrentUser.bind(this.props.restApi))
+                .then(function(user) {
+
                     this.setState({
-                        status: 'success'
+                        isLogged: true,
+                        status: 'success',
+                        user: user
                     });
-                }
+                }.bind(this))
+                .catch (function(err) {
 
-            }.bind(this))
-            .catch(function(e){
-                this.setState({
-                    status: 'failure',
-                    alert: 'Can\'t log in'
+                    this.setState({
+                        status: 'failure',
+                        statusText: err.message
+                    });
+                }.bind(this))
+                .done(function() {
+                    loader.stop();
                 });
-            }.bind(this))
-            .done();
         },
 
         componentDidMount: function() {
-            // this.login();
+            setTimeout(function(){
+                this.login();
+            }.bind(this), 100);
+
         },
 
         render: function() {
 
             var loginForm;
+            var button;
+            var alert;
 
             if (this.state.status === 'success') {
                 loginForm = (
-                    <div className="domain-control">
-                        <span>{this.state.accountName}</span>
-                        <span>.tpondemand.com</span>
+                    <div className="media">
+                        <span className="pull-left">
+                            <img src={this.state.user.avatarSrc} className="img-circle media-object" />
+                        </span>
+                        <div className="media-body">
+                            <h5 className="media-heading">{this.state.user.name}</h5>
+                            <div className="domain-control"><a href={this.props.restApi.host}>{this.props.restApi.hostName}</a></div>
+                        </div>
                     </div>
                 );
             } else {
                 loginForm = (
                     <div className="domain-control">
                         <input className="form-control" name="login" type="text" placeholder="account" required defaultValue={this.state.accountName} />
-                        <span>.tpondemand.com</span>
+                        <span>.tpondemand.com</span >
                     </div>
                 );
             }
 
+            if (!this.state.isLogged) {
+                button = <button className="btn btn-success btn-lg btn-block ladda-button" data-style="slide-left" type="submit"><span className="ladda-label">Login</span></button>;
+            } else {
+                button = <button className="btn btn-default btn-lg btn-block ladda-button" data-style="slide-left" type="submit"><span className="ladda-label">Logout</span></button>;
+            }
+
+            if (this.state.status === 'failure') {
+                alert = <div className="alert alert-danger">{this.state.statusText}</div>;
+            }
 
             return (
-                <form className="form-settings" action="#" onSubmit={this.doLogin} style={this.state.status === 'pending' ? {opacity: 0.5} : {}}>
-                        {this.state.alert ? <div className="alert alert-danger">{this.state.alert}</div> : ''}
-                        <div className="form-group">
-                            <label>Targetprocess Account</label>
-                            {loginForm}
-                        </div>
-                        {this.state.status !== 'success' ? <button className="btn btn-success btn-lg btn-block" type="submit">Login</button> : <button className="btn btn-primary btn-lg btn-block" type="submit">Logout</button>}
-                </form>
+                <form className="form-settings" action="#" onSubmit={this.doLogin}>
+                    {alert}
+                    <div className ="form-group">
+                        {loginForm}
+                    </div>
+                    {button}
+                </form >
             );
         }
     });

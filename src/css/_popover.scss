@@ -19,8 +19,8 @@ $black-color: #0e2e33;
 
 
     .popover-content {
-        padding: 12px 14px;
-        max-height: 100vh;
+        padding: 0;
+        // max-height: calc(100vh - 6px);
         // overflow-y: scroll;
     }
 
@@ -41,14 +41,14 @@ $black-color: #0e2e33;
         color: #d1d3d6;
     }
 
-    .btn-success {
-        border: 0;
-        border-radius: 5px;
-        background: #95d54e;
-        font-size: 14px;
-        line-height: 17px;
-        height: 36px;
-    }
+    // .btn-success {
+    //     border: 0;
+    //     border-radius: 5px;
+    //     background: #95d54e;
+    //     font-size: 14px;
+    //     line-height: 17px;
+    //     height: 36px;
+    // }
 
     .form-color {
         label {
@@ -126,24 +126,14 @@ $black-color: #0e2e33;
     }
 
     .form-settings {
-        .checkbox label {
-            font-size: 12px
-        }
 
-        .popover-content:first-of-type {
-            border-bottom: 1px solid #d1d3d6;
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
+        font-size: 12px;
+        padding: 12px 14px;
 
-        .popover-content:nth-of-type(2) {
-            padding-bottom: 17px;
-            label {
-                padding-bottom: 7px;
-                font-weight: normal;
-            }
+        img {
+            width: 100px;
+            height: 100px;
         }
-
 
         .domain-control {
             display: flex;
@@ -162,6 +152,15 @@ $black-color: #0e2e33;
                 color: $grey-color;
             }
         }
+    }
+
+    .media {
+        padding: 0;
+        margin-bottom: 10px;
+    }
+
+    .alert {
+        margin-bottom: 10px;
     }
 
 }

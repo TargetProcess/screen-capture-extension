@@ -95,11 +95,8 @@ define([], function(){
         },
 
         componentDidMount: function() {
-            // return;
             $(document).on('click', function(e){
                 var trigger = this.state.trigger;
-                // debugger;
-                // console.log(trigger, e.target);
                 if ((e.target !== this.getDOMNode() && !$(this.getDOMNode()).find(e.target).length) ||
                     (trigger && e.target === trigger && !$(trigger).find(e.target).length)) {
                     this.setState({
@@ -112,7 +109,6 @@ define([], function(){
             }.bind(this));
 
             var observer = new MutationObserver(function(mutations) {
-                // console.log('chhhaa');
                 this.alignTo(this.state.trigger);
             }.bind(this));
 

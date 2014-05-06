@@ -34,6 +34,16 @@ define(['Class', './button-tool'], function(Class, Button) {
             };
 
             this.fabricCanvas.on(this.subscriptions);
+
+            $(document).on('keydown.pencil', function(e) {
+                if (e.which === 8 || e.which === 46) {
+                    e.preventDefault();
+                    this.fabricCanvas.discardActiveObject();
+                    this.fabricCanvas.remove(this.figure);
+                    this.saveState();
+                    this.figure = null;
+                }
+            }.bind(this));
         },
 
         disable: function() {
@@ -45,6 +55,7 @@ define(['Class', './button-tool'], function(Class, Button) {
             });
 
             this.fabricCanvas.off(this.subscriptions);
+            $(document).off('.pencil');
         },
 
         blur: function() {
@@ -70,6 +81,9 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         undo: function(state) {
 
+            if (!_.find(this.fabricCanvas.getObjects(), state.object)) {
+                this.fabricCanvas.add(state.object);
+            }
             state.object.set(state.state);
             state.object.setCoords();
             this.fabricCanvas.renderAll();

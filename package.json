@@ -33,6 +33,7 @@
     "gulp.spritesmith": "^0.3.0",
     "gulp-autoprefixer": "0.0.7",
     "gulp-react": "^0.3.2",
-    "http-proxy": "^1.1.2"
+    "http-proxy": "^1.1.2",
+    "gulp-filter": "^0.4.1"
   }
 }
