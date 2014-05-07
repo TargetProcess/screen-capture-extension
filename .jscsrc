@@ -6,8 +6,7 @@
         "while",
         "do",
         "try",
-        "catch",
-        "default"
+        "catch"
     ],
     "requireSpaceAfterKeywords": [
         "if",
@@ -125,9 +124,9 @@
     "disallowMultipleLineStrings": true,
     "disallowMultipleLineBreaks": true,
     "validateLineBreaks": "LF",
-    
+
     "validateQuoteMarks": "'",
-    
+
     "validateIndentation": 4,
     "disallowMixedSpacesAndTabs": true,
     "disallowTrailingWhitespace": true,

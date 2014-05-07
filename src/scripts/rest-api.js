@@ -55,14 +55,14 @@ define(['Class'], function(Class) {
             this.authToken = null;
         },
 
-        get: function(path) {
+        get: function(path, data) {
 
             return Q($.ajax({
                 type: 'get',
                 url: this.host + '/' + this.endpointApi + '/' + path,
-                data: {
+                data: _.extend({
                     format: 'json'
-                }
+                }, data)
             }))
             .catch(function(err) {
                 if (!err.status) {

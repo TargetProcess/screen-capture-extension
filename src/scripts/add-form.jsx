@@ -120,7 +120,7 @@ define(['./settings-form'], function(Form){
                     </div>
                     <div className="form-group">
                         <select name="projectId" className="form-control">
-                            <option selected value=null>No Project</option>
+                            <option selected value={null}>No Project</option>
                             {this.state.projects.map(function(v){
                                 return <option key={v.Id} value={v.Id}>{v.Name}</option>
                             })}
@@ -128,7 +128,7 @@ define(['./settings-form'], function(Form){
                     </div>
                     <div className="form-group">
                         <select name="teamId" className="form-control">
-                            <option selected value=null>No Team</option>
+                            <option selected value={null}>No Team</option>
                             {this.state.teams.map(function(v){
                                 return <option key={v.Id} value={v.Id}>{v.Name}</option>
                             })}

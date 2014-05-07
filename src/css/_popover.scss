@@ -11,6 +11,7 @@ $black-color: #0e2e33;
     left: auto;
     max-height: calc(100vh - 6px);
     color: $text-color;
+    display: flex;
     // overflow: hidden;
 
     & li > a {
@@ -19,7 +20,9 @@ $black-color: #0e2e33;
 
 
     .popover-content {
+        flex-grow: 1;
         padding: 0;
+        overflow: scroll;
         // max-height: calc(100vh - 6px);
         // overflow-y: scroll;
     }

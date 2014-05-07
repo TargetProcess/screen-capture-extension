@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch Beta 3.0.2 (7779) - http://www.bohemiancoding.com/sketch -->
+    <title>cursor</title>
+    <description>Created with Sketch Beta.</description>
+    <defs></defs>
+    <g id="Panel" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="[panel]-editor" sketch:type="MSLayerGroup" transform="translate(-10.000000, -112.000000)" fill="#FFFFFF">
+            <g id="[cursor]" transform="translate(0.000000, 112.000000)" sketch:type="MSShapeGroup">
+                <path d="M26.512085,13.4627686 L36.9482422,23.2905273 L32.5739746,24.0435791 L35.5848389,29.625 L33.618042,30.5235596 L30.498291,25.0358887 L26.512085,27.621582 L26.512085,13.4627686 Z" id="Path-11"></path>
+            </g>
+        </g>
+    </g>
+</svg>

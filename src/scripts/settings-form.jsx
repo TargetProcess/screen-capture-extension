@@ -55,7 +55,7 @@ define(['rest-api'], function(RestApi) {
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
 
-            // this.props.restApi.setOnDemandAccount(accountName);
+            this.props.restApi.setOnDemandAccount(accountName);
 
             Q
                 .when(this.props.restApi.auth())
@@ -81,10 +81,12 @@ define(['rest-api'], function(RestApi) {
         },
 
         componentDidMount: function() {
-            setTimeout(function(){
-                this.login();
-            }.bind(this), 100);
 
+            // setTimeout(function(){
+            if (this.state.accountName) {
+                this.login(this.state.accountName);
+            }
+            // }.bind(this), 100);
         },
 
         render: function() {

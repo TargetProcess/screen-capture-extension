@@ -1,5 +1,175 @@
-define([], function(){
+define(['./card-entity'], function(Card) {
     'use strict';
+
+    var FieldInput = React.createClass({
+
+        serialize: function() {
+
+            if (!this.props.field.isVisible) {
+                return null;
+            }
+
+            return {
+                name: this.props.field.name,
+                type: this.props.field.type,
+                value: $(this.refs.input.getDOMNode()).val()
+            };
+        },
+
+        render: function() {
+
+            var data = this.props.field;
+
+            var classSet = React.addons.classSet({
+                "form-group": true,
+                "hidden": !data.isVisible
+            });
+
+            return (
+                <div className={classSet}>
+                    {data.isCustomField ? <label htmlFor={data.name}>{data.caption}</label> : '' }
+                    <input ref="input" name={data.name} id={data.name} className="form-control" type={data.inputType} defaultValue={data.config.defaultValue}
+                        disabled={!data.isVisible}
+                        placeholder={data.isCustomField ? null : data.caption}
+                        required={data.required}
+                        aria-required={data.required}
+                    />
+                </div>
+            );
+        }
+    });
+
+    var FieldSelect = React.createClass({
+
+        serialize: function() {
+
+            if (!this.props.field.isVisible) {
+                return null;
+            }
+
+
+            var val = $(this.refs.input.getDOMNode()).val();
+            return {
+                name: this.props.field.name,
+                type: this.props.field.type,
+                value: Array.isArray(val) ? val.join(',') : val
+            };
+        },
+
+        render: function() {
+            var data = this.props.field;
+            var options = data.options.values.map(function(v){
+                return (<option key={v.id} value={v.id} data-process-id={v.processId}>{v.title}</option>);
+            });
+
+            if (!data.required) {
+                options.unshift(<option></option>);
+            }
+
+            var classSet = React.addons.classSet({
+                "form-group": true,
+                "hidden": !data.isVisible
+            });
+
+            return (
+                <div className={classSet} key={data.name}>
+                    {data.isCustomField ? <label>{data.caption}</label> : ''}
+                    <select ref='input' name={data.name} className="form-control" defaultValue={data.config.defaultValue}
+                        multiple={data.multiple}
+                        disabled={!data.isVisible}
+                        onChange={this.props.onChange}
+                        required={data.required}
+                        aria-required={data.required} >
+                        {options}
+                    </select>
+                </div>
+            );
+        }
+    });
+
+    var FieldUrl = React.createClass({
+
+
+        serialize: function() {
+
+            if (!this.props.field.isVisible) {
+                return null;
+            }
+
+            return {
+                name: this.props.field.name,
+                type: this.props.field.type,
+                value: {
+                    url: $(this.refs.url.getDOMNode()).val(),
+                    label: $(this.refs.label.getDOMNode()).val()
+                }
+            };
+        },
+
+        render: function() {
+            var data = this.props.field;
+
+            return (
+                <div className={data.isVisible ? null : 'hidden'}>
+                    <div className="form-group" key={data.name + '_u'}>
+                        <label>{data.caption}</label>
+                        <input ref="url" name={data.name + '__url'} className="form-control" type="url" placeholder='URL'
+                        disabled={!data.isVisible}
+                        required={data.required}
+                        aria-required={data.required} />
+
+                    </div>
+                    <div className="form-group" key={data.name + '_d'}>
+                        <input ref="label" name={data.name + '__label'} className="form-control" type="text" placeholder='URL Description'
+                        disabled={!data.isVisible}
+                        required={data.required}
+                        aria-required={data.required} />
+                    </div>
+                </div>
+
+            );
+        }
+    });
+
+    var FieldCheckbox = React.createClass({
+
+        serialize: function() {
+
+            if (!this.props.field.isVisible) {
+                return null;
+            }
+
+
+            if ($(this.refs.input.getDOMNode()).prop('checked')) {
+                return {
+                    name: this.props.field.name,
+                    type: this.props.field.type,
+                    value: $(this.refs.input.getDOMNode()).val()
+                };
+            } else {
+                return null;
+            }
+        },
+
+        render: function() {
+            var data = this.props.field;
+
+            var classSet = React.addons.classSet({
+                "checkbox": true,
+                "hidden": !data.isVisible
+            });
+
+            return (
+                <div className={classSet} key={data.name}>
+                    <label>
+                        <input ref="input" name={data.name} type="checkbox" value="true"
+                            disabled={!data.isVisible} />
+                        {data.caption}
+                    </label>
+                </div>
+            );
+        }
+    });
 
     return React.createClass({
 
@@ -7,11 +177,20 @@ define([], function(){
             return {
                 fields: [],
                 processId: null,
-                entity: null
+                entity: null,
+                validate: false
             };
         },
 
         componentDidMount: function() {
+
+            this.getDOMNode().addEventListener('invalid', function first(){
+                this.setState({
+                    validate: true
+                });
+                this.getDOMNode().removeEventListener('invalid', first);
+            }.bind(this), true);
+
 
             this.props.restApi
                 .getForm(this.props.restId)
@@ -134,7 +313,8 @@ define([], function(){
                     this.setState({
                         status: 'success',
                         entity: entity,
-                        attach: attach
+                        attach: attach,
+                        validate: false
                     });
 
                 }.bind(this))
@@ -151,7 +331,10 @@ define([], function(){
         },
 
         getValues: function() {
-            var values = $(this.getDOMNode()).serializeArray();
+
+            var values = _.compact(_.values(this.refs).map(function(ref) {
+                return ref.serialize();
+            }));
 
             values = values.reduce(function(res, field){
                 // debugger;
@@ -194,108 +377,40 @@ define([], function(){
 
         },
 
-        renderFieldInput: function(data) {
-
-            var classSet = React.addons.classSet({
-                "form-group": true,
-                "hidden": !data.isVisible
-            });
-
-            return (
-                <div className={classSet} key={data.name}>
-                    {data.isCustomField ? <label htmlFor={data.name}>{data.caption}</label> : '' }
-                    <input name={data.name} id={data.name} className="form-control" type={data.inputType} defaultValue={data.config.defaultValue} placeholder={data.isCustomField ? null : data.caption} required={data.required} />
-                </div>
-            );
-        },
-
-        renderFieldCheckbox: function(data) {
-
-            var classSet = React.addons.classSet({
-                "checkbox": true,
-                "hidden": !data.isVisible
-            });
-
-            return (
-                <div className={classSet} key={data.name}>
-                    <label>
-                        <input name={data.name} type="checkbox" required={data.required} />
-                        {data.caption}
-                    </label>
-                </div>
-            );
-        },
-
-        renderFieldSelect: function(data) {
-
-            var options = data.options.values.map(function(v){
-                return (<option key={v.id} value={v.id} data-process-id={v.processId}>{v.title}</option>);
-            });
-
-            if (!data.required) {
-                options.unshift(<option></option>);
-            }
-
-            var classSet = React.addons.classSet({
-                "form-group": true,
-                "hidden": !data.isVisible
-            });
-
-            return (
-                <div className={classSet} key={data.name}>
-                    {data.isCustomField ? <label>{data.caption}</label> : ''}
-                    <select name={data.name} className="form-control" defaultValue={data.config.defaultValue} required={data.required} multiple={data.multiple}
-                        onChange={data.name === 'project' ? this.onSelectProject : null}>
-                        {options}
-                    </select>
-                </div>
-            );
-        },
-
-        renderFieldURL: function(data) {
-
-            return (
-                <div className={data.isVisible ? null : 'hidden'}>
-                    <div className="form-group" key={data.name + '_u'}>
-                        <label>{data.caption}</label>
-                        <input name={data.name + '__url'} required={data.required} className="form-control" type="url" placeholder='URL' />
-                    </div>
-                    <div className="form-group" key={data.name + '_d'}>
-                        <input name={data.name + '__url'} required={data.required} className="form-control" type="text" placeholder='URL Description' />
-                    </div>
-                </div>
-
-            );
-        },
-
         render: function() {
-            var fields = this.state.fields;
 
-            fields = fields.map(function(field) {
+            var groupFieldsData = _.groupBy(this.state.fields, function(field) {
+                return field.isCustomField ? 'custom' : 'main';
+            });
 
-                switch (field.type) {
-                    case 'Text':
-                    case 'Date':
-                    case 'Number':
-                    case 'TemplatedURL':
-                        return this.renderFieldInput(field);
+            var groupFields = _.object(_.map(groupFieldsData, function(fields, key) {
 
-                    case 'DDL':
-                    case 'DropDown':
-                    case 'MultipleSelectionList':
-                        return this.renderFieldSelect(field);
+                fields = fields.map(function(field) {
 
-                    case 'CheckBox':
-                        return this.renderFieldCheckbox(field);
+                    switch (field.type) {
+                        case 'Text':
+                        case 'Date':
+                        case 'Number':
+                        case 'TemplatedURL':
+                            return (<FieldInput key={field.name} ref={field.name} field={field} />);
 
-                    case 'URL':
-                        return this.renderFieldURL(field);
+                        case 'DDL':
+                        case 'DropDown':
+                        case 'MultipleSelectionList':
+                            return (<FieldSelect key={field.name} ref={field.name} field={field} onChange={field.name === 'project' ? this.onSelectProject : null} />);
 
-                    default:
-                        return null;
-                }
-            }.bind(this));
-            fields = _.compact(fields);
+                        case 'CheckBox':
+                            return (<FieldCheckbox key={field.name} ref={field.name} field={field} />);
+
+                        case 'URL':
+                            return (<FieldUrl key={field.name} ref={field.name} field={field} />);
+
+                        default:
+                            return null;
+                    }
+                }.bind(this));
+                return [key, _.compact(fields)];
+            }.bind(this)));
 
             var alert;
             var entity;
@@ -303,32 +418,38 @@ define([], function(){
             if (this.state.status === 'success') {
                 alert = <div className="alert alert-success">Entity is added</div>;
 
-                entity = (
-                    <div className="media">
-                        <span className="pull-left">
-                            <img src={this.state.attach.thumbnailUrl.replace(/localhost/, 'localhost:8080').replace(/100/g, '50')} className="img-rounded media-object" />
-                        </span>
-                        <div className="media-body">
-                            <h5 className="media-heading"><a href="#">{'#' + this.state.entity.id}</a> {this.state.entity.name}</h5>
-                        </div>
-                    </div>
-                );
+                entity = <Card restApi={this.props.restApi} entity={this.state.entity} />;
 
             } else if (this.state.status === 'failure') {
                 alert = <div className="alert alert-danger">{this.state.statusText}</div>;
             }
 
+            var fieldsetCustom;
+            if (groupFields.custom && groupFields.custom.length) {
+                var hasVisible = Boolean(_.where(groupFieldsData.custom, {isVisible: true}).length);
+                var className = React.addons.classSet({
+                    'fieldset-customfields': true,
+                    'hidden': !hasVisible
+                });
 
+                fieldsetCustom = (<fieldset className={className}>
+                    {groupFields.custom}
+                </fieldset>);
+            }
 
             return (
-                <form action="#" onSubmit={this.onSubmit}>
-                    {alert}
-                    {entity}
-                    {fields}
-
-                    <button className="btn btn-success btn-lg btn-block ladda-button" data-style="expand-left"  type="submit">
-                        <span className="ladda-label">Add</span>
-                    </button>
+                <form action="#" onSubmit={this.onSubmit} className={this.state.validate ? 'validate' : null}>
+                    <fieldset className="fieldset-main">
+                        {alert}
+                        {entity}
+                        {groupFields.main}
+                    </fieldset>
+                    {fieldsetCustom}
+                    <fieldset>
+                        <button className="btn btn-success btn-lg btn-block ladda-button" data-style="expand-left"  type="submit">
+                            <span className="ladda-label">Add</span>
+                        </button>
+                    </fieldset>
                 </form>
             );
         }

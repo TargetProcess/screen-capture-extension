@@ -5,37 +5,21 @@ define([], function(){
         getInitialState: function() {
             return {
                 visible: false,
-                trigger: false,
-                style: {}
+                trigger: false
             };
         },
 
         toggle: function(trigger, flag) {
 
-            var visible = !this.state.visible;
-
             this.setState({
-                visible: visible,
-                trigger: trigger,
-                style: {
-                    display: visible ? 'block' : 'none',
-                    visibility: 'hidden'
-                }
+                visible: true,
+                trigger: trigger
             });
-
-            this.state.visible = visible;
-
-            setTimeout(function(){
-                this.alignTo(trigger);
-            }.bind(this), 100);
         },
 
         hide: function() {
             this.setState({
-                visible: false,
-                style: {
-                    display: 'none'
-                }
+                visible: false
             });
         },
 
@@ -83,28 +67,23 @@ define([], function(){
 
 
             this.setState({
-                visible: this.state.visible,
                 arrowStyle: {
                     top: arrowTop
                 },
                 style: {
-                    display: this.state.visible ? 'block' : 'none',
                     top: top
                 }
             });
         },
 
         componentDidMount: function() {
+
             $(document).on('click', function(e){
                 var trigger = this.state.trigger;
                 if ((e.target !== this.getDOMNode() && !$(this.getDOMNode()).find(e.target).length) ||
                     (trigger && e.target === trigger && !$(trigger).find(e.target).length)) {
-                    this.setState({
-                        visible: false,
-                        style: {
-                            display: 'none'
-                        }
-                    });
+
+                    this.hide();
                 }
             }.bind(this));
 
@@ -123,8 +102,13 @@ define([], function(){
 
         render: function() {
 
+            var className = React.addons.classSet({
+                'popover right': true,
+                'hidden': !this.state.visible
+            });
+
             return (
-                <div className="popover right" style={this.state.style}>
+                <div className={className} style={this.state.style}>
                     <div className="arrow" style={this.state.arrowStyle}></div>
                     <div className="popover-content">
                         {this.props.children}

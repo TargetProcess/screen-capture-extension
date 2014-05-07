@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch Beta 3.0.2 (7779) - http://www.bohemiancoding.com/sketch -->
+    <title>arrow</title>
+    <description>Created with Sketch Beta.</description>
+    <defs></defs>
+    <g id="Panel" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="[panel]-editor" sketch:type="MSLayerGroup" transform="translate(-10.000000, -200.000000)" fill="#FFFFFF">
+            <g id="[arrow]" transform="translate(0.000000, 200.000000)" sketch:type="MSShapeGroup">
+                <path d="M26.6509234,25.4794401 L38.1562809,13.9740826 C38.8037931,13.3265705 39.7768176,13.2528033 40.3308244,13.80681 C40.8848311,14.3608168 40.8110639,15.3338414 40.1635518,15.9813535 L28.6581943,27.486711 L32.8973733,27.519393 C33.6372328,27.5250969 34.2397854,28.1276495 34.2454894,28.867509 C34.2511933,29.6073686 33.6578604,30.2007015 32.9180009,30.1949975 L24.0113031,30.1263313 L23.9426369,21.2196335 C23.9369329,20.479774 24.5302658,19.8864411 25.2701254,19.892145 C26.0099849,19.897849 26.6125375,20.5004016 26.6182414,21.2402611 L26.6509234,25.4794401 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
