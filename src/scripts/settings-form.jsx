@@ -4,6 +4,12 @@ define(['rest-api'], function(RestApi) {
 
     return React.createClass({
 
+        getDefaultProps: function() {
+            return {
+                autoLogin: false
+            }
+        },
+
         getInitialState: function() {
 
             return {
@@ -61,12 +67,13 @@ define(['rest-api'], function(RestApi) {
                 .when(this.props.restApi.auth())
                 .then(this.props.restApi.getCurrentUser.bind(this.props.restApi))
                 .then(function(user) {
-
-                    this.setState({
-                        isLogged: true,
-                        status: 'success',
-                        user: user
-                    });
+                    if (this.isMounted()) { // when lay inside add form and umount later, to prevent race conditions
+                        this.setState({
+                            isLogged: true,
+                            status: 'success',
+                            user: user
+                        });
+                    }
                 }.bind(this))
                 .catch (function(err) {
 
@@ -82,11 +89,26 @@ define(['rest-api'], function(RestApi) {
 
         componentDidMount: function() {
 
-            // setTimeout(function(){
-            if (this.state.accountName) {
+
+            if (this.props.autoLogin && this.state.accountName) {
                 this.login(this.state.accountName);
             }
-            // }.bind(this), 100);
+
+            this.props.restApi.onAuth.add(function(){
+                if (!this.state.isLogged) {
+                    Q
+                        .when(this.props.restApi.getCurrentUser())
+                        .then(function(user) {
+                            if (this.isMounted()) { // when lay inside add form and umount later, to prevent race conditions
+                                this.setState({
+                                    isLogged: true,
+                                    status: 'success',
+                                    user: user
+                                });
+                            }
+                        }.bind(this));
+                }
+            }.bind(this));
         },
 
         render: function() {
@@ -95,7 +117,7 @@ define(['rest-api'], function(RestApi) {
             var button;
             var alert;
 
-            if (this.state.status === 'success') {
+            if (this.state.status === 'success' && !this.props.hideResult) {
                 loginForm = (
                     <div className="media">
                         <span className="pull-left">
@@ -110,7 +132,7 @@ define(['rest-api'], function(RestApi) {
             } else {
                 loginForm = (
                     <div className="domain-control">
-                        <input className="form-control" name="login" type="text" placeholder="account" required defaultValue={this.state.accountName} />
+                        <input className="form-control" name="login" type="text" placeholder="account" required pattern="[A-Za-z-0-9]+" title="your-host1313" defaultValue={this.state.accountName} />
                         <span>.tpondemand.com</span >
                     </div>
                 );

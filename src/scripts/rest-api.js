@@ -11,6 +11,9 @@ define(['Class'], function(Class) {
             this.authToken = null;
             this.host = 'http://localhost:8080/targetprocess';
             this.hostName = 'localhost/targetprocess';
+
+            this.onAuth = $.Callbacks();
+            this.onLogout = $.Callbacks();
         },
 
         setOnDemandAccount: function(name) {
@@ -31,9 +34,7 @@ define(['Class'], function(Class) {
                 .get('Authentication')
                 .then(function(data) {
                     this.authToken = data.Token;
-                    if (this.onAuth) {
-                        this.onAuth();
-                    }
+                    this.onAuth.fire();
                 }.bind(this));
         },
 
@@ -53,6 +54,7 @@ define(['Class'], function(Class) {
 
         logout: function() {
             this.authToken = null;
+            this.onLogout.fire();
         },
 
         get: function(path, data) {
@@ -130,6 +132,7 @@ define(['Class'], function(Class) {
         },
 
         getForms: function(ids) {
+
             return Q($.ajax({
                 type: 'post',
                 url: this.host + '/slice/v1/matrix/listModeActionsV2',

@@ -25,27 +25,31 @@ define(['./add-form-generated', './settings-form'], function(GeneratedForm, Logi
                 this.getForms();
             }
 
-            this.props.restApi.onAuth = function(){
+            this.props.restApi.onAuth.add(function(){
                 this.getForms();
-            }.bind(this);
+            }.bind(this));
+
+            this.props.restApi.onLogout.add(function(){
+                this.forceUpdate();
+            }.bind(this));
         },
 
         getForms: function() {
             this.props.restApi
-            .getForms(this.state.items)
-            .then(function(forms){
-                forms[0].active = true;
-                this.setState({
-                    forms: forms
-                });
-            }.bind(this))
-            .done();
+                .getForms(this.state.items)
+                .then(function(forms){
+                    forms[0].active = true;
+                    this.setState({
+                        forms: forms
+                    });
+                }.bind(this))
+                .done();
         },
 
         render: function() {
 
             if (!this.props.restApi.isLogged()) {
-                return (<LoginForm restApi={this.props.restApi} />);
+                return (<LoginForm hideResult={true} restApi={this.props.restApi} />);
             }
 
             return (
