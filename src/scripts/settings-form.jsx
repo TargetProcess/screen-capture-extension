@@ -36,6 +36,7 @@ define(['rest-api'], function(RestApi) {
         logout: function(e) {
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
+            storage.setItem('accountName', '');
             Q
                 .when(this.props.restApi.logout())
                 .then(function() {
@@ -61,7 +62,10 @@ define(['rest-api'], function(RestApi) {
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
 
-            this.props.restApi.setOnDemandAccount(accountName);
+            // for tests now, login to remote only if extension
+            if (chrome.tabs) {
+                this.props.restApi.setOnDemandAccount(accountName);
+            }
 
             Q
                 .when(this.props.restApi.auth())

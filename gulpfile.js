@@ -10,8 +10,6 @@ var gp = require('gulp-load-plugins')();
 var livereload = require('tiny-lr')();
 gp.lr = gp.livereload.bind(null, livereload);
 
-var sprite = require('css-sprite').stream;
-
 var express = require('express');
 var httpProxy = require('http-proxy');
 
@@ -48,8 +46,8 @@ gulp.task('html-release', function() {
 
     return gulp.src('dist/*.html')
         .pipe(gp.usemin({
-            css: [gp.csso(), gp.rev()],
-            js: [gp.uglify(), gp.rev()]
+            css: [gp.csso()],
+            js: [gp.uglify()]
         }))
         .pipe(gulp.dest('release/'));
 });
@@ -59,8 +57,7 @@ gulp.task('css', function() {
     return gulp.src('src/css/style.scss')
         .pipe(gp.plumber())
         .pipe(gp.rubySass({
-            loadPath: ['dist/vendor/bootstrap-sass-official/vendor/assets/stylesheets'],
-            // sourcemap: true
+            loadPath: ['dist/vendor/bootstrap-sass-official/vendor/assets/stylesheets']
         }))
         .pipe(gp.autoprefixer())
         .pipe(gulp.dest('dist/css'))
@@ -157,45 +154,12 @@ gulp.task('rjs', function(cb) {
         },
         dir: 'release/scripts',
         modules: [
-            // //First set up the common build layer.
-            // {
-            //     //module names are relative to baseUrl
-            //     name: '../common',
-            //     //List common dependencies here. Only need to list
-            //     //top level dependencies, "include" will find
-            //     //nested dependencies.
-            //     include: [
-            //         'jquery',
-            //         'app/lib',
-            //         'app/controller/Base',
-            //         'app/model/Base'
-            //     ]
-            // },
-
-            // //Now set up a build layer for each page, but exclude
-            // //the common one. "exclude" will exclude nested
-            // //the nested, built dependencies from "common". Any
-            // //"exclude" that includes built modules should be
-            // //listed before the build layer that wants to exclude it.
-            // //"include" the appropriate "app/main*" module since by default
-            // //it will not get added to the build since it is loaded by a nested
-            // //require in the page*.js files.
-            // {
-            //     //module names are relative to baseUrl/paths config
-            //     name: '../page1',
-            //     include: ['app/main1'],
-            //     exclude: ['../common']
-            // },
-
             {
-                //module names are relative to baseUrl
                 name: 'main',
                 include: ['../../dist/vendor/requirejs/require.js']
-                // exclude: ['../common']
             }
         ]
     }, function() {
-        // console.log('build response', buildResponse);
         cb();
     }, cb);
 });
@@ -239,8 +203,6 @@ gulp.task('watch', function() {
         }
         gulp.watch('src/**/*.scss', ['css']);
         gulp.watch('src/*.jade', ['html']);
-        // gulp.watch('src/*.jade', ['html']);
-        // gulp.watch('*.html', ['html']);
         gulp.watch('src/scripts/**/*.js', ['js']);
         gulp.watch('src/scripts/**/*.jsx', ['jsx']);
         gulp.watch('src/manifest.json', ['manifest']);

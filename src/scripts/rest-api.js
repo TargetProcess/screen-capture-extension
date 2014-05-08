@@ -9,7 +9,7 @@ define(['Class'], function(Class) {
             this.endpointApi = 'api/v1';
             this.endpointUpload = 'UploadFile.ashx';
             this.authToken = null;
-            this.host = 'http://localhost:8080/targetprocess';
+            this.host = '/targetprocess';
             this.hostName = 'localhost/targetprocess';
 
             this.onAuth = $.Callbacks();

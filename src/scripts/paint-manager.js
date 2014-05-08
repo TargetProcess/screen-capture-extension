@@ -25,7 +25,9 @@ define(['Class'], function(Class) {
         initCanvas: function(id) {
 
             this.canvas = new fabric.Canvas(id, {
-                selection: false
+                selection: false,
+                perPixelTargetFind: true,
+                targetFindTolerance: 5
             });
         },
 
@@ -72,8 +74,9 @@ define(['Class'], function(Class) {
             var canvas = this.canvas;
             var canvasRect = this.canvas.upperCanvasEl.getBoundingClientRect();
 
+            var isMac = (window.navigator.appVersion.indexOf('Mac') >= 0);
             $(document).on('keydown', function(e) {
-                if (e.keyCode === 90 && e.metaKey) {
+                if (e.keyCode === 90 && e[isMac ? 'metaKey' : 'ctrlKey']) {
                     this.undo();
                 }
             }.bind(this));

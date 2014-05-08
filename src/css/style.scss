@@ -11,7 +11,7 @@
 
 
 body {
-    font-family: 'Lucida Grande';
+    font-family: 'Lucida Grande', Arial, sans-serif;
     overflow: hidden; // to prevent scroll on MacOS
     -webkit-font-smoothing: antialiased;
 }
@@ -30,7 +30,7 @@ body {
     flex-grow: 0;
     flex-shrink: 0;
     width: 64px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .editor__area {
@@ -39,7 +39,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: scroll;
+    overflow: auto;
 }
 
 
