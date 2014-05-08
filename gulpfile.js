@@ -120,11 +120,14 @@ gulp.task('images-release', function() {
 
 gulp.task('sprites', function() {
 
-    return gulp.src('src/icons/*.svg').pipe(gp.svgmin([{
+    var plugins = [{
         removeEditorsNSData: {
             additionalNamespaces: ['http://www.bohemiancoding.com/sketch/ns']
         }
-    }]))
+    }];
+
+    return gulp.src('src/icons/*.svg')
+        .pipe(gp.svgmin(plugins))
         .pipe(gp.svgSprites.svg({
             className: '.icon-%f',
             cssFile: 'css/icons.css',
@@ -158,12 +161,10 @@ gulp.task('rjs', function(cb) {
             'Class': 'libs/class'
         },
         dir: 'release/scripts',
-        modules: [
-            {
-                name: 'main',
-                include: ['../../dist/vendor/requirejs/require.js']
-            }
-        ]
+        modules: [{
+            name: 'main',
+            include: ['../../dist/vendor/requirejs/require.js']
+        }]
     }, function() {
         cb();
     }, cb);

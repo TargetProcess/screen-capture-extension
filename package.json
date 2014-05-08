@@ -41,6 +41,7 @@
     "requirejs": "^2.1.11",
     "gulp-svg-sprites": "^0.1.0",
     "gulp-svgmin": "^0.4.5",
-    "gulp-template": "^0.1.1"
+    "gulp-template": "^0.1.1",
+    "svgo": "git://github.com/roadhump/svgo"
   }
 }
