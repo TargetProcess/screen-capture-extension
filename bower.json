@@ -18,25 +18,16 @@
   ],
   "dependencies": {
     "ladda-bootstrap": "~0.1.0",
-    "jquery": "*",
-    "fancyselect": "*",
+    "jquery": "~2.1.1",
     "fabric": "~1.4.5",
     "imgareaselect": "~0.9.10",
     "q": "1.0.1",
     "react": "~0.10.0",
     "lodash": "~2.4.1",
-
     "bootstrap-sass-official": "~3.1.1",
-
     "requirejs": "~2.1.11"
   },
   "overrides": {
-    "fancyselect": {
-      "main": [
-        "fancySelect.js",
-        "fancySelect.css"
-      ]
-    },
     "q": {
       "main": [
         "q.js"

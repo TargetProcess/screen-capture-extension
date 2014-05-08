@@ -1,5 +1,6 @@
 /*eslint-env node */
-/*eslint no-global-strict: 0, no-console: 0 */
+/*eslint no-console: 0 */
+
 'use strict';
 
 var path = require('path');
@@ -16,6 +17,7 @@ var httpProxy = require('http-proxy');
 gp.runSequence = require('run-sequence');
 var rjs = require('requirejs');
 
+var pkg = require('./package.json');
 var locals = {
     env: 'dev'
 };
@@ -84,6 +86,9 @@ gulp.task('jsx', function() {
 gulp.task('manifest', function() {
 
     return gulp.src('src/manifest.json')
+        .pipe(gp.template({
+            pkg: pkg
+        }))
         .pipe(gulp.dest('dist'))
         .pipe(gp.lr())
         .pipe(gp.size());
