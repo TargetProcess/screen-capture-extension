@@ -18,7 +18,7 @@ define(['Class'], function(Class) {
 
             return Q
                 .when(this.initCanvas(canvasId))
-                .then(this.setImageAsBackground.bind(this, url))
+                .then(url ? this.setImageAsBackground.bind(this, url) : null)
                 .then(this.initEvents.bind(this));
         },
 
@@ -27,7 +27,9 @@ define(['Class'], function(Class) {
             this.canvas = new fabric.Canvas(id, {
                 selection: false,
                 perPixelTargetFind: true,
-                targetFindTolerance: 5
+                targetFindTolerance: 5,
+                width: 800,
+                height: 600
             });
         },
 

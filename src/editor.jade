@@ -20,7 +20,8 @@ html(xmlns='http://www.w3.org/1999/html')
         // endbuild 
 
         - if (env === 'dev')
-            script(type='text/javascript', src="vendor/requirejs/require.js", data-main="scripts/main.js")
+            script(type='text/javascript', src="vendor/requirejs/require.js")
+            script(type='text/javascript', src="scripts/main.js")
         - if (env === 'prod')
             script(type='text/javascript', src="scripts/main.js")
 

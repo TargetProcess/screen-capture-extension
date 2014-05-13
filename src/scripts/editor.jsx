@@ -15,25 +15,28 @@ define([
     './rest-api'
 ], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, PaintManager, RestApi){
 
-    var storage = window.localStorage;
-    var imageUrl = window.screenshotUrl || storage.getItem('imageUrl') || 'img/screen.png';
-    storage.setItem('imageUrl', imageUrl);
 
     return React.createClass({
 
         getInitialState: function() {
+
+            var storage = window.localStorage;
+            var imageUrl = window.screenshotUrl || storage.getItem('imageUrl') || '';
+            storage.setItem('imageUrl', imageUrl);
 
             return {
                 restApi: new RestApi(),
                 paintManager: new PaintManager({
                     width: 2
                 }),
-                selectedTool: storage.getItem('tool') || 'rect'
+                selectedTool: storage.getItem('tool') || 'rect',
+                imageUrl: imageUrl
             };
         },
 
         loadImage: function(imageUrl) {
-             this.state.paintManager.start('imageView', imageUrl).then(function() {
+
+            this.state.paintManager.start('imageView', imageUrl).then(function() {
                 this.state.paintManager.selectTool(this.state.selectedTool);
             }.bind(this));
         },
@@ -47,8 +50,7 @@ define([
                 });
                 storage.setItem('tool', name);
             }.bind(this);
-
-            this.loadImage(imageUrl);
+            this.loadImage(this.state.imageUrl);
         },
 
         render: function() {

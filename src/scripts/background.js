@@ -10,26 +10,15 @@
         });
     };
 
-    var openEditorTab = function() {
+    var openImageInEditor = function(imageData) {
 
-        var url = chrome.extension.getURL('editor.html?id=' + Number(new Date()));
-        return new Promise(function(resolve) {
-            chrome
-                .tabs
-                .create({
-                    url: url
-                }, resolve);
-        });
-    };
-
-    var openImageInEditor = function(imageData, editorTab) {
-
+        var editorTab = null;
         chrome
             .tabs
             .onUpdated
             .addListener(function waitComplete(tabId, changedProps) {
 
-                if (tabId === editorTab.id || changedProps.status === 'complete') {
+                if (editorTab && tabId === editorTab.id && changedProps.status === 'complete') {
 
                     chrome.tabs.onUpdated.removeListener(waitComplete);
 
@@ -37,33 +26,29 @@
                         return view.location.href === editorTab.url;
                     })[0];
 
-                    view.screenshotUrl = imageData;
+                    if (view) {
+                        view.setScreenshotUrl(imageData);
+                    }
                 }
             });
-    };
 
-    var shortcutListener = function() {
+        var url = chrome.extension.getURL('editor.html?id=' + Number(new Date()));
 
-        if (window === top) {
-            window.addEventListener('keyup', function(e) {
-                if (e.ctrlKey && e.shiftKey && e.keyCode) {
-                    chrome
-                        .extension
-                        .sendRequest({
-                            message: 'shortcut-is-fired',
-                            code: e.keyCode
-                        });
-                }
-            }, false);
-        }
+        chrome
+            .tabs
+            .create({
+                url: url
+            }, function(tab) {
+                editorTab = tab;
+            });
     };
 
     var takeScreenshot = function() {
 
         Promise
-            .all([getImageData(), openEditorTab()])
-            .then(function(values) {
-                openImageInEditor(values[0], values[1]);
+            .cast(getImageData())
+            .then(function(imageData) {
+                openImageInEditor(imageData);
             });
     };
 
@@ -73,5 +58,4 @@
         .onClicked
         .addListener(takeScreenshot);
 
-    shortcutListener();
 }());

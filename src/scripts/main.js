@@ -8,5 +8,12 @@ require.config({
 
 require(['editor'], function(Editor) {
     'use strict';
-    React.renderComponent(Editor(), $('.main')[0]);
+    setTimeout(function() {
+        React.renderComponent(Editor(), $('.main')[0]);
+    }, 100);
 });
+
+window.setScreenshotUrl = function(url) {
+    'use strict';
+    window.screenshotUrl = url;
+};
