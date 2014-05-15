@@ -12,6 +12,8 @@ define(['Class'], function(Class) {
             this.options = options;
 
             this.selectedTool = null;
+
+            this.patchFabric();
         },
 
         start: function(canvasId, url) {
@@ -73,9 +75,6 @@ define(['Class'], function(Class) {
             var isDrawMode = false;
             var selectionActivated = false;
 
-            var canvas = this.canvas;
-            var canvasRect = this.canvas.upperCanvasEl.getBoundingClientRect();
-
             var isMac = (window.navigator.appVersion.indexOf('Mac') >= 0);
             $(document).on('keydown', function(e) {
                 if (e.keyCode === 90 && e[isMac ? 'metaKey' : 'ctrlKey']) {
@@ -107,7 +106,6 @@ define(['Class'], function(Class) {
                 'mouse:down': function(evt) {
 
                     if (!selectionActivated) {
-                        canvasRect = canvas.upperCanvasEl.getBoundingClientRect();
                         isDrawMode = true;
                         this.trigger('custom:mousedown', evt.e);
                     }
@@ -117,10 +115,6 @@ define(['Class'], function(Class) {
 
                     if (isDrawMode) {
                         var e = evt.e;
-                        e = {
-                            offsetX: e.clientX - canvasRect.left,
-                            offsetY: e.clientY - canvasRect.top
-                        };
                         this.trigger('custom:mousemove', e);
                     }
                 },
@@ -187,6 +181,53 @@ define(['Class'], function(Class) {
             if (this.onUndo) {
                 this.onUndo();
             }
+        },
+
+        patchFabric: function() {
+
+            // correct position without absolute parent
+            fabric.util.getScrollLeftTop = function(element, upperCanvasEl) {
+
+                var firstFixedAncestor;
+                var origElement;
+                var left = 0;
+                var top = 0;
+                var docElement = fabric.document.documentElement;
+                var body = fabric.document.body || {
+                    scrollLeft: 0,
+                    scrollTop: 0
+                };
+
+                origElement = element;
+
+                while (element && element.parentNode && !firstFixedAncestor) {
+
+                    element = element.parentNode;
+
+                    if (element !== fabric.document &&
+                        fabric.util.getElementStyle(element, 'position') === 'fixed') {
+                        firstFixedAncestor = element;
+                    }
+
+                    if (element !== fabric.document &&
+                        origElement !== upperCanvasEl &&
+                        fabric.util.getElementStyle(element, 'position') === 'absolute') {
+                        left = 0;
+                        top = 0;
+                    } else if (element === fabric.document) {
+                        left = body.scrollLeft || docElement.scrollLeft || left;
+                        top = body.scrollTop || docElement.scrollTop || top;
+                    } else {
+                        left += element.scrollLeft || 0;
+                        top += element.scrollTop || 0;
+                    }
+                }
+
+                return {
+                    left: left,
+                    top: top
+                };
+            };
         }
     });
 });

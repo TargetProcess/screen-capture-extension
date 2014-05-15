@@ -41,6 +41,31 @@ define([
             }.bind(this));
         },
 
+        onDragOver: function(e) {
+
+            var source = e.dataTransfer;
+            var items = (source.files && source.files.length) ? source.files : source.items;
+
+            if (items && items.length) {
+                var item = items[0];
+                if (item.type.match(/image\/([a-z]+)/)) {
+                    e.preventDefault();
+                    e.nativeEvent.dataTransfer.dropEffect = 'move';
+                }
+            }
+        },
+
+        onDrop: function(e) {
+
+            e.preventDefault();
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                storage.setItem('imageUrl', e.target.result);
+                this.state.paintManager.setImageAsBackground(e.target.result);
+            }.bind(this);
+            reader.readAsDataURL(e.dataTransfer.files[0]);
+        },
+
         componentDidMount: function() {
 
             this.state.paintManager.onToolSelected = function(name) {
@@ -79,7 +104,7 @@ define([
                             </ul>
                         </nav>
                     </div>
-                    <div className="editor__area"><canvas id="imageView" /></div>
+                    <div className="editor__area" tabindex="1" onDragOver={this.onDragOver}  onDrop={this.onDrop}><canvas id="imageView" /></div>
                 </div>
             );
         }
