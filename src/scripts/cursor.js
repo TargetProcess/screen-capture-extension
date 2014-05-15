@@ -37,11 +37,27 @@ define(['Class', './button-tool'], function(Class, Button) {
 
             $(document).on('keydown.pencil', function(e) {
                 if (e.which === 8 || e.which === 46) {
+
                     e.preventDefault();
-                    this.fabricCanvas.discardActiveObject();
-                    this.fabricCanvas.remove(this.figure);
+                    var objs = [];
+
+                    if (this.figure.type === 'group') {
+                        this.fabricCanvas.discardActiveGroup();
+                        objs = this.figure.getObjects();
+                    } else {
+                        this.fabricCanvas.discardActiveObject();
+                        objs = [this.figure];
+                    }
+
                     this.saveState();
+                    this.fabricCanvas.remove(this.figure);
+
+                    objs.forEach(function(object) {
+                        this.fabricCanvas.remove(object);
+                    }.bind(this));
+
                     this.figure = null;
+                    this.fabricCanvas.renderAll();
                 }
             }.bind(this));
         },
@@ -72,20 +88,43 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         getState: function() {
 
-            var obj = this.figure;
-            return {
-                object: obj,
-                state: _.clone(obj.originalState)
-            };
+            var isGroup = (this.figure.type === 'group');
+            var objs = isGroup ? this.figure.getObjects() : [this.figure];
+            return objs.map(function(obj) {
+                var res = {
+                    object: obj,
+                    state: _.clone(obj.originalState)
+                };
+
+                // set by hands, skip groups now
+                if (!isGroup) {
+                    obj.originalState = _.clone(obj);
+                }
+                return res;
+            });
         },
 
-        undo: function(state) {
+        undo: function(states) {
 
-            if (!_.find(this.fabricCanvas.getObjects(), state.object)) {
-                this.fabricCanvas.add(state.object);
-            }
-            state.object.set(state.state);
-            state.object.setCoords();
+            this.fabricCanvas.discardActiveGroup();
+            this.fabricCanvas.renderAll();
+            states.forEach(function(state) {
+                if (!_.find(this.fabricCanvas.getObjects(), state.object)) {
+                    this.fabricCanvas.add(state.object);
+                }
+
+                // groups bugs ?
+                if (!state.state.width) {
+                    delete state.state.width;
+                }
+                if (!state.state.height) {
+                    delete state.state.height;
+                }
+
+                state.object.set(state.state);
+                state.object.setCoords();
+
+            }.bind(this));
             this.fabricCanvas.renderAll();
         }
     });
