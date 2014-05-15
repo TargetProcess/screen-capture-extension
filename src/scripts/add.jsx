@@ -17,7 +17,7 @@ define(['./add-form2', './popover'], function(Form, Popover) {
 
             return (
                 <li className="tools__item tools__item-add">
-                    <button className="tools__trigger" title="Add" onClick={this.toggleBubble}>
+                    <button className="tools__trigger" title="add" onClick={this.toggleBubble}>
                         <i className="icon icon-add"></i>
                     </button>
                     <Popover ref="popover">

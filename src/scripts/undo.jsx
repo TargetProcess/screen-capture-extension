@@ -35,7 +35,7 @@ define(['Class'], function(Class){
 
             return (
                 <li className={"tools__item tools__item-undo"}>
-                    <button className="tools__trigger" onClick={this.select} disabled={!this.state.enabled} >
+                    <button title="undo" className="tools__trigger" onClick={this.select} disabled={!this.state.enabled} >
                         <i className="icon icon-undo"></i>
                     </button>
                 </li>

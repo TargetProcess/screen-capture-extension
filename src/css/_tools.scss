@@ -40,9 +40,6 @@
         overflow: hidden;
         display: block;
         line-height: 0;
-        // overflow: hidden;
-        // text-indent: -9999px;
-        // white-space: nowrap;
         width: 64px;
         height: 44px;
         padding: 0;
@@ -50,6 +47,7 @@
         border: 0;
         background: transparent;
         color: transparent;
+        cursor: pointer;
 
         &:hover,
         &:focus,

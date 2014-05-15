@@ -29,7 +29,7 @@ define([], function() {
 
             return (
                 <li className="tools__item tools__item-color">
-                    <input className="tools__trigger" type="color" onChange={this.selectColor} defaultValue={this.state.color} />
+                    <input title="color" className="tools__trigger" type="color" onChange={this.selectColor} defaultValue={this.state.color} />
                 </li>
             );
         }

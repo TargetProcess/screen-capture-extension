@@ -13,8 +13,8 @@ define(function(){
         render: function() {
 
             return (
-                <li className={"tools__item tools__item-" + this.props.name + " " + this.props.className} title={this.props.title || this.props.name}>
-                    <button className="tools__trigger" onClick={this.select}>
+                <li className={"tools__item tools__item-" + this.props.name + " " + this.props.className}>
+                    <button title={this.props.title || this.props.name} className="tools__trigger" onClick={this.select}>
                         <i className={"icon icon-" + this.props.name}></i>
                     </button>
                 </li>

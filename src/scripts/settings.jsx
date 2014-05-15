@@ -19,7 +19,7 @@ define(['./settings-form', './popover'], function(Form, Popover){
             }
             return (
                 <li className="tools__item tools__item-settings">
-                    <button className="tools__trigger" onClick={this.toggleBubble}>
+                    <button title="settings" className="tools__trigger" onClick={this.toggleBubble}>
                         <i className="icon icon-settings"></i>
                     </button>
                     <Popover ref="popover">
