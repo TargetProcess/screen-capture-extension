@@ -414,7 +414,7 @@ define(['./card-entity'], function(Card) {
 
             var alert;
             var entity;
-            // debugger;
+
             if (this.state.status === 'success') {
                 alert = <div className="alert alert-success">Entity is added</div>;
 

@@ -15,12 +15,12 @@ define([
     './rest-api'
 ], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, PaintManager, RestApi){
 
+    var storage = window.localStorage;
 
     return React.createClass({
 
         getInitialState: function() {
 
-            var storage = window.localStorage;
             var imageUrl = window.screenshotUrl || storage.getItem('imageUrl') || '';
             storage.setItem('imageUrl', imageUrl);
 

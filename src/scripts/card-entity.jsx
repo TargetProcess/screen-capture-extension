@@ -51,7 +51,7 @@ define([], function(){
         render: function() {
 
             if (!this.state.isLoaded) {
-                return <div>Loaded</div>;
+                return (<div>Loaded</div>);
             }
 
             var entity = this.state.entity;
