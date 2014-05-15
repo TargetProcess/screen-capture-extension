@@ -6,13 +6,18 @@ $black-color: #0e2e33;
     box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.20);
     border-radius: 0;
     max-width: none;
-    margin: 0;
+    margin: 0 0 0 0;
     top: auto;
     left: auto;
     max-height: calc(100vh - 6px);
     color: $text-color;
     display: flex;
-    // overflow: hidden;
+
+    &.right {
+        margin-left: 3px;
+    }
+
+
 
     & li > a {
         color: $black-color;
@@ -23,8 +28,6 @@ $black-color: #0e2e33;
         flex-grow: 1;
         padding: 0;
         overflow: auto;
-        // max-height: calc(100vh - 6px);
-        // overflow-y: scroll;
     }
 
     label {
@@ -44,15 +47,6 @@ $black-color: #0e2e33;
         color: #d1d3d6;
     }
 
-    // .btn-success {
-    //     border: 0;
-    //     border-radius: 5px;
-    //     background: #95d54e;
-    //     font-size: 14px;
-    //     line-height: 17px;
-    //     height: 36px;
-    // }
-
     .form-color {
         label {
             display: block;
@@ -65,58 +59,6 @@ $black-color: #0e2e33;
             display: none;
         }
     }
-
-    // .fancy-select {
-    //     font-weight: normal;
-    //     text-transform: none;
-    //     .options, .trigger, .trigger.open {
-    //         width: 100%;
-    //         border-radius: 3px;
-    //         background: #ffffff;
-    //         border: 1px solid $grey-color;
-    //         padding: 7px 8px;
-    //         font-size: 12px;
-    //         line-height: 15px;
-    //         box-shadow: none !important;
-
-    //         &:after {
-    //             top: 12px;
-    //         }
-    //     }
-
-    //     .options.open {
-    //         top: 35px;
-    //     }
-
-    //     .options {
-    //         li,
-    //         li.selected {
-    //             color: $grey-color;
-    //         }
-
-    //         li.selected {
-    //             background: $grey-color;
-    //             color: #ffffff;
-    //         }
-
-    //         .hover {
-    //             background-color: $grey-color;
-    //             color: #000000;
-    //         }
-    //     }
-
-    //     // .trigger:after {
-    //     //     @extend .glyphicon;
-    //     //     content: "\e114";
-    //     //     border: none;
-    //     //     position: absolute;
-    //     //     right: 20px;
-    //     //     top: 10px;
-    //     //     font-size: 10px;
-    //     //     color: $grey-color;
-    //     //     font-weight: normal;
-    //     // }
-    // }
 
     .form-group {
         margin-bottom: 10px;

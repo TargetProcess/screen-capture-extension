@@ -53,7 +53,7 @@ define([], function(){
             var arrowTop;
             switch (position) {
                 case 'top':
-                    arrowTop = triggerRect.height / 2;
+                    arrowTop = triggerRect.height / 2 - 3;
                     break;
 
                 case 'bottom':

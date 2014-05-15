@@ -36,7 +36,7 @@
     "imgareaselect": {
       "main": [
         "jquery.imgareaselect.dev.js",
-        "distfiles/css/imgareaselect-default.css"
+        "distfiles/css/imgareaselect-deprecated.css"
       ]
     },
     "react": {
