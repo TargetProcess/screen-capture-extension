@@ -149,7 +149,7 @@ gulp.task('sprites-release', function() {
 });
 
 gulp.task('clean-release', function() {
-    return gulp.src('release')
+    return gulp.src(['release', 'release-compressed'])
         .pipe(gp.clean());
 });
 
@@ -175,6 +175,12 @@ gulp.task('rjs-clean', function() {
         read: false
     })
         .pipe(gp.clean());
+});
+
+gulp.task('compress', function() {
+    return gulp.src('release/**/*')
+        .pipe(gp.zip('build.zip'))
+        .pipe(gulp.dest('release-compressed'));
 });
 
 gulp.task('server', function() {
@@ -227,6 +233,8 @@ gulp.task('release', function(next) {
             'html-release', 'manifest-release', 'images-release', 'sprites-release', 'rjs'
         ], [
             'rjs-clean'
+        ], [
+            'compress'
         ],
         next
     );

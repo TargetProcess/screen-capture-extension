@@ -2,6 +2,7 @@
     "manifest_version": 2,
 
     "name": "Targetprocess Chrome extension",
+    "short_name": "Targetprocess Chrome extension",
     "version": "0.1.0",
     "description": "Capture screenshot and create entity in your Targetprocess account.",
 
