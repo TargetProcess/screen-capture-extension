@@ -35,7 +35,7 @@ define(['Class', './button-tool'], function(Class, Button) {
 
             this.fabricCanvas.on(this.subscriptions);
 
-            $(document).on('keydown.pencil', function(e) {
+            $(document).on('keydown.pencil', '.editor_area', function(e) {
                 if (e.which === 8 || e.which === 46) {
 
                     e.preventDefault();
