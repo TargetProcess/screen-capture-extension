@@ -45,7 +45,7 @@ define([], function(){
         },
 
         loadEntity: function(entity) {
-            return this.props.restApi.get('Generals/' + (entity.Id || entity.id), {include: '[Id,Name,EntityType[Name],Attachments[Id,Name,Uri,ThumbnailUri],Project[Id,Name,Abbreviation,Color]]'});
+            return this.props.restApi.get('Generals/' + (entity.Id || entity.id), {include: '[Id,Name,Description,EntityType[Name],Attachments[Id,Name,Uri,ThumbnailUri],Project[Id,Name,Abbreviation,Color]]'});
         },
 
         render: function() {
@@ -65,10 +65,6 @@ define([], function(){
                 project = <span className="card__project" style={{background: entity.Project.Color}}>{entity.Project.Abbreviation}</span>;
             }
 
-            // var team;
-            // if (entity.Team) {
-            //     project = <span className="card__project" style={{background: entity.Project.Color}}>{entity.Project.Abbreviation}</span>;
-            // }
 
             return (
                 <div className="media card">
@@ -76,8 +72,8 @@ define([], function(){
                         <img src={thumbnailUri} className="img-rounded media-object" />
                     </div>
                     <div className="media-body">
-                        <div className="card__id"><a href={url} target="_blank">#{entity.Id}</a></div>
-                        <div className="card__name">{entity.Name}</div>
+                        <div className="card__id"><a href={url} target="_blank">#{entity.Id}</a> {entity.Name}</div>
+                        <div className="card__description">{entity.Description}</div>
                         <div className="card__info">
                             {project}
                         </div>

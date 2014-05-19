@@ -70,6 +70,11 @@ $black-color: #0e2e33;
         }
     }
 
+    textarea.form-control {
+        height: auto;
+        padding: 8px;
+    }
+
     .form-settings {
 
         font-size: 12px;

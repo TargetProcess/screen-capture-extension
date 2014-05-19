@@ -16,9 +16,36 @@ define(['./card-entity'], function(Card) {
             };
         },
 
+        renderTextarea: function() {
+
+            var data = this.props.field;
+
+            var classSet = React.addons.classSet({
+                "form-group": true,
+                "hidden": !data.isVisible
+            });
+
+            return (
+                <div className={classSet}>
+                    {data.isCustomField ? <label htmlFor={data.name}>{data.caption}</label> : '' }
+                    <textarea ref="input" name={data.name} id={data.name} className="form-control" type={data.inputType} defaultValue={data.config.defaultValue}
+                        disabled={!data.isVisible}
+                        placeholder={data.isCustomField ? null : data.caption}
+                        required={data.required}
+                        aria-required={data.required}
+                        rows="4"
+                    />
+                </div>
+            );
+        },
+
         render: function() {
 
             var data = this.props.field;
+
+            if (data.inputType === 'text' && data.options.multiline) {
+                return this.renderTextarea();
+            }
 
             var classSet = React.addons.classSet({
                 "form-group": true,
@@ -221,6 +248,16 @@ define(['./card-entity'], function(Card) {
 
         processFields: function(fields) {
 
+            fields.splice(1, 0, {
+                id: 'Description',
+                caption: 'Description',
+                options: {
+                    multiline: true
+                },
+                required: false,
+                type: 'Text'
+            });
+
             fields = fields.map(function(field) {
 
                 field.isCustomField = (field.type === 'CustomField');
@@ -257,7 +294,7 @@ define(['./card-entity'], function(Card) {
                     field.name = field.id;
                 }
 
-                if (['Text', 'Number', 'Date', 'TemplatedURL'].indexOf(field.type)) {
+                if (['Text', 'Number', 'Date', 'TemplatedURL'].indexOf(field.type) >= 0) {
                     field.inputType = field.type === 'TemplatedURL' ? 'text' : field.type.toLowerCase();
                 }
 
@@ -337,7 +374,7 @@ define(['./card-entity'], function(Card) {
             }));
 
             values = values.reduce(function(res, field){
-                // debugger;
+
                 var name = field.name.split('__');
                 var val;
                 if (name.length === 2) {
