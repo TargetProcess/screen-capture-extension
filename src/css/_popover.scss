@@ -6,12 +6,13 @@ $black-color: #0e2e33;
     box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.20);
     border-radius: 0;
     max-width: none;
-    margin: 0 0 0 0;
+    margin: 0;
     top: auto;
     left: auto;
     max-height: calc(100vh - 6px);
     color: $text-color;
     display: flex;
+    border: 0;
 
     &.right {
         margin-left: 3px;

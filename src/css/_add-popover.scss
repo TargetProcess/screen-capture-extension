@@ -1,14 +1,19 @@
 .tools__item-add {
 
+    $selector-color: #f8f9fa;
+
     .popover {
         padding: 0;
         min-width: 500px;
         font-size: 12px;
 
-    }
+        label {
+            font-size: 12px;
+        }
 
-    .popover label {
-        font-size: 12px;
+        .arrow:after {
+            border-right-color: $selector-color;
+        }
     }
 
     .checkbox label {
@@ -34,7 +39,7 @@
         vertical-align: top;
         border-right: 1px solid #dae0e6;
         padding: 2px 0;
-        background: #f8f9fa;
+        background: $selector-color;
         width: 25%;
         display: table-cell;
 
