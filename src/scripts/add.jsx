@@ -1,4 +1,4 @@
-define(['./add-form2', './popover'], function(Form, Popover) {
+define(['./add-form', './popover'], function(Form, Popover) {
 
     return React.createClass({
 

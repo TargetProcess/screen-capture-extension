@@ -136,6 +136,10 @@ define(['Class'], function(Class) {
 
         selectTool: function(name) {
 
+            if (this.selectedTool === name) {
+                return;
+            }
+
             if (this.selectedTool) {
                 this.tools[this.selectedTool].disable();
             }
