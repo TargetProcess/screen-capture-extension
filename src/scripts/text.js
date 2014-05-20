@@ -15,6 +15,7 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
             this.subscriptions = {
 
                 'object:modified': function(e) {
+                    isBlur = true;
                     this.saveState(e);
                 }.bind(this),
 
@@ -58,13 +59,14 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
                 fontWeight: 'normal',
                 left: e.offsetX,
                 top: e.offsetY,
-                lineHeight: 1,
+                lineHeight: 1.3,
                 fill: this.options.color,
                 strokeWidth: this.options.width,
                 selectionStart: 0,
                 selectionEnd: 3,
                 selectable: false,
-                editable: true
+                editable: true,
+                textBackgroundColor: 'rgba(0,0,0,0.5)'
             });
 
             this.fabricCanvas.add(this.figure);
