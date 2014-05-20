@@ -1,12 +1,10 @@
 // http://jsfiddle.net/matthze/n5Lwj/
-(function (global) {
+(function(global) {
 
-    "use strict";
+    'use strict';
 
-    var fabric = global.fabric || (global.fabric = { }),
-        extend = fabric.util.object.extend,
-        coordProps = { 'x1': 1, 'x2': 1, 'y1': 1, 'y2': 1 },
-        supportsLineDash = fabric.StaticCanvas.supports('setLineDash');
+    var fabric = global.fabric || (global.fabric = {});
+    var supportsLineDash = fabric.StaticCanvas.supports('setLineDash');
 
     if (fabric.Arrow) {
         fabric.warn('fabric.Arrow is already defined');
@@ -32,7 +30,7 @@
          * @private
          * @param {CanvasRenderingContext2D} ctx Context to render on
          */
-        _render: function (ctx) {
+        _render: function(ctx) {
             ctx.beginPath();
 
             var isInPathGroup = this.group && this.group.type === 'path-group';
@@ -48,7 +46,7 @@
                 var yMult = (this.y1 <= this.y2) ? -1 : 1;
 
                 var mw = this.width / 2;
-                var mh = this.height / 2;
+                var mh = this.height;
 
                 var kw = this.width === 1 ? 0 : 1;
                 var kh = this.height === 1 ? 0 : 1;
@@ -59,19 +57,20 @@
                 var x1 = -1 * x0;
                 var y1 = -1 * y0;
 
+                if (x1 === x0 && y0 === y1) {
+                    return;
+                }
+
                 ctx.moveTo(x0, y0);
 
                 ctx.lineTo(x1, y1);
 
-                var dx = (0.05 * mh);
-                var dy = (0.01 * mh);
-
-
+                var dx = 13;
+                var dy = 10;
 
                 ctx.lineTo(x1 - dx, y1 - dy);
-
-                ctx.arcTo(x1, y1, x1 - dx, y1 + dy, 5);
-
+                ctx.lineTo(x1, y1);
+                ctx.lineTo(x1 - dx, y1 + dy);
                 ctx.lineTo(x1, y1);
 
                 ctx.save();
