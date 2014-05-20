@@ -45,7 +45,16 @@ define([], function(){
         },
 
         loadEntity: function(entity) {
-            return this.props.restApi.get('Generals/' + (entity.Id || entity.id), {include: '[Id,Name,Description,EntityType[Name],Attachments[Id,Name,Uri,ThumbnailUri],Project[Id,Name,Abbreviation,Color]]'});
+            return this.props.restApi.get('Generals/' + (entity.Id || entity.id), {
+                include: '[' + TreeFormat.stringify([
+                    'Id',
+                    'Name',
+                    'Description',
+                    {'EntityType': 'Name'},
+                    {'Attachments': ['Id', 'Name', 'Uri', 'ThumbnailUri']},
+                    {'Project': ['Id', 'Name', 'Abbreviation', 'Color']}
+                ]) + ']'
+            });
         },
 
         render: function() {
