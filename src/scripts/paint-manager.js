@@ -142,10 +142,6 @@ define(['Class'], function(Class) {
 
         selectTool: function(name) {
 
-            if (this.selectedTool === name) {
-                return;
-            }
-
             if (this.selectedTool) {
                 this.tools[this.selectedTool].disable();
             }
@@ -163,7 +159,9 @@ define(['Class'], function(Class) {
         setColor: function(value) {
 
             this.options.color = value;
-            this.selectTool(this.selectedTool);
+            if (this.selectedTool !== 'text') {
+                this.selectTool(this.selectedTool);
+            }
         },
 
         saveState: function() {

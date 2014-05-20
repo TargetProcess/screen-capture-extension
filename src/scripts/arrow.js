@@ -14,6 +14,7 @@ define(['./draw-tool', './button-tool', './libs/fabric/arrow'], function(Class, 
                 top: e.offsetY,
                 stroke: this.options.color,
                 strokeWidth: this.options.width,
+                shadow: this.options.shadow,
                 selectable: false
             });
 
