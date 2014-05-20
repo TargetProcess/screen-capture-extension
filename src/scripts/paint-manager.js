@@ -11,10 +11,10 @@ define(['Class'], function(Class) {
             this.tools = {};
             this.options = options;
             this.options.shadow = {
-                color: 'rgba(0,0,0,0.5)',
+                color: 'rgba(0,0,0,0.3)',
                 offsetX: 1,
                 offsetY: 1,
-                blur: 3
+                blur: 1
             };
 
             this.selectedTool = null;

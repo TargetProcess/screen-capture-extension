@@ -7,9 +7,10 @@
 @import 'figures';
 @import 'card';
 
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
 
 body {
-    font-family: 'Lucida Grande', Arial, sans-serif;
+    font-family: 'Open Sans', Arial, sans-serif;
     overflow: hidden; // to prevent scroll on MacOS
     -webkit-font-smoothing: antialiased;
 }
@@ -24,7 +25,7 @@ body {
 
 .editor__tools {
     display: flex;
-    background: #2C2C2C;
+    background: #2c2c2c;
     flex-grow: 0;
     flex-shrink: 0;
     width: 64px;
@@ -32,7 +33,7 @@ body {
 }
 
 .editor__area {
-    background: #F7F7F5;
+    background: #f7f7f5;
     flex-grow: 1;
     display: flex;
     align-items: center;

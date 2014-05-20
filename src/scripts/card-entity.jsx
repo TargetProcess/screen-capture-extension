@@ -76,16 +76,14 @@ define([], function(){
 
 
             return (
-                <div className="media card">
-                    <div className="pull-left">
-                        <img src={thumbnailUri} className="img-rounded media-object" />
+                <div className="card">
+                    <div className="card__attachment">
+                        <img src={thumbnailUri} />
                     </div>
-                    <div className="media-body">
-                        <div className="card__id"><a href={url} target="_blank">#{entity.Id}</a> {entity.Name}</div>
+                    <div className="card__body">
+                        <div className="card__id"><a href={url} target="_blank">#{entity.Id}</a></div>
+                        <div className="card__name">{entity.Name}</div>
                         <div className="card__description">{entity.Description}</div>
-                        <div className="card__info">
-                            {project}
-                        </div>
                     </div>
                 </div>
             );
