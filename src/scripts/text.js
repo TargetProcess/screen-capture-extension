@@ -55,7 +55,7 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
 
             this.figure = new fabric.IText(DEFAULT_TEXT, {
                 fontSize: 28,
-                fontFamily: 'Lucida Grande, sans-serif',
+                fontFamily: '"Open Sans", sans-serif',
                 fontWeight: 'normal',
                 left: e.offsetX,
                 top: e.offsetY,
