@@ -9,9 +9,9 @@ define(['./add-form-generated', './settings-form'], function(GeneratedForm, Logi
                 status: 'ready',
                 message: '',
                 items: [
+                    'userstory',
                     'bug',
-                    'request',
-                    'userstory'
+                    'request'
                 ],
                 forms: []
             };
@@ -56,7 +56,11 @@ define(['./add-form-generated', './settings-form'], function(GeneratedForm, Logi
                         <div className="column-selector">
                             <ul className="nav nav-pills nav-stacked">
                                 {this.state.forms.map(function(v){
-                                    return <li key={v.name} className={v.name.toLowerCase() + (v.active ? ' active' : '')}><a href={"#" + v.name} data-toggle="tab">{v.title}</a></li>
+                                    return (
+                                        <li key={v.name} className={v.name.toLowerCase() + (v.active ? ' active' : '')}>
+                                            <a href={"#" + v.name} data-toggle="tab">{v.title}</a>
+                                        </li>
+                                    );
                                 })}
                             </ul>
                         </div>
@@ -66,7 +70,7 @@ define(['./add-form-generated', './settings-form'], function(GeneratedForm, Logi
                                     <div key={v.name} className={"tab-pane " + (v.active ? 'active' : '')} id={v.name}>
                                         <GeneratedForm restApi={this.props.restApi} restId={v.name} paintManager={this.props.paintManager} />
                                     </div>
-                                )
+                                );
                             }.bind(this))}
                         </div>
                     </div>
