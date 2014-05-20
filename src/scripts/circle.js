@@ -16,6 +16,7 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
                 fill: false,
                 stroke: this.options.color,
                 strokeWidth: this.options.width,
+                shadow: this.options.shadow,
                 selectable: false
             });
 
