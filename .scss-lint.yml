@@ -46,7 +46,7 @@ linters:
         extra_properties: []
     SelectorDepth:
         enabled: true
-        max_depth: 3
+        max_depth: 4
     SingleLinePerSelector:
         enabled: true
     SpaceAfterComma:

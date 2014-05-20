@@ -4,7 +4,7 @@
   "description": "Capture screenshot and create entity in your Targetprocess account.",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint src && jscs src && jsxhint src/**/*.jsx && scss-lint src/css"
   },
   "repository": {
     "type": "git",

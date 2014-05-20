@@ -1,3 +1,4 @@
+/*eslint-disable*/
 define([], function() {
     var initializing = false, fnTest = /xyz/.test(function() { xyz; }) ? /\b_super\b/ : /.*/;
     var Class = function() {};

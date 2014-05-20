@@ -7,7 +7,7 @@ define(['rest-api'], function(RestApi) {
         getDefaultProps: function() {
             return {
                 autoLogin: false
-            }
+            };
         },
 
         getInitialState: function() {

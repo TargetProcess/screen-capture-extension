@@ -1,4 +1,6 @@
 // http://jsfiddle.net/matthze/n5Lwj/
+/*globals exports */
+/*eslint no-underscore-dangle:0 */
 (function(global) {
 
     'use strict';
@@ -35,7 +37,7 @@
 
             var isInPathGroup = this.group && this.group.type === 'path-group';
             if (isInPathGroup && !this.transformMatrix) {
-                ctx.translate(-this.group.width / 2 + this.left, -this.group.height / 2 + this.top);
+                ctx.translate( -this.group.width / 2 + this.left, -this.group.height / 2 + this.top);
             }
 
             if (!this.strokeDashArray || this.strokeDashArray && supportsLineDash) {
@@ -80,7 +82,6 @@
                 ctx.fill();
 
                 ctx.restore();
-
             }
 
             ctx.lineWidth = this.strokeWidth;
@@ -94,4 +95,4 @@
             ctx.strokeStyle = origStrokeStyle;
         }
     });
-})(typeof exports !== 'undefined' ? exports : this);
+}(typeof exports !== 'undefined' ? exports : this));

@@ -18,6 +18,12 @@ $ gulp release # release mode, works locally release/index.html
 $ rm -rf node_modules/gulp-svgmin/node_modules/svgo # use patched svgo
 ```
 
+Make sure to have no fallen tests before commit:
+
+```sh
+$ npm test
+```
+
 ## TODO
 
 - release version to manifest
