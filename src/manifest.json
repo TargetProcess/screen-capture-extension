@@ -1,20 +1,23 @@
 {
     "manifest_version": 2,
 
-    "name": "Targetprocess Chrome extension",
-    "short_name": "Targetprocess Chrome extension",
+    "name": "Targetprocess Screen Capture",
+    "short_name": "Targetprocess Screen Capture",
     "version": "<%= pkg.version %>",
     "description": "<%= pkg.description %>",
 
     "browser_action": {
-        "default_icon": "img/icon19@2x.png",
-        "default_title": "Take a screenshot and post it to Targetprocess!"
+        "default_icon": {
+            "19": "img/icon19.png",
+            "38": "img/icon38.png"
+        },
+        "default_title": "Targetprocess Screen Capture"
     },
 
     "icons": {
-        "16": "img/icon16@2x.png",
-        "48": "img/icon48@2x.png",
-        "128": "img/icon128@2x.png"
+        "16": "img/icon16.png",
+        "48": "img/icon48.png",
+        "128": "img/icon128.png"
     },
 
     "background": {
