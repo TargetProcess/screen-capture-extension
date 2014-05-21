@@ -24,12 +24,6 @@ Make sure to have no fallen tests before commit:
 $ npm test
 ```
 
-## TODO
-
-- release version to manifest
-- build with linting
-- tests
-
 ## Contributors
 
-Aliaksei Shytkin, Vladimir Petriko
+Aliaksei Shytkin, Vladimir Petriko, Alex Tsayun
