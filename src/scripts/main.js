@@ -9,7 +9,7 @@ require.config({
 require(['editor'], function(Editor) {
     'use strict';
     setTimeout(function() {
-        React.renderComponent(Editor(), $('.main')[0]);
+        React.renderComponent(Editor(), document.querySelector('.main'));
     }, 100);
 });
 
