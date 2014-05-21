@@ -1,19 +1,18 @@
 {
     "manifest_version": 2,
 
-    "name": "Targetprocess Chrome extension",
-    "short_name": "Targetprocess Chrome extension",
+    "name": "Targetprocess Screen Capture",
+    "short_name": "Targetprocess Screen Capture",
     "version": "0.1.0",
     "description": "Capture screenshot and create entity in your Targetprocess account.",
 
     "browser_action": {
-
-    	"default_icon": {                    
-            "19": "img/icon19.png",           
-            "38": "img/icon38.png"            
-          },
-          "default_title": "Targetprocess Screen Capture"
+        "default_icon": {
+            "19": "img/icon19.png",
+            "38": "img/icon38.png"
         },
+        "default_title": "Targetprocess Screen Capture"
+    },
 
     "icons": {
         "16": "img/icon16.png",
@@ -28,7 +27,7 @@
         ]
     },
 
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
 
     "permissions": [
         "activeTab",
