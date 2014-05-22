@@ -103,7 +103,7 @@ define(['Class'], function(Class) {
             var form = new FormData();
 
             form.append('generalId', entityId);
-            form.append('files[]', blob, 'chrome-screenshot.png');
+            form.append('files[]', blob, 'targetprocess-screen-capture.png');
 
             var defer = Q.defer();
 
@@ -122,7 +122,7 @@ define(['Class'], function(Class) {
                     defer.reject(new Error('Status code was ' + request.status));
                 }
             };
-            request.onprogress = function onprogress(event) {
+            request.upload.onprogress = function onprogress(event) {
                 defer.notify(event.loaded / event.total);
             };
             request.open('POST', this.host + '/' + this.endpointUpload);
