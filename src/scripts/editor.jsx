@@ -104,7 +104,9 @@ define([
                             </ul>
                         </nav>
                     </div>
-                    <div className="editor__area" tabIndex="0" onDragOver={this.onDragOver}  onDrop={this.onDrop}><canvas id="imageView" /></div>
+                    <div className="editor__area" tabIndex="0" onDragOver={this.onDragOver}  onDrop={this.onDrop}>
+                        <canvas id="imageView" />
+                    </div>
                 </div>
             );
         }

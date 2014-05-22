@@ -73,10 +73,7 @@ define(['Class', './button-tool'], function(Class, Button) {
 
             this.saveState();
 
-            this.fabricCanvas.backgroundImage.left = this.fabricCanvas.backgroundImage.left - dim.left;
-            this.fabricCanvas.backgroundImage.top = this.fabricCanvas.backgroundImage.top - dim.top;
-
-            this.fabricCanvas.setDimensions({
+            this.fabricCanvas.setDimensionsCorrect({
                 width: dim.width,
                 height: dim.height
             });
@@ -108,10 +105,7 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         undo: function(state) {
 
-            this.fabricCanvas.backgroundImage.left = this.fabricCanvas.backgroundImage.left + state.left;
-            this.fabricCanvas.backgroundImage.top = this.fabricCanvas.backgroundImage.top + state.top;
-
-            this.fabricCanvas.setDimensions({
+            this.fabricCanvas.setDimensionsCorrect({
                 width: state.width,
                 height: state.height
             });

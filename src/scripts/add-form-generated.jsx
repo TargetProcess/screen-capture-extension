@@ -339,7 +339,8 @@ define(['./card-entity'], function(Card) {
                 .then(function(entity) {
                     return Q.all([
                         entity,
-                        this.props.restApi.postAttach(entity.id, this.props.paintManager.canvas.toDataURL())
+                        this.props.restApi.postAttach(entity.id,
+                            this.props.paintManager.canvas.toDataURLWithMultiplier('png', window.devicePixelRatio, 1))
                             .progress(function(progress) {
                                 loader.setProgress(progress);
                             })

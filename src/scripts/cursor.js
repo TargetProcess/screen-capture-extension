@@ -12,7 +12,9 @@ define(['Class', './button-tool'], function(Class, Button) {
 
             canvas.selection = true;
             canvas.forEachObject(function(o) {
-                o.selectable = true;
+                if (o.type !== 'image') {
+                    o.selectable = true;
+                }
             });
 
             this.subscriptions = {

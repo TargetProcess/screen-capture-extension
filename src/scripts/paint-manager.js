@@ -39,6 +39,30 @@ define(['Class'], function(Class) {
                 width: 800,
                 height: 600
             });
+
+            // Scale the canvas for retina
+            this.canvas.setDimensionsCorrect = function(obj) {
+                var c = this.getElement();
+                this.width = obj.width;
+                this.height = obj.height;
+                var w = obj.width * window.devicePixelRatio;
+                var h = obj.height * window.devicePixelRatio;
+
+                c.setAttribute('width', w);
+                c.setAttribute('height', h);
+                c.getContext('2d').scale(window.devicePixelRatio, window.devicePixelRatio);
+
+                var nc = c.nextSibling;
+                nc.setAttribute('width', obj.width);
+                nc.setAttribute('height', obj.height); // no scale here
+
+                $(c.parentElement).add(c).add(c.nextSibling).css({
+                    width: obj.width + 'px',
+                    height: obj.height + 'px'
+                });
+
+                this.calcOffset();
+            };
         },
 
         setImageAsBackground: function(url) {
@@ -47,23 +71,24 @@ define(['Class'], function(Class) {
                 .when(this.loadImage(url))
                 .then(function(img) {
 
-                    var w = img.getWidth();
-                    var h = img.getHeight();
+                    var w = img.getWidth() / window.devicePixelRatio;
+                    var h = img.getHeight() / window.devicePixelRatio;
 
-                    var dpxRatio = window.devicePixelRatio;
-
-                    var xw = w / dpxRatio;
-                    var xh = h / dpxRatio;
-
-                    img.setWidth(xw);
-                    img.setHeight(xh);
-
-                    this.canvas.setDimensions({
-                        width: img.getWidth(),
-                        height: img.getHeight()
+                    this.canvas.setDimensionsCorrect({
+                        width: w,
+                        height: h
                     });
 
-                    this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas));
+                    img.set({
+                        selectable: false,
+                        left: 0,
+                        top: 0,
+                        scaleX: 1 / window.devicePixelRatio,
+                        scaleY: 1 / window.devicePixelRatio
+                    });
+
+                    this.canvas.add(img);
+                    this.canvas.renderAll();
                 }.bind(this));
         },
 
