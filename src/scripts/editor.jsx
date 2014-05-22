@@ -85,7 +85,9 @@ define([
                         <nav className="tools">
                             <ul className="tools__panel">
                                 <Add paintManager={this.state.paintManager} restApi={this.state.restApi} />
+                                <li className="tools__separator-short"></li>
                                 <Undo paintManager={this.state.paintManager} />
+                                <li className="tools__separator-short"></li>
                                 <Cursor className={this.state.selectedTool === 'cursor' ? 'selected' : ''} paintManager={this.state.paintManager} />
 
                                 <Pencil className={this.state.selectedTool === 'pencil' ? 'selected' : ''} paintManager={this.state.paintManager} />
@@ -100,6 +102,7 @@ define([
                             </ul>
                             <div className="tools__separator"></div>
                             <ul className="tools__panel">
+                                <li className="tools__separator-short"></li>
                                 <Settings paintManager={this.state.paintManager} restApi={this.state.restApi} />
                             </ul>
                         </nav>

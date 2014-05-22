@@ -20,6 +20,10 @@
     flex-grow: 1;
 }
 
+.tools__separator-short {
+    flex: 0 0 16px;
+}
+
 .tools__item {
     height: 44px;
     overflow: visible;
@@ -77,8 +81,6 @@
 }
 
 .tools__item-add {
-    margin-bottom: 16px;
-
     .popover {
         min-width: 420px;
     }
