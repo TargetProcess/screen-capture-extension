@@ -27,7 +27,7 @@ define([
             return {
                 restApi: new RestApi(),
                 paintManager: new PaintManager({
-                    width: 2
+                    width: 4
                 }),
                 selectedTool: storage.getItem('tool') || 'rect',
                 imageUrl: imageUrl
