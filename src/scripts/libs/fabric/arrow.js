@@ -63,25 +63,20 @@
                     return;
                 }
 
+                ctx.setLineJoin('round');
+                ctx.setLineCap('round');
+
                 ctx.moveTo(x0, y0);
 
                 ctx.lineTo(x1, y1);
+                ctx.moveTo(x1 + ctx.lineWidth, y1);
+                var dx = ctx.lineWidth * 6;
+                var dy = ctx.lineWidth * 4;
 
-                var dx = 13;
-                var dy = 10;
-
+                ctx.setStrokeColor('#656565');
                 ctx.lineTo(x1 - dx, y1 - dy);
-                ctx.lineTo(x1, y1);
+                ctx.lineTo(x1 + ctx.lineWidth, y1);
                 ctx.lineTo(x1 - dx, y1 + dy);
-                ctx.lineTo(x1, y1);
-
-                ctx.save();
-
-                ctx.fillStyle = ctx.strokeStyle;
-
-                ctx.fill();
-
-                ctx.restore();
             }
 
             ctx.lineWidth = this.strokeWidth;
