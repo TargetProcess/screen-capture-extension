@@ -87,7 +87,7 @@ define([
                                 <Add paintManager={this.state.paintManager} restApi={this.state.restApi} />
                                 <li className="tools__separator-short"></li>
                                 <Undo paintManager={this.state.paintManager} />
-                                <li className="tools__separator-short"></li>
+                                <li className="tools__separator-shortest"></li>
                                 <Cursor className={this.state.selectedTool === 'cursor' ? 'selected' : ''} paintManager={this.state.paintManager} />
 
                                 <Pencil className={this.state.selectedTool === 'pencil' ? 'selected' : ''} paintManager={this.state.paintManager} />

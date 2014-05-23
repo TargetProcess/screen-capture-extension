@@ -24,6 +24,11 @@
     flex: 0 0 16px;
 }
 
+.tools__separator-shortest {
+    flex: 0 0 1px;
+    background: #525252;
+}
+
 .tools__item {
     height: 44px;
     overflow: visible;
