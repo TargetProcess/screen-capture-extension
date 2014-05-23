@@ -36,8 +36,8 @@ define(['Class'], function(Class) {
                 selection: false,
                 perPixelTargetFind: true,
                 targetFindTolerance: 5,
-                width: 800,
-                height: 600
+                width: 4000, // big numbers to prevent strange bugs of selection when resize up
+                height: 4000
             });
 
             // Scale the canvas for retina
@@ -80,6 +80,7 @@ define(['Class'], function(Class) {
                     });
 
                     img.set({
+                        evented: false,
                         selectable: false,
                         left: 0,
                         top: 0,
