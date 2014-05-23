@@ -65,8 +65,7 @@ define(['./draw-tool', './button-tool'], function(Class, Button) {
                 selectionStart: 0,
                 selectionEnd: 3,
                 selectable: false,
-                editable: true,
-                textBackgroundColor: 'rgba(0,0,0,0.5)'
+                editable: true
             });
 
             this.fabricCanvas.add(this.figure);
