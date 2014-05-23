@@ -8,13 +8,22 @@ define(['Class', './button-tool'], function(Class, Button) {
             this.options = options;
             this.fabricCanvas = fabricCanvas;
 
-            this.rect = {};
+            this.$cropEl = $(this.fabricCanvas.upperCanvasEl);
 
-            $(this.layer()).imgAreaSelect({
+            this.rect = null;
+
+            this.$cropEl.imgAreaSelect({
                 handles: true,
                 onSelectEnd: function(img, selection) {
                     this.rect = selection;
+                    this.$cropHelper.tooltip('show');
                 }.bind(this)
+            });
+
+            this.$cropHelper = $('.imgareaselect-selection').parent();
+            this.$cropHelper.tooltip({
+                trigger: 'manual',
+                title: 'Double click or press Enter to crop, Esc to leave'
             });
 
             $(document).on('keydown.crop', function(e) {
@@ -36,21 +45,24 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         disable: function() {
             $(document).off('.crop');
-            $(this.layer()).off('.crop');
-            $(this.layer()).imgAreaSelect({
+            this.$cropEl.off('.crop');
+            this.$cropHelper.tooltip('hide');
+            this.$cropHelper.tooltip('destroy');
+
+            this.$cropEl.imgAreaSelect({
                 remove: true
             });
         },
 
-        layer: function() {
-            return this.fabricCanvas.upperCanvasEl;
-        },
-
         onEnter: function() {
+            this.$cropHelper.tooltip('hide');
+            if (!this.rect) {
+                return;
+            }
 
             var r = this.rect;
 
-            $(this.layer()).imgAreaSelect({
+            this.$cropEl.imgAreaSelect({
                 hide: true
             });
 
@@ -85,12 +97,15 @@ define(['Class', './button-tool'], function(Class, Button) {
             });
 
             this.fabricCanvas.renderAll();
+            this.rect = null;
         },
 
         onEscape: function() {
-            $(this.layer()).imgAreaSelect({
+            this.$cropHelper.tooltip('hide');
+            this.$cropEl.imgAreaSelect({
                 hide: true
             });
+            this.rect = null;
         },
 
         getState: function() {
