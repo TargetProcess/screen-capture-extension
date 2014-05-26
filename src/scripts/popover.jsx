@@ -57,7 +57,7 @@ define([], function(){
                     break;
 
                 case 'bottom':
-                    arrowTop = thisRect.height - triggerRect.height / 2;
+                    arrowTop = thisRect.height - triggerRect.height / 2 + 3;
                     break;
 
                 default:

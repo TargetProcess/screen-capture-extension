@@ -149,12 +149,11 @@ define(['rest-api'], function(RestApi) {
         render: function() {
 
             var loginForm;
-            var button;
             var alert;
-            var help;
 
             if (this.state.status === 'success' && !this.props.hideResult) {
                 loginForm = (
+                    <form className="form-settings" action="#" onSubmit={this.doLogin}>
                     <div className="media">
                         <span className="pull-left">
                             <img src={this.state.user.avatarSrc} className="img-circle media-object" />
@@ -164,49 +163,63 @@ define(['rest-api'], function(RestApi) {
                             <div className="domain-control"><a href={this.props.restApi.host}>{this.props.restApi.hostName}</a></div>
                         </div>
                     </div>
+                    <button className="btn btn-default btn-lg btn-block ladda-button" data-style="slide-left" type="submit"><span className="ladda-label">Logout</span></button>
+                    </form>
                 );
             } else {
                 if (this.state.isOnDemand) {
                     loginForm = (
                         <div className="domain-control">
                             <input className="form-control" name="login" type="text" placeholder="account" required pattern="[A-Za-z-0-9]+" title="your-host1313" value={this.state.accountName} onChange={this.setAccountName} />
-                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}> .tpondemand.com</span>
+                            <span> .tpondemand.com</span>
                         </div>
                     );
                 } else {
                     loginForm = (
                         <div className="domain-control">
                             <input className="form-control" name="login" type="url" placeholder="URL" required pattern="*" title="https://yourhost.com" value={this.state.accountName} onChange={this.setAccountName} />
-                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}> / </span>
                         </div>
                     );
                 }
 
-                help = (
-                    <p className="help-block clearfix"><a className="pull-right" href="http://www.targetprocess.com/" target="_blank">Don't have an account yet?</a></p>
+                if (this.state.status === 'failure') {
+                    alert = <div className="alert alert-danger">{this.state.statusText}</div>;
+                }
+
+                loginForm = (
+                    <div>
+                        <form className="form-settings" action="#" onSubmit={this.doLogin}>
+
+
+                            {alert}
+                            <h2>Targetprocess Account</h2>
+                            <div className="form-group">
+                                <div className="btn-group btn-group-justified"  data-toggle="buttons">
+                                    <div className="btn-group">
+                                        <button className={"btn btn-default btn-sm" + (this.state.isOnDemand ? ' active' : '') } onClick={this.toggleOnDemand} type="button">On-Demand</button>
+                                    </div>
+                                    <div className="btn-group">
+                                        <button className={"btn btn-default btn-sm" + (!this.state.isOnDemand ? ' active' : '') }  onClick={this.toggleOnDemand} type="button">On-Premise</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                {loginForm}
+                            </div>
+                            <button className="btn btn-primary btn-lg btn-block ladda-button" data-style="slide-left" type="submit"><span className="ladda-label">Login</span></button>
+                        </form>
+                        <form className="form-settings form-login" action="#">
+                            <a className="btn btn-success btn-lg btn-block" href="http://www.targetprocess.com/" target="_blank">Create a new account for free</a>
+                        </form>
+                    </div>
                 );
             }
 
-            if (!this.state.isLogged) {
-                button = <button className="btn btn-success btn-lg btn-block ladda-button" data-style="slide-left" type="submit"><span className="ladda-label">Login</span></button>;
-            } else {
-                button = <button className="btn btn-default btn-lg btn-block ladda-button" data-style="slide-left" type="submit"><span className="ladda-label">Logout</span></button>;
-            }
-
-            if (this.state.status === 'failure') {
-                alert = <div className="alert alert-danger">{this.state.statusText}</div>;
-            }
-
             return (
-                <form className="form-settings" action="#" onSubmit={this.doLogin}>
-                    {alert}
-
-                    <div className="form-group">
-                        {help}
-                        {loginForm}
-                    </div>
-                    {button}
-                </form>
+                <div className="form-settings-main">
+                    {loginForm}
+                </div>
             );
         }
     });
