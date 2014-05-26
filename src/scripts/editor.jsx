@@ -11,9 +11,10 @@ define([
     './color',
     './cursor',
     './undo',
+    './export',
     './paint-manager',
     './rest-api'
-], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, PaintManager, RestApi){
+], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, Export, PaintManager, RestApi){
 
     var storage = window.localStorage;
 
@@ -85,7 +86,7 @@ define([
                         <nav className="tools">
                             <ul className="tools__panel">
                                 <Add paintManager={this.state.paintManager} restApi={this.state.restApi} />
-                                <li className="tools__separator-short"></li>
+                                <Export paintManager={this.state.paintManager} restApi={this.state.restApi} />
                                 <Undo paintManager={this.state.paintManager} />
                                 <li className="tools__separator-shortest"></li>
                                 <Cursor className={this.state.selectedTool === 'cursor' ? 'selected' : ''} paintManager={this.state.paintManager} />
