@@ -18,7 +18,7 @@
             .onUpdated
             .addListener(function waitComplete(tabId, changedProps) {
 
-                if (editorTab && tabId === editorTab.id && changedProps.status === 'complete') {
+                if (editorTab && tabId === editorTab.id && changedProps.status === 'loading') {
 
                     chrome.tabs.onUpdated.removeListener(waitComplete);
 
@@ -27,7 +27,7 @@
                     })[0];
 
                     if (view) {
-                        view.setScreenshotUrl(imageData);
+                        view.screenshotUrl = imageData;
                     }
                 }
             });
