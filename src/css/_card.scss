@@ -1,10 +1,11 @@
 .card {
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
-    padding: 12px;
+    // border: 1px solid #e8e8e8;
+    // border-radius: 10px;
+    // padding: 12px;
     display: flex;
     color: #000;
     line-height: 1.5;
+    min-height: 50px;
 }
 
 .card__body {
@@ -27,9 +28,22 @@
     max-width: 250px;
 }
 
-.card__attachment img {
-    border: 1px solid #e8e8e8;
-    padding: 0;
-    width: 50px;
-    height: 50px;
+.card__attachments {
+    position: relative;
+    flex-basis: 50px;
+    flex-grow: 1;
+    max-width: 50px;
+}
+
+.card__attachment {
+
+    position: absolute;
+
+    img {
+        background: rgba(232, 232, 232, 0.5);
+        border: 1px solid #e8e8e8;
+        padding: 0;
+        width: 50px;
+        height: 50px;
+    }
 }

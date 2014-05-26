@@ -68,6 +68,11 @@
         &[disabled] {
             opacity: 0.1;
         }
+
+        > .icon {
+            display: block;
+            margin: auto;
+        }
     }
 
     &.selected {
@@ -75,14 +80,6 @@
             background: $select-color;
         }
     }
-
-
-    .icon {
-        display: block;
-        margin: auto;
-    }
-
-
 }
 
 .tools__item-add {

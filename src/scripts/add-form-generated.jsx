@@ -368,6 +368,41 @@ define(['./card-entity'], function(Card) {
                 });
         },
 
+        submitToEntity: function(e) {
+
+            var imageData = this.props.paintManager.canvas.toDataURLWithMultiplier('png', 1, 1);
+            var entity = this.state.entity;
+
+            var loader = Ladda.create(e.currentTarget);
+            loader.start();
+
+            return Q
+                .when(this.props.restApi
+                    .postAttach(entity.id, imageData)
+                    .progress(function(progress) {
+                        loader.setProgress(progress);
+                    })
+                )
+                .then(function(){
+                    entity.ModifyDate = new Date();
+                    this.setState({
+                        status: 'append',
+                        entity: entity,
+                        validate: false
+                    });
+                }.bind(this))
+                .catch(function(err) {
+
+                    this.setState({
+                        statusText: err.message,
+                        status: 'failure'
+                    });
+                }.bind(this))
+                .done(function() {
+                    loader.stop();
+                });
+        },
+
         getValues: function() {
 
             var values = _.compact(_.values(this.refs).map(function(ref) {
@@ -453,11 +488,17 @@ define(['./card-entity'], function(Card) {
             var alert;
             var entity;
 
-            if (this.state.status === 'success') {
-                alert = <div className="alert alert-success">Entity is added</div>;
+            if (this.state.status === 'success' || this.state.status === 'append') {
+                alert = <div className="alert alert-success">{this.state.status === 'success' ? 'Entity is added' : 'Attach is added'}</div>;
 
-                entity = <Card restApi={this.props.restApi} entity={this.state.entity} />;
-
+                entity = (
+                    <div className="form__card">
+                        <Card restApi={this.props.restApi} entity={this.state.entity} />
+                        <button className="btn btn-success btn-sm btn-block ladda-button" data-style="expand-left" type="button" onClick={this.submitToEntity}>
+                            <div className="ladda-label">Add one more to this entity</div>
+                        </button>
+                    </div>
+                );
             } else if (this.state.status === 'failure') {
                 alert = <div className="alert alert-danger">{this.state.statusText}</div>;
             }

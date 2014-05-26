@@ -25,7 +25,7 @@ define([], function(){
 
         componentWillReceiveProps: function(nextProps) {
 
-            if ((nextProps.entity.Id || nextProps.entity.id) === this.state.entity.Id) {
+            if ((nextProps.entity.Id || nextProps.entity.id) === this.state.entity.Id && nextProps.entity.ModifyDate === this.state.entity.ModifyDate) {
                 return;
             }
 
@@ -50,6 +50,7 @@ define([], function(){
                     'Id',
                     'Name',
                     'Description',
+                    'ModifyDate',
                     {'EntityType': 'Name'},
                     {'Attachments': ['Id', 'Name', 'Uri', 'ThumbnailUri']},
                     {'Project': ['Id', 'Name', 'Abbreviation', 'Color']}
@@ -59,14 +60,18 @@ define([], function(){
 
         render: function() {
 
-            if (!this.state.isLoaded) {
-                return (<div>Loaded</div>);
+            if (!this.state.entity) {
+                return (<div className="card card-loaded"></div>);
             }
 
             var entity = this.state.entity;
 
-            var attach = _.last(entity.Attachments.Items);
-            var thumbnailUri = attach.ThumbnailUri.replace(/localhost/, 'localhost:8080').replace(/100/g, '50');
+
+            var attachs = entity.Attachments.Items;
+            attachs = attachs.map(function(attach) {
+                attach.thumbnailUri = attach.ThumbnailUri.replace(/localhost/, 'localhost:8080').replace(/100/g, '50');
+                return attach;
+            });
 
             var url = this.props.restApi.host + '/entity/' + entity.Id;
             var project;
@@ -74,11 +79,16 @@ define([], function(){
                 project = <span className="card__project" style={{background: entity.Project.Color}}>{entity.Project.Abbreviation}</span>;
             }
 
-
             return (
                 <div className="card">
-                    <div className="card__attachment">
-                        <img src={thumbnailUri} />
+                    <div className="card__attachments"  style={{maxWidth: 50 + 5 * attachs.length + "px", height: 50 + 5 * attachs.length + "px" }}>
+                        {attachs.map(function(attach, i) {
+                            return (
+                                <div className="card__attachment" style={{left: 5 * i + "px", top: 5 * i + 'px' }}>
+                                    <img src={attach.thumbnailUri} />
+                                </div>
+                            );
+                        })}
                     </div>
                     <div className="card__body">
                         <div className="card__id"><a href={url} target="_blank">#{entity.Id}</a></div>
