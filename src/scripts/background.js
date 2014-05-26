@@ -2,6 +2,10 @@
 (function() {
     'use strict';
 
+    var isEditorTab = function(tab) {
+        return (tab.title === 'Targetprocess Screen Capture' && tab.url.match(/^chrome-extension:\/\//));
+    };
+
     var getImageData = function() {
         return new Promise(function(resolve) {
             chrome
@@ -43,13 +47,14 @@
             });
     };
 
-    var takeScreenshot = function() {
-
-        Promise
-            .cast(getImageData())
-            .then(function(imageData) {
-                openImageInEditor(imageData);
-            });
+    var takeScreenshot = function(tab) {
+        if (!isEditorTab(tab)) {
+            Promise
+                .cast(getImageData())
+                .then(function(imageData) {
+                    openImageInEditor(imageData);
+                });
+        }
     };
 
     // Listen for a click on the camera icon. On that click, take a screenshot
