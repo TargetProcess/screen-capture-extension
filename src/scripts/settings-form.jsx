@@ -5,6 +5,7 @@ define(['rest-api'], function(RestApi) {
     return React.createClass({
 
         getDefaultProps: function() {
+
             return {
                 autoLogin: false
             };
@@ -17,7 +18,8 @@ define(['rest-api'], function(RestApi) {
                 host: '',
                 isLogged: false,
                 status: 'ready',
-                user: null
+                user: null,
+                isOnDemand: (storage.getItem('accountName') && storage.getItem('isOnDemand') === "false") ? false : true,
             };
         },
 
@@ -28,12 +30,12 @@ define(['rest-api'], function(RestApi) {
             if (this.state.status === 'success') {
                 this.logout();
             } else {
-                this.login(accountName);
+                this.login(accountName, this.state.isOnDemand);
             }
-
         },
 
         logout: function(e) {
+
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
             storage.setItem('accountName', '');
@@ -50,9 +52,10 @@ define(['rest-api'], function(RestApi) {
                 });
         },
 
-        login: function(accountName) {
+        login: function(accountName, isOnDemand) {
 
             storage.setItem('accountName', accountName);
+            storage.setItem('isOnDemand', isOnDemand);
 
             this.setState({
                 status: 'pending',
@@ -64,7 +67,11 @@ define(['rest-api'], function(RestApi) {
 
             // for tests now, login to remote only if extension
             if (chrome.tabs) {
-                this.props.restApi.setOnDemandAccount(accountName);
+                if (isOnDemand) {
+                    this.props.restApi.setOnDemandAccount(accountName);
+                } else {
+                    this.props.restApi.setOnSiteAccount(accountName);
+                }
             }
 
             Q
@@ -91,11 +98,35 @@ define(['rest-api'], function(RestApi) {
                 });
         },
 
+        setAccountName: function(e) {
+
+            this.setState({
+                accountName: e.target.value
+            });
+        },
+
+        toggleOnDemand: function() {
+
+            var isOnDemand = !this.state.isOnDemand;
+            var accountName = $(this.getDOMNode()).find('[name=login]').val();
+            if (accountName) {
+                if (isOnDemand) {
+                    accountName = accountName.replace(/^https?:\/\//, '').replace(/.tpondemand.com\/?$/, '').replace(/\.[a-z]+$/, '');
+                } else {
+                    accountName = 'https://' + accountName + '.tpondemand.com';
+                }
+            }
+
+            this.setState({
+                isOnDemand: isOnDemand,
+                accountName: accountName
+            });
+        },
+
         componentDidMount: function() {
 
-
             if (this.props.autoLogin && this.state.accountName) {
-                this.login(this.state.accountName);
+                this.login(this.state.accountName, this.state.isOnDemand);
             }
 
             this.props.restApi.onAuth.add(function(){
@@ -120,6 +151,7 @@ define(['rest-api'], function(RestApi) {
             var loginForm;
             var button;
             var alert;
+            var help;
 
             if (this.state.status === 'success' && !this.props.hideResult) {
                 loginForm = (
@@ -134,11 +166,24 @@ define(['rest-api'], function(RestApi) {
                     </div>
                 );
             } else {
-                loginForm = (
-                    <div className="domain-control">
-                        <input className="form-control" name="login" type="text" placeholder="account" required pattern="[A-Za-z-0-9]+" title="your-host1313" defaultValue={this.state.accountName} />
-                        <span>.tpondemand.com</span >
-                    </div>
+                if (this.state.isOnDemand) {
+                    loginForm = (
+                        <div className="domain-control">
+                            <input className="form-control" name="login" type="text" placeholder="account" required pattern="[A-Za-z-0-9]+" title="your-host1313" value={this.state.accountName} onChange={this.setAccountName} />
+                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}>.tpondemand.com</span>
+                        </div>
+                    );
+                } else {
+                    loginForm = (
+                        <div className="domain-control">
+                            <input className="form-control" name="login" type="url" placeholder="URL" required pattern="*" title="https://yourhost.com" value={this.state.accountName} onChange={this.setAccountName} />
+                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}>back</span>
+                        </div>
+                    );
+                }
+
+                help = (
+                    <p className="help-block clearfix"><a className="pull-right" href="http://www.targetprocess.com/" target="_blank">Don't have an account yet?</a></p>
                 );
             }
 
@@ -155,11 +200,12 @@ define(['rest-api'], function(RestApi) {
             return (
                 <form className="form-settings" action="#" onSubmit={this.doLogin}>
                     {alert}
-                    <div className ="form-group">
+                    <div className="form-group">
                         {loginForm}
                     </div>
+                    {help}
                     {button}
-                </form >
+                </form>
             );
         }
     });

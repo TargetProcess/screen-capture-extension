@@ -21,6 +21,11 @@ define(['Class'], function(Class) {
             this.hostName = name + '.tpondemand.com';
         },
 
+        setOnSiteAccount: function(name) {
+            this.host = name;
+            this.hostName = name;
+        },
+
         setHost: function(value) {
             this.host = value;
         },
