@@ -5,7 +5,6 @@
     .popover {
         padding: 0;
         min-width: 500px;
-        min-height: 250px;
         font-size: 12px;
 
         label {
@@ -30,6 +29,7 @@
     .add-form {
         display: table; // can't flex, cos left column dont return to short if align-items stretch :(
         width: 100%;
+        min-height: 250px;
     }
 
     .add-form-inner {

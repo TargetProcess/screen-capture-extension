@@ -170,14 +170,14 @@ define(['rest-api'], function(RestApi) {
                     loginForm = (
                         <div className="domain-control">
                             <input className="form-control" name="login" type="text" placeholder="account" required pattern="[A-Za-z-0-9]+" title="your-host1313" value={this.state.accountName} onChange={this.setAccountName} />
-                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}>.tpondemand.com</span>
+                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}> .tpondemand.com</span>
                         </div>
                     );
                 } else {
                     loginForm = (
                         <div className="domain-control">
                             <input className="form-control" name="login" type="url" placeholder="URL" required pattern="*" title="https://yourhost.com" value={this.state.accountName} onChange={this.setAccountName} />
-                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}>back</span>
+                            <span className="domain-control__ondemand" onClick={this.toggleOnDemand}> / </span>
                         </div>
                     );
                 }
@@ -200,10 +200,11 @@ define(['rest-api'], function(RestApi) {
             return (
                 <form className="form-settings" action="#" onSubmit={this.doLogin}>
                     {alert}
+
                     <div className="form-group">
+                        {help}
                         {loginForm}
                     </div>
-                    {help}
                     {button}
                 </form>
             );
