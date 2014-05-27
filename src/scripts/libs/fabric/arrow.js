@@ -70,8 +70,8 @@
 
                 ctx.lineTo(x1, y1);
                 ctx.moveTo(x1 + ctx.lineWidth, y1);
-                var dx = ctx.lineWidth * 4;
-                var dy = ctx.lineWidth * 3;
+                var dx = ctx.lineWidth * 3;
+                var dy = ctx.lineWidth * 2;
 
                 ctx.setStrokeColor('#656565');
                 ctx.lineTo(x1 - dx, y1 - dy);
