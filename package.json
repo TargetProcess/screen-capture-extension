@@ -1,6 +1,6 @@
 {
   "name": "targetprocess-chrome-extension",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Capture screenshot and create entity in your Targetprocess account.",
   "main": "gulpfile.js",
   "scripts": {

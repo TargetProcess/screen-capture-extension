@@ -3,7 +3,7 @@
 
     "name": "Targetprocess Screen Capture",
     "short_name": "Targetprocess Screen Capture",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Capture screenshot and create entity in your Targetprocess account.",
 
     "browser_action": {
