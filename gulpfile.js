@@ -178,7 +178,7 @@ gulp.task('rjs-clean', function() {
 
 gulp.task('compress', function() {
     return gulp.src('release/**/*')
-        .pipe(gp.zip('build.zip'))
+        .pipe(gp.zip('build-' + pkg.version + '.zip'))
         .pipe(gulp.dest('release-compressed'));
 });
 

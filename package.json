@@ -1,7 +1,7 @@
 {
   "name": "targetprocess-chrome-extension",
   "version": "0.2.0",
-  "description": "Capture screenshot and create entity in your Targetprocess account.",
+  "description": "Capture and annotate screenshots and create entities in your Targetprocess account.",
   "main": "gulpfile.js",
   "scripts": {
     "test": "eslint src && jscs src && jsxhint src/**/*.jsx && scss-lint src/css"
@@ -31,7 +31,6 @@
     "gulp-ruby-sass": "^0.4.1",
     "gulp-autoprefixer": "0.0.7",
     "gulp-react": "^0.3.2",
-    "http-proxy": "^1.1.2",
     "gulp-filter": "^0.4.1",
     "run-sequence": "^0.3.6",
     "gulp-clean": "^0.2.4",
