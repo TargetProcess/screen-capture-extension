@@ -334,10 +334,12 @@ define(['./card-entity'], function(Card) {
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
 
-            this.props
-                .restApi.submitForm(this.props.restId, values)
-                .then(function(entity) {
-                    var imageData = this.props.paintManager.canvas.toDataURLWithMultiplier('png', 1, 1);
+            Q
+                .all([
+                    this.props.restApi.submitForm(this.props.restId, values),
+                    this.props.paintManager.exportDataURL()
+                ])
+                .spread(function(entity, imageData) {
                     return Q.all([
                         entity,
                         this.props.restApi.postAttach(entity.id, imageData)
@@ -370,19 +372,20 @@ define(['./card-entity'], function(Card) {
 
         submitToEntity: function(e) {
 
-            var imageData = this.props.paintManager.canvas.toDataURLWithMultiplier('png', 1, 1);
             var entity = this.state.entity;
 
             var loader = Ladda.create(e.currentTarget);
             loader.start();
 
             return Q
-                .when(this.props.restApi
+                .when(this.props.paintManager.exportDataURL())
+                .then(function(imageData) {
+                    return this.props.restApi
                     .postAttach(entity.id, imageData)
                     .progress(function(progress) {
                         loader.setProgress(progress);
-                    })
-                )
+                    });
+                }.bind(this))
                 .then(function(){
                     entity.ModifyDate = new Date();
                     this.setState({

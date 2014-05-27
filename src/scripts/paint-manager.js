@@ -217,6 +217,15 @@ define(['Class'], function(Class) {
             }
         },
 
+        exportDataURL: function() {
+
+            var def = Q.defer();
+            this.canvas.clone(function(canvas) {
+                def.resolve(canvas.toDataURLWithMultiplier('png', window.devicePixelRatio, 10));
+            });
+            return def.promise;
+        },
+
         patchFabric: function() {
 
             // correct position without absolute parent
