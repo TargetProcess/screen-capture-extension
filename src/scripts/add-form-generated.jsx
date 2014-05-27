@@ -498,7 +498,7 @@ define(['./card-entity'], function(Card) {
                     <div className="form__card">
                         <Card restApi={this.props.restApi} entity={this.state.entity} />
                         <button className="btn btn-success btn-sm btn-block ladda-button" data-style="expand-left" type="button" onClick={this.submitToEntity}>
-                            <div className="ladda-label">Add one more to this entity</div>
+                            <div className="ladda-label">Attach another screenshot to this entity</div>
                         </button>
                     </div>
                 );
