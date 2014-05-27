@@ -271,6 +271,18 @@ define(['Class'], function(Class) {
                     top: top
                 };
             };
+
+            /*eslint-disable */
+            fabric.Line.prototype._setWidthHeight = function(options) {
+                options || (options = {});
+
+                this.width = this.width || Math.abs(this.x2 - this.x1) || 1;
+                this.height = this.height || Math.abs(this.y2 - this.y1) || 1;
+
+                this.left = 'left' in options ? options.left : this._getLeftToOriginX();
+
+                this.top = 'top' in options ? options.top : this._getTopToOriginY();
+            };
         }
     });
 });
