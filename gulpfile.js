@@ -12,7 +12,6 @@ var livereload = require('tiny-lr')();
 gp.lr = gp.livereload.bind(null, livereload);
 
 var express = require('express');
-var httpProxy = require('http-proxy');
 
 gp.runSequence = require('run-sequence');
 var rjs = require('requirejs');
@@ -190,14 +189,6 @@ gulp.task('server', function() {
     app.configure(function() {
         app.use(express.errorHandler());
         app.use(express.static(path.resolve(__dirname, 'dist')));
-    });
-
-    var apiProxy = httpProxy.createProxyServer();
-
-    app.all('/targetprocess/*', function(req, res) {
-        apiProxy.web(req, res, {
-            target: 'http://shitkin:80'
-        });
     });
 
     app.listen(8080);
