@@ -86,7 +86,7 @@ define([
                         <nav className="tools">
                             <ul className="tools__panel">
                                 <Add paintManager={this.state.paintManager} restApi={this.state.restApi} />
-                                <Export paintManager={this.state.paintManager} restApi={this.state.restApi} />
+                                <Export paintManager={this.state.paintManager} restApi={this.state.restApi} title="export to PNG" />
                                 <Undo paintManager={this.state.paintManager} />
                                 <li className="tools__separator-shortest"></li>
                                 <Cursor className={this.state.selectedTool === 'cursor' ? 'selected' : ''} paintManager={this.state.paintManager} />
