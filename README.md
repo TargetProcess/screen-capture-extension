@@ -29,3 +29,4 @@ $ npm test
 ## Contributors
 
 Aliaksei Shytkin, Vladimir Petriko, Alex Tsayun
+
