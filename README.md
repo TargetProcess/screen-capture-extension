@@ -1,6 +1,8 @@
-# Targetprocess Chrome Extension
+[![Build Status](https://travis-ci.org/TargetProcess/screen-capture-extension.svg?branch=master)](https://travis-ci.org/TargetProcess/screen-capture-extension)
 
-Capture screenshot and create entity for OnDemand account.
+# Screen Capture Extension
+
+Capture and annotate screenshots and create entities in your Targetprocess account.
 
 ## Installation
 
@@ -14,7 +16,7 @@ Install from `release` folder as described here https://developer.chrome.com/ext
 $ npm install
 $ bower install
 $ gulp # dev mode, http://localhost:8080
-$ gulp release # release mode, works locally release/index.html
+$ gulp release # release mode, works locally release/index.html, generate .zip file in release-compressed/ folder
 $ rm -rf node_modules/gulp-svgmin/node_modules/svgo # use patched svgo
 ```
 
