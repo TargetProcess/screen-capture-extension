@@ -205,7 +205,7 @@ gulp.task('watch', function() {
             return console.log(err);
         }
         gulp.watch('src/**/*.scss', ['css']);
-        gulp.watch('src/*.jade', ['html']);
+        gulp.watch(['src/*.jade', 'bower.json'], ['html']);
         gulp.watch('src/scripts/**/*.js', ['js']);
         gulp.watch('src/scripts/**/*.jsx', ['jsx']);
         gulp.watch('src/manifest.json', ['manifest']);

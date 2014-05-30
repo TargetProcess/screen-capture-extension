@@ -19,12 +19,9 @@ $black-color: #0e2e33;
         margin-left: 3px;
     }
 
-
-
     & li > a {
         color: $black-color;
     }
-
 
     .popover-content {
         flex-grow: 1;
@@ -127,8 +124,7 @@ $black-color: #0e2e33;
         margin-bottom: 10px;
     }
 
-    .alert,
-    .card {
+    .alert {
         margin-bottom: 10px;
     }
 }

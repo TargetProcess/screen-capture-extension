@@ -1,4 +1,4 @@
-define(['./add-form-generated', './settings-form'], function(GeneratedForm, LoginForm){
+define(['./add-form-generated', './add-form-existing', './settings-form'], function(GeneratedForm, ExistingForm, LoginForm){
 
     'use strict';
 
@@ -62,6 +62,9 @@ define(['./add-form-generated', './settings-form'], function(GeneratedForm, Logi
                                         </li>
                                     );
                                 })}
+                                <li className='existing'>
+                                    <a href="#existing" data-toggle="tab">Attach to...</a>
+                                </li>
                             </ul>
                         </div>
                         <div className="tab-content column-forms">
@@ -72,6 +75,9 @@ define(['./add-form-generated', './settings-form'], function(GeneratedForm, Logi
                                     </div>
                                 );
                             }.bind(this))}
+                            <div key='existing' className="tab-pane" id='existing'>
+                                <ExistingForm restApi={this.props.restApi} paintManager={this.props.paintManager} />
+                            </div>
                         </div>
                     </div>
                 </div>

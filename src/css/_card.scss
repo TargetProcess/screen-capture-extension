@@ -33,6 +33,11 @@
     flex-basis: 50px;
     flex-grow: 1;
     max-width: 50px;
+    flex-shrink: 0;
+
+    &:empty {
+        background: rgba(232, 232, 232, 0.5);
+    }
 }
 
 .card__attachment {
@@ -40,7 +45,6 @@
     position: absolute;
 
     img {
-        background: rgba(232, 232, 232, 0.5);
         border: 1px solid #e8e8e8;
         padding: 0;
         width: 50px;

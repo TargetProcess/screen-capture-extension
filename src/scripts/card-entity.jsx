@@ -81,7 +81,10 @@ define([], function(){
 
             return (
                 <div className="card">
-                    <div className="card__attachments"  style={{maxWidth: 50 + 5 * attachs.length + "px", height: 50 + 5 * attachs.length + "px" }}>
+                    <div className="card__attachments"  style={{
+                        flexBasis: 50 + 5 * (attachs.length ? attachs.length - 1 : 0) + "px",
+                        maxWidth: 50 + 5 * (attachs.length ? attachs.length - 1 : 0) + "px",
+                        height: 50 + 5 * (attachs.length ? attachs.length - 1 : 0) + "px" }}>
                         {attachs.map(function(attach, i) {
                             return (
                                 <div className="card__attachment" style={{left: 5 * i + "px", top: 5 * i + 'px' }}>

@@ -26,7 +26,8 @@
     "lodash": "~2.4.1",
     "bootstrap-sass-official": "~3.1.1",
     "requirejs": "~2.1.11",
-    "tree-format": "~0.1.1"
+    "tree-format": "~0.1.1",
+    "typeahead.js": "~0.10.2"
   },
   "overrides": {
     "q": {
