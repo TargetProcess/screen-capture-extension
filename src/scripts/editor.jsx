@@ -23,6 +23,8 @@ define([
         getInitialState: function() {
 
             var imageUrl = window.screenshotUrl || storage.getItem('imageUrl') || '';
+            var imageSelection = window.screenshotSelection || null;
+
             storage.setItem('imageUrl', imageUrl);
 
             return {
@@ -31,14 +33,23 @@ define([
                     width: 4
                 }),
                 selectedTool: storage.getItem('tool') || 'rect',
-                imageUrl: imageUrl
+                imageUrl: imageUrl,
+                imageSelection: imageSelection
             };
         },
 
-        loadImage: function(imageUrl) {
+        loadImage: function(imageUrl, imageSelection) {
 
-            this.state.paintManager.start('imageView', imageUrl).then(function() {
+            this.state.paintManager.start('imageView', imageUrl, imageSelection).then(function() {
                 this.state.paintManager.selectTool(this.state.selectedTool);
+
+                if (imageSelection) {
+                    this.state.paintManager.exportDataURL()
+                    .then(function(data) {
+                        storage.setItem('imageUrl', data);
+                    })
+                    .done();
+                }
             }.bind(this));
         },
 
@@ -76,7 +87,7 @@ define([
                 });
                 storage.setItem('tool', name);
             }.bind(this);
-            this.loadImage(this.state.imageUrl);
+            this.loadImage(this.state.imageUrl, this.state.imageSelection);
         },
 
         render: function() {

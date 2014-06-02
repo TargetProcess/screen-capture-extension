@@ -2,6 +2,8 @@
 (function() {
     'use strict';
 
+    var selection = null;
+
     var isEditorTab = function(tab) {
         return (tab.title === 'Targetprocess Screen Capture' && tab.url.match(/^chrome-extension:\/\//));
     };
@@ -32,7 +34,9 @@
 
                     if (view) {
                         view.screenshotUrl = imageData;
+                        view.screenshotSelection = selection;
                     }
+                    selection = null;
                 }
             });
 
@@ -48,6 +52,7 @@
     };
 
     var takeScreenshot = function(tab) {
+
         if (!isEditorTab(tab)) {
             Promise
                 .cast(getImageData())
@@ -57,10 +62,39 @@
         }
     };
 
-    // Listen for a click on the camera icon. On that click, take a screenshot
-    chrome
-        .browserAction
-        .onClicked
-        .addListener(takeScreenshot);
+    var initSelection = function(tab) {
+
+        chrome.tabs.sendMessage(tab.id, {
+            action: 'captureSelection:start'
+        });
+    };
+
+    chrome.runtime.onMessage.addListener(function(request, sender) {
+
+        switch (request.action) {
+            case 'captureVisible:selected':
+                chrome.tabs.query({
+                    active: true
+                }, function(tabs) {
+                    takeScreenshot(tabs[0]);
+                });
+
+                break;
+
+            case 'captureSelection:selected':
+                chrome.tabs.query({
+                    active: true
+                }, function(tabs) {
+                    initSelection(tabs[0]);
+                });
+                break;
+
+            case 'captureSelection:completed':
+                selection = request.selection;
+                takeScreenshot(sender.tab);
+                break;
+
+        }
+    });
 
 }());

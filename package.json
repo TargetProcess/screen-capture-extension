@@ -45,6 +45,7 @@
     "gulp-zip": "^0.3.4",
     "eslint": "^0.6.2",
     "jscs": "^1.4.5",
-    "jsxhint": "^0.4.9"
+    "jsxhint": "^0.4.9",
+    "gulp-concat": "^2.2.0"
   }
 }

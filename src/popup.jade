@@ -1,0 +1,28 @@
+doctype html
+html(xmlns='http://www.w3.org/1999/html')
+    head
+        meta(charset='UTF-8')
+        title Targetprocess Screen Capture
+
+        // build:css build/popup.css 
+        link(rel='stylesheet', href='css/icons.css')
+        link(rel='stylesheet', href='css/popup.css')
+        // endbuild 
+
+    body
+        ul.nav
+            li
+                a(data-action="captureSelection:selected") 
+                    i.icon.icon-area-snap
+                    | Area Snap
+
+            li
+                a(data-action="captureVisible:selected")
+                    i.icon.icon-window-snap
+                    | Window Snap
+
+        // build:js build/popup.js 
+        script(type='text/javascript', src="scripts/chrome/popup.js")
+        // endbuild 
+
+

@@ -11,11 +11,6 @@ require(['editor'], function(Editor) {
     React.renderComponent(Editor(), document.querySelector('.main'));
 });
 
-window.setScreenshotUrl = function(url) {
-    'use strict';
-    window.screenshotUrl = url;
-};
-
 /*eslint-disable */
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-51208652-1']);

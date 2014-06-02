@@ -55,7 +55,7 @@ gulp.task('html-release', function() {
 
 gulp.task('css', function() {
 
-    return gulp.src('src/css/style.scss')
+    return gulp.src(['src/css/style.scss', 'src/css/popup.scss'])
         .pipe(gp.plumber())
         .pipe(gp.rubySass({
             loadPath: ['dist/vendor/bootstrap-sass-official/vendor/assets/stylesheets']
@@ -86,7 +86,8 @@ gulp.task('manifest', function() {
 
     return gulp.src('src/manifest.json')
         .pipe(gp.template({
-            pkg: pkg
+            pkg: pkg,
+            locals: locals
         }))
         .pipe(gulp.dest('dist'))
         .pipe(gp.lr())
@@ -170,10 +171,39 @@ gulp.task('rjs', function(cb) {
 });
 
 gulp.task('rjs-clean', function() {
-    return gulp.src('release/scripts/!(main.js|background.js)', {
+    return gulp.src('release/scripts/!(main.js|chrome)', {
         read: false
     })
         .pipe(gp.clean());
+});
+
+gulp.task('rjs-clean2', function() {
+    return gulp.src('release/scripts/chrome/!(background.js)', {
+        read: false
+    })
+        .pipe(gp.clean());
+});
+
+gulp.task('content-js-release', function() {
+    // should make it automatic
+    return gulp.src([
+        'dist/vendor/jquery/dist/jquery.js',
+        'dist/vendor/imgareaselect/jquery.imgareaselect.dev.js',
+        'dist/scripts/chrome/selection.js'
+    ])
+        .pipe(gp.concat('content.js'))
+        .pipe(gp.uglify())
+        .pipe(gulp.dest('release/build/'));
+});
+
+gulp.task('content-css-release', function() {
+    // should make it automatic
+    return gulp.src([
+        'dist/vendor/imgareaselect/distfiles/css/imgareaselect-deprecated.css'
+    ])
+        .pipe(gp.concat('content.css'))
+        .pipe(gp.csso())
+        .pipe(gulp.dest('release/build/'));
 });
 
 gulp.task('compress', function() {
@@ -221,9 +251,10 @@ gulp.task('release', function(next) {
         [
             'build', 'clean-release'
         ], [
-            'html-release', 'manifest-release', 'images-release', 'sprites-release', 'rjs'
+            'html-release', 'manifest-release', 'images-release', 'sprites-release', 'rjs', 'content-js-release',
+            'content-css-release'
         ], [
-            'rjs-clean'
+            'rjs-clean', 'rjs-clean2'
         ], [
             'compress'
         ],

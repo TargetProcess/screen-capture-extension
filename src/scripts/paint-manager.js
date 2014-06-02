@@ -22,11 +22,11 @@ define(['Class'], function(Class) {
             this.patchFabric();
         },
 
-        start: function(canvasId, url) {
+        start: function(canvasId, url, selection) {
 
             return Q
                 .when(this.initCanvas(canvasId))
-                .then(url ? this.setImageAsBackground.bind(this, url) : null)
+                .then(url ? this.setImageAsBackground.bind(this, url, selection) : null)
                 .then(this.initEvents.bind(this));
         },
 
@@ -65,14 +65,14 @@ define(['Class'], function(Class) {
             };
         },
 
-        setImageAsBackground: function(url) {
+        setImageAsBackground: function(url, selection) {
 
             return Q
                 .when(this.loadImage(url))
                 .then(function(img) {
 
-                    var w = img.getWidth() / window.devicePixelRatio;
-                    var h = img.getHeight() / window.devicePixelRatio;
+                    var w = (selection ? selection.width : img.getWidth()) / window.devicePixelRatio;
+                    var h = (selection ? selection.height : img.getHeight()) / window.devicePixelRatio;
 
                     this.canvas.setDimensionsCorrect({
                         width: w,
@@ -82,14 +82,15 @@ define(['Class'], function(Class) {
                     img.set({
                         evented: false,
                         selectable: false,
-                        left: 0,
-                        top: 0,
+                        left: selection ? -1 * selection.x1 : 0,
+                        top: selection ? -1 * selection.y1 : 0,
                         scaleX: 1 / window.devicePixelRatio,
                         scaleY: 1 / window.devicePixelRatio
                     });
 
                     this.canvas.add(img);
                     this.canvas.renderAll();
+
                 }.bind(this));
         },
 

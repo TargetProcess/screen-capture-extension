@@ -11,7 +11,8 @@
             "19": "img/icon19.png",
             "38": "img/icon38.png"
         },
-        "default_title": "Targetprocess Screen Capture"
+        "default_title": "Targetprocess Screen Capture",
+        "default_popup": "popup.html"
     },
 
     "icons": {
@@ -23,9 +24,30 @@
     "background": {
         "persistent": true,
         "scripts": [
-            "scripts/background.js"
+            "scripts/chrome/background.js"
         ]
     },
+
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": [
+            <% if (locals.env === "dev") { %>
+            "vendor/jquery/dist/jquery.js",
+            "vendor/imgareaselect/jquery.imgareaselect.dev.js",
+            "scripts/chrome/selection.js"
+            <% } else { %>
+            "build/content.js"
+            <% } %>
+        ],
+        "css": [
+            <% if (locals.env === "dev") { %>
+            "vendor/imgareaselect/distfiles/css/imgareaselect-deprecated.css"
+            <% } else { %>
+            "build/content.css"
+            <% } %>
+        ],
+        "run_at": "document_end"
+    }],
 
     "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self'",
 
