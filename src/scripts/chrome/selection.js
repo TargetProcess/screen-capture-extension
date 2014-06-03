@@ -12,10 +12,18 @@
 
             this.$cropEl = $('body');
 
+            this.$cropEl.css('cursor', 'crosshair');
+
             this.$cropEl.imgAreaSelect({
                 handles: true,
+                zIndex: 9999,
                 onSelectEnd: function(img, selection) {
+
+                    selection.width = window.devicePixelRatio * selection.width;
+                    selection.height = window.devicePixelRatio * selection.height;
                     this.rect = selection;
+
+                    this.$cropEl.css('cursor', 'crosshair');
                 }.bind(this)
             });
 
@@ -39,6 +47,8 @@
         },
 
         disable: function() {
+
+            this.$cropEl.css('cursor', '');
 
             $(document).off('.crop');
             this.$cropEl.off('.crop');
@@ -69,11 +79,12 @@
         },
 
         onEscape: function() {
-            this.$cropHelper.tooltip('hide');
+
             this.$cropEl.imgAreaSelect({
                 hide: true
             });
             this.rect = null;
+            this.disable();
         }
     };
 
