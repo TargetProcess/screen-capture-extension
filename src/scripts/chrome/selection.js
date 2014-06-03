@@ -84,7 +84,6 @@
             this.disable();
 
             setTimeout(function() {
-                console.log(selection)
                 chrome.runtime.sendMessage({
                     action: 'captureSelection:completed',
                     selection: selection
