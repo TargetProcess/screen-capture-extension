@@ -10,7 +10,14 @@
 
         enable: function() {
 
-            this.$cropEl = $('body');
+            this.$cropEl = $('<div></div>').appendTo('body').css({
+                position: 'fixed',
+                width: '100%',
+                background: 'transparent',
+                top: 0,
+                bottom: 0,
+                zIndex: 9999
+            });
 
             this.$cropEl.css('cursor', 'crosshair');
 
@@ -19,10 +26,15 @@
                 zIndex: 9999,
                 onSelectEnd: function(img, selection) {
 
+                    var rect = this.$cropEl[0].getBoundingClientRect();
+
                     selection.width = window.devicePixelRatio * selection.width;
                     selection.height = window.devicePixelRatio * selection.height;
-                    this.rect = selection;
 
+                    selection.x1 = selection.x1 + rect.left;
+                    selection.y1 = selection.y1 + rect.top;
+
+                    this.rect = selection;
                     this.$cropEl.css('cursor', 'crosshair');
                 }.bind(this)
             });
@@ -56,6 +68,7 @@
             this.$cropEl.imgAreaSelect({
                 remove: true
             });
+            this.$cropEl.remove();
 
             this.enabled = false;
         },
@@ -71,6 +84,7 @@
             this.disable();
 
             setTimeout(function() {
+                console.log(selection)
                 chrome.runtime.sendMessage({
                     action: 'captureSelection:completed',
                     selection: selection
