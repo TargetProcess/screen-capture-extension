@@ -54,8 +54,10 @@
                 return;
             }
 
+            this.arcDirection = this.angle < 180 ? -1 : 1;
+
             var qx = 0;
-            var qy = (x1 - x0) / 8;
+            var qy = (x1 - x0) / 8 * this.arcDirection;
             var triangleWidth = 25;
             var triangleHeight = Math.sqrt(Math.pow(triangleWidth, 2) - Math.pow(triangleWidth / 2, 2)) + 5;
 
@@ -66,8 +68,8 @@
             ctx.save(); // do not remove, important for edit
 
             ctx.beginPath();
-            ctx.translate(x1, y1 - 1);
-            ctx.rotate( -10 * Math.PI / 180);
+            ctx.translate(x1, y1 - this.arcDirection);
+            ctx.rotate( -1 * 10 * this.arcDirection * Math.PI / 180);
 
             ctx.setLineJoin('miter');
             ctx.setLineCap('miter');
