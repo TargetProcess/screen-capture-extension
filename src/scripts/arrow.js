@@ -1,4 +1,4 @@
-define(['./draw-tool', './button-tool', './libs/fabric/arrow'], function(Class, Button) {
+define(['./draw-tool', './button-tool', './libs/fabric/arrow-arc'], function(Class, Button) {
 
     'use strict';
 
@@ -9,7 +9,7 @@ define(['./draw-tool', './button-tool', './libs/fabric/arrow'], function(Class, 
             this.x0 = e.offsetX;
             this.y0 = e.offsetY;
 
-            this.figure = new fabric.Arrow(null, {
+            this.figure = new fabric.ArrowArc(null, {
                 left: e.offsetX,
                 top: e.offsetY,
                 stroke: this.options.color,
