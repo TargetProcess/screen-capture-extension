@@ -97,4 +97,28 @@
         }
     });
 
+    var toggleAction = function(tabId) {
+        chrome.tabs.get(tabId, function(tab) {
+            if (isEditorTab(tab)) {
+                chrome.browserAction.disable();
+            } else {
+                chrome.browserAction.enable();
+            }
+        });
+    };
+
+    chrome
+        .tabs
+        .onUpdated
+        .addListener(function(tabId) {
+            return toggleAction(tabId);
+        });
+
+    chrome
+        .tabs
+        .onActivated
+        .addListener(function(info) {
+            return toggleAction(info.tabId);
+        });
+
 }());
