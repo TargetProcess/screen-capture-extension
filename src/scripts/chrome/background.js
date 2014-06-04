@@ -99,10 +99,12 @@
 
     var toggleAction = function(tabId) {
         chrome.tabs.get(tabId, function(tab) {
-            if (isEditorTab(tab)) {
-                chrome.browserAction.disable();
-            } else {
-                chrome.browserAction.enable();
+            if (tab) {
+                if (isEditorTab(tab)) {
+                    chrome.browserAction.disable();
+                } else {
+                    chrome.browserAction.enable();
+                }
             }
         });
     };
