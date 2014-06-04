@@ -14,19 +14,19 @@ define(['Class'], function(Class){
 
         componentDidMount: function() {
 
-            this.props.paintManager.onUndo = function(){
+            this.props.paintManager.onUndo.add(function(){
                 if (this.props.paintManager.states.length === 0) {
                     this.setState({
                         enabled: false
                     });
                 }
-            }.bind(this);
+            }.bind(this));
 
-            this.props.paintManager.onStateAdded = function(){
+            this.props.paintManager.onStateAdded.add(function(){
                 this.setState({
                     enabled: true
                 });
-            }.bind(this);
+            }.bind(this));
         },
 
         render: function(){

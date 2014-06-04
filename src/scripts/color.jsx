@@ -1,12 +1,10 @@
-define([], function() {
-
-    var storage = window.localStorage;
+define(['./storage'], function(storage) {
 
     return React.createClass({
 
         getInitialState: function() {
             return {
-                color: storage.getItem('color') || ('#' + Math.round(Math.random() * 255*255*255).toString(16))
+                color: '#' + Math.round(Math.random() * 255*255*255).toString(16)
             };
         },
 
@@ -19,7 +17,8 @@ define([], function() {
             this.setState({
                 color: value
             });
-            storage.setItem('color', value);
+
+            storage.set('color', value);
 
             if (obj) {
                 var objs = [obj];
@@ -42,14 +41,22 @@ define([], function() {
         },
 
         componentDidMount: function() {
-            this.props.paintManager.setColor(this.state.color);
+
+            storage.get('color').then(function(val) {
+                if (val) {
+                    this.setState({
+                        color: val
+                    });
+                }
+                this.props.paintManager.setColor(this.state.color);
+            }.bind(this));
         },
 
         render: function() {
 
             return (
                 <li className="tools__item tools__item-color">
-                    <input title="color" className="tools__trigger" type="color" onChange={this.selectColor} defaultValue={this.state.color} />
+                    <input title="color" className="tools__trigger" type="color" onChange={this.selectColor} value={this.state.color} />
                 </li>
             );
         }

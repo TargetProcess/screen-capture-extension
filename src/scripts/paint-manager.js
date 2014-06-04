@@ -19,6 +19,10 @@ define(['Class'], function(Class) {
 
             this.selectedTool = null;
 
+            this.onToolSelected = $.Callbacks();
+            this.onStateAdded = $.Callbacks();
+            this.onUndo = $.Callbacks();
+
             this.patchFabric();
         },
 
@@ -177,9 +181,8 @@ define(['Class'], function(Class) {
             if (this.tools[this.selectedTool]) {
                 this.tools[this.selectedTool].enable(this.options, this.canvas);
                 this.tools[this.selectedTool].saveState = this.saveState.bind(this);
-                if (this.onToolSelected) {
-                    this.onToolSelected(this.selectedTool);
-                }
+
+                this.onToolSelected.fire(this.selectedTool);
             }
         },
 
@@ -201,9 +204,7 @@ define(['Class'], function(Class) {
                 tool: this.selectedTool
             });
 
-            if (this.onStateAdded) {
-                this.onStateAdded();
-            }
+            this.onStateAdded.fire();
         },
 
         undo: function() {
@@ -213,9 +214,7 @@ define(['Class'], function(Class) {
                 this.tools[state.tool].undo(state.state);
             }
 
-            if (this.onUndo) {
-                this.onUndo();
-            }
+            this.onUndo.fire();
         },
 
         exportDataURL: function() {

@@ -12,27 +12,25 @@ define([
     './cursor',
     './undo',
     './export',
-    './paint-manager',
-    './rest-api'
-], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, Export, PaintManager, RestApi){
 
-    var storage = window.localStorage;
+    './paint-manager',
+    './rest-api',
+    './storage'
+], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, Export, PaintManager, RestApi, storage){
 
     return React.createClass({
 
         getInitialState: function() {
 
-            var imageUrl = window.screenshotUrl || storage.getItem('imageUrl') || '';
+            var imageUrl = window.screenshotUrl || '';
             var imageSelection = window.screenshotSelection || null;
-
-            storage.setItem('imageUrl', imageUrl);
 
             return {
                 restApi: new RestApi(),
                 paintManager: new PaintManager({
                     width: 4
                 }),
-                selectedTool: storage.getItem('tool') || 'rect',
+                selectedTool: 'rect',
                 imageUrl: imageUrl,
                 imageSelection: imageSelection
             };
@@ -46,9 +44,11 @@ define([
                 if (imageSelection) {
                     this.state.paintManager.exportDataURL()
                     .then(function(data) {
-                        storage.setItem('imageUrl', data);
+                        storage.set('imageUrl', data, 'local');
                     })
                     .done();
+                } else {
+                    storage.set('imageUrl', imageUrl, 'local');
                 }
             }.bind(this));
         },
@@ -72,7 +72,7 @@ define([
             e.preventDefault();
             var reader = new FileReader();
             reader.onload = function(e) {
-                storage.setItem('imageUrl', e.target.result);
+                storage.set('imageUrl', e.target.result, 'local');
                 this.state.paintManager.setImageAsBackground(e.target.result);
             }.bind(this);
             reader.readAsDataURL(e.dataTransfer.files[0]);
@@ -80,14 +80,27 @@ define([
 
         componentDidMount: function() {
 
-            this.state.paintManager.onToolSelected = function(name) {
+            Q.all([
+                storage.get('imageUrl', 'local'),
+                storage.get('tool')
+            ])
+            .spread(function(imageUrl, tool) {
+                this.setState({
+                    imageUrl: imageUrl || this.state.imageUrl,
+                    selectedTool: tool || this.state.selectedTool
+                });
+
+                this.loadImage(this.state.imageUrl, this.state.imageSelection);
+
+            }.bind(this));
+
+            this.state.paintManager.onToolSelected.add(function(name) {
 
                 this.setState({
                     selectedTool: name
                 });
-                storage.setItem('tool', name);
-            }.bind(this);
-            this.loadImage(this.state.imageUrl, this.state.imageSelection);
+                storage.set('tool', name);
+            }.bind(this));
         },
 
         render: function() {

@@ -1,6 +1,4 @@
-define(['rest-api'], function(RestApi) {
-
-    var storage = window.localStorage;
+define(['./rest-api', './storage'], function(RestApi, storage) {
 
     return React.createClass({
 
@@ -14,12 +12,12 @@ define(['rest-api'], function(RestApi) {
         getInitialState: function() {
 
             return {
-                accountName: storage.getItem('accountName') || '',
+                accountName: '',
                 host: '',
                 isLogged: false,
                 status: 'ready',
                 user: null,
-                isOnDemand: (storage.getItem('accountName') && storage.getItem('isOnDemand') === "false") ? false : true,
+                isOnDemand: true,
             };
         },
 
@@ -38,7 +36,7 @@ define(['rest-api'], function(RestApi) {
 
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
-            storage.setItem('accountName', '');
+            storage.set('accountName', '');
             Q
                 .when(this.props.restApi.logout())
                 .then(function() {
@@ -54,8 +52,8 @@ define(['rest-api'], function(RestApi) {
 
         login: function(accountName, isOnDemand) {
 
-            storage.setItem('accountName', accountName);
-            storage.setItem('isOnDemand', isOnDemand);
+            storage.set('accountName', accountName);
+            storage.set('isOnDemand', isOnDemand);
 
             this.setState({
                 status: 'pending',
@@ -125,24 +123,36 @@ define(['rest-api'], function(RestApi) {
 
         componentDidMount: function() {
 
-            if (this.props.autoLogin && this.state.accountName) {
-                this.login(this.state.accountName, this.state.isOnDemand);
-            }
+            Q.all([
+                storage.get('accountName'),
+                storage.get('isOnDemand')
+            ]).spread(function(accountName, isOnDemand) {
 
-            this.props.restApi.onAuth.add(function(){
-                if (!this.state.isLogged) {
-                    Q
-                        .when(this.props.restApi.getCurrentUser())
-                        .then(function(user) {
-                            if (this.isMounted()) { // when lay inside add form and umount later, to prevent race conditions
-                                this.setState({
-                                    isLogged: true,
-                                    status: 'success',
-                                    user: user
-                                });
-                            }
-                        }.bind(this));
+                this.setState({
+                    accountName: accountName || this.state.accountName,
+                    isOnDemand: isOnDemand !== undefined ? isOnDemand : this.state.isOnDemand
+                });
+
+                if (this.props.autoLogin && this.state.accountName) {
+                    this.login(this.state.accountName, this.state.isOnDemand);
                 }
+
+                this.props.restApi.onAuth.add(function(){
+                    if (!this.state.isLogged) {
+                        Q
+                            .when(this.props.restApi.getCurrentUser())
+                            .then(function(user) {
+                                if (this.isMounted()) { // when lay inside add form and umount later, to prevent race conditions
+                                    this.setState({
+                                        isLogged: true,
+                                        status: 'success',
+                                        user: user
+                                    });
+                                }
+                            }.bind(this));
+                    }
+                }.bind(this));
+
             }.bind(this));
         },
 
