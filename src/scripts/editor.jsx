@@ -86,7 +86,7 @@ define([
             ])
             .spread(function(imageUrl, tool) {
                 this.setState({
-                    imageUrl: imageUrl || this.state.imageUrl,
+                    imageUrl: this.state.imageUrl || imageUrl,
                     selectedTool: tool || this.state.selectedTool
                 });
 
