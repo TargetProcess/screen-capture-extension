@@ -58,7 +58,7 @@
 
             var qx = 0;
             var qy = (x1 - x0) / 8 * this.arcDirection;
-            var triangleWidth = 25;
+            var triangleWidth = 20;
             var triangleHeight = Math.sqrt(Math.pow(triangleWidth, 2) - Math.pow(triangleWidth / 2, 2)) + 5;
 
             ctx.beginPath();
