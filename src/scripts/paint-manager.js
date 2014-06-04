@@ -112,6 +112,10 @@ define(['Class'], function(Class) {
             var isDrawMode = false;
             var selectionActivated = false;
 
+            // correct position of mouse if moved out of canvas during drawing
+            var canvas = this.canvas;
+            var canvasRect = this.canvas.upperCanvasEl.getBoundingClientRect();
+
             var isMac = (window.navigator.appVersion.indexOf('Mac') >= 0);
             $(document).on('keydown', function(e) {
                 if (e.keyCode === 90 && e[isMac ? 'metaKey' : 'ctrlKey']) {
@@ -143,6 +147,8 @@ define(['Class'], function(Class) {
                 'mouse:down': function(evt) {
 
                     if (!selectionActivated) {
+                        canvasRect = canvas.upperCanvasEl.getBoundingClientRect();
+
                         isDrawMode = true;
                         this.trigger('custom:mousedown', evt.e);
                     }
@@ -152,6 +158,10 @@ define(['Class'], function(Class) {
 
                     if (isDrawMode) {
                         var e = evt.e;
+                        e = {
+                            offsetX: e.clientX - canvasRect.left,
+                            offsetY: e.clientY - canvasRect.top
+                        };
                         this.trigger('custom:mousemove', e);
                     }
                 },
