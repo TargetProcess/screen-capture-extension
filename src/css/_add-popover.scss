@@ -147,6 +147,9 @@
         @include box-shadow(0 6px 12px rgba(0, 0, 0, 0.175));
         background-clip: padding-box;
 
+        max-height: 200px;
+        overflow-y: auto;
+
         .suggestion__id {
             display: inline-block;
             border: 1px solid transparent;

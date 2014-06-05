@@ -60,6 +60,7 @@ define(['./card-entity'], function(Card) {
                 <div className={classSet}>
                     {data.isCustomField ? <label htmlFor={data.name}>{data.caption}</label> : '' }
                     <input ref="input" name={data.name} id={data.name} className="form-control" type={data.inputType} defaultValue={data.config.defaultValue}
+                        maxLength="255"
                         disabled={!data.isVisible}
                         placeholder={data.isCustomField ? null : data.caption}
                         required={data.required}
