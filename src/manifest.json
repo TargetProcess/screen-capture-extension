@@ -34,6 +34,7 @@
             <% if (locals.env === "dev") { %>
             "vendor/jquery/dist/jquery.js",
             "vendor/imgareaselect/jquery.imgareaselect.dev.js",
+            "vendor/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js",
             "scripts/chrome/selection.js"
             <% } else { %>
             "build/content.js"
@@ -41,6 +42,7 @@
         ],
         "css": [
             <% if (locals.env === "dev") { %>
+            "css/content.css",
             "vendor/imgareaselect/distfiles/css/imgareaselect-deprecated.css"
             <% } else { %>
             "build/content.css"

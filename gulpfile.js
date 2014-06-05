@@ -55,7 +55,7 @@ gulp.task('html-release', function() {
 
 gulp.task('css', function() {
 
-    return gulp.src(['src/css/style.scss', 'src/css/popup.scss'])
+    return gulp.src(['src/css/style.scss', 'src/css/popup.scss', 'src/css/content.scss'])
         .pipe(gp.plumber())
         .pipe(gp.rubySass({
             loadPath: ['dist/vendor/bootstrap-sass-official/vendor/assets/stylesheets']
@@ -189,6 +189,7 @@ gulp.task('content-js-release', function() {
     return gulp.src([
         'dist/vendor/jquery/dist/jquery.js',
         'dist/vendor/imgareaselect/jquery.imgareaselect.dev.js',
+        'dist/vendor/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js',
         'dist/scripts/chrome/selection.js'
     ])
         .pipe(gp.concat('content.js'))
@@ -199,6 +200,7 @@ gulp.task('content-js-release', function() {
 gulp.task('content-css-release', function() {
     // should make it automatic
     return gulp.src([
+        'dist/css/content.css',
         'dist/vendor/imgareaselect/distfiles/css/imgareaselect-deprecated.css'
     ])
         .pipe(gp.concat('content.css'))

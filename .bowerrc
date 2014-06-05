@@ -1,3 +1,6 @@
 {
-    "directory": "dist/vendor"
+    "directory": "dist/vendor",
+    "scripts": {
+        "postinstall": "rm -rf dist/vendor/bootstrap"
+    }
 }

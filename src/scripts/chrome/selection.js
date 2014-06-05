@@ -36,7 +36,14 @@
 
                     this.rect = selection;
                     this.$cropEl.css('cursor', 'crosshair');
+                    this.$cropHelper.tooltip('show');
                 }.bind(this)
+            });
+
+            this.$cropHelper = $('.imgareaselect-selection').parent();
+            this.$cropHelper.tooltip({
+                trigger: 'manual',
+                title: 'Double click or press Enter to crop, Esc to leave'
             });
 
             $(document).on('keydown.crop', function(e) {
@@ -65,6 +72,9 @@
             $(document).off('.crop');
             this.$cropEl.off('.crop');
 
+            this.$cropHelper.tooltip('hide');
+            this.$cropHelper.tooltip('destroy');
+
             this.$cropEl.imgAreaSelect({
                 remove: true
             });
@@ -74,7 +84,7 @@
         },
 
         onEnter: function() {
-
+            this.$cropHelper.tooltip('hide');
             if (!this.rect) {
                 return;
             }
@@ -92,7 +102,7 @@
         },
 
         onEscape: function() {
-
+            this.$cropHelper.tooltip('hide');
             this.$cropEl.imgAreaSelect({
                 hide: true
             });
