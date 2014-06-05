@@ -1,5 +1,9 @@
+/**
+ * @jsx React.DOM
+ */
 define(function(){
 
+    'use strict';
 
     function b64toBlob(b64Data, contentType, sliceSize) {
         contentType = contentType || '';

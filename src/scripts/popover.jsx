@@ -1,4 +1,9 @@
+/**
+ * @jsx React.DOM
+ */
 define([], function(){
+
+    'use strict';
 
     return React.createClass({
 
@@ -9,7 +14,7 @@ define([], function(){
             };
         },
 
-        toggle: function(trigger, flag) {
+        toggle: function(trigger) {
 
             this.setState({
                 visible: true,
@@ -27,7 +32,9 @@ define([], function(){
 
             var el = trigger;
 
-            if (!trigger) return;
+            if (!trigger) {
+                return;
+            }
 
             var triggerRect = el.getBoundingClientRect();
             var thisRect = this.getDOMNode().getBoundingClientRect();
@@ -87,7 +94,7 @@ define([], function(){
                 }
             }.bind(this));
 
-            var observer = new MutationObserver(function(mutations) {
+            var observer = new MutationObserver(function() {
                 this.alignTo(this.state.trigger);
             }.bind(this));
 

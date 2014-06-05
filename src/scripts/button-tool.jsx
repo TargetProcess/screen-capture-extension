@@ -1,4 +1,9 @@
+/**
+ * @jsx React.DOM
+ */
 define(function(){
+
+    'use strict';
 
     return React.createClass({
 

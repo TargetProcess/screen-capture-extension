@@ -1,7 +1,11 @@
+/**
+ * @jsx React.DOM
+ */
+/*globals Bloodhound, Ladda */
 define(['./card-entity'], function(Card) {
     'use strict';
 
-    return  React.createClass({
+    return React.createClass({
 
         getInitialState: function() {
             return {
@@ -49,7 +53,7 @@ define(['./card-entity'], function(Card) {
                         return url.replace('%QUERY', query);
                     },
                     filter: function(data) {
-                        console.log(data.items[0].dynamic.items.length);
+
                         return data.items[0].dynamic.items.map(function(v) {
                             return {
                                 value: v.data.id + ' ' + v.data.name,
@@ -77,7 +81,9 @@ define(['./card-entity'], function(Card) {
                 source: source.ttAdapter(),
                 templates: {
                     suggestion: function(item) {
-                        return '<div class="' + item.data.type.toLowerCase() + '"><span class="suggestion__id">' + item.data.id + '</span></div><div>' + item.data.name + '</div>';
+                        return '<div class="' + item.data.type.toLowerCase() + '">' +
+                            '<span class="suggestion__id">' + item.data.id + '</span>' +
+                            '</div><div>' + item.data.name + '</div>';
                     }
                 }
             });
@@ -96,7 +102,9 @@ define(['./card-entity'], function(Card) {
         onSubmit: function(e) {
 
             e.preventDefault();
-            if (!this.state.entity) return;
+            if (!this.state.entity) {
+                return;
+            }
 
             var entity = this.state.entity;
 
@@ -113,7 +121,7 @@ define(['./card-entity'], function(Card) {
                     });
 
             }.bind(this))
-            .then(function(attach){
+            .then(function(){
 
                 entity.ModifyDate = new Date();
                 this.setState({
@@ -150,12 +158,14 @@ define(['./card-entity'], function(Card) {
             var entity;
 
             if (this.state.status === 'success' || this.state.status === 'append') {
-                alert = <div className="alert alert-success">{this.state.status === 'success' ? 'Entity is added' : 'Attach is added'}</div>;
+                alert = (<div className='alert alert-success'>
+                    {this.state.status === 'success' ? 'Entity is added' : 'Attach is added'}
+                </div>);
             }
 
             if (this.state.entity) {
                 entity = (
-                    <div className="form__card">
+                    <div className='form__card'>
                         <Card entity={this.state.entity} restApi={this.props.restApi} />
                     </div>
                 );
@@ -165,7 +175,7 @@ define(['./card-entity'], function(Card) {
                 <form action="#" onSubmit={this.onSubmit} className={this.state.validate ? 'validate' : null}>
                     <fieldset className="fieldset-main">
                         {alert}
-                        <div className="form-group">
+                        <div className='form-group'>
                             <input ref="autocomplete" className="form-control typeahead" onChange={this.onChange} type="search" placeholder="Enter ID or Name" />
                         </div>
                         {entity}

@@ -1,4 +1,9 @@
+/**
+ * @jsx React.DOM
+ */
 define(['./add-form', './popover'], function(Form, Popover) {
+
+    'use strict';
 
     return React.createClass({
 

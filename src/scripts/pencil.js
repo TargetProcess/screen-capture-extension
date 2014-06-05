@@ -1,3 +1,4 @@
+/*globals foo */
 define(['Class', './button-tool'], function(Class, Button) {
 
     'use strict';

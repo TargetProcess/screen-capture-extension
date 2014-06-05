@@ -1,4 +1,10 @@
+/**
+ * @jsx React.DOM
+ */
 define(['./settings-form', './popover'], function(Form, Popover){
+
+    'use strict';
+
     return React.createClass({
 
         getInitialState: function(){

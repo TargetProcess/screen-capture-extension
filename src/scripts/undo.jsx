@@ -1,4 +1,9 @@
-define(['Class'], function(Class){
+/**
+ * @jsx React.DOM
+ */
+define(function() {
+
+    'use strict';
 
     return React.createClass({
 
@@ -14,7 +19,7 @@ define(['Class'], function(Class){
 
         componentDidMount: function() {
 
-            this.props.paintManager.onUndo.add(function(){
+            this.props.paintManager.onUndo.add(function() {
                 if (this.props.paintManager.states.length === 0) {
                     this.setState({
                         enabled: false
@@ -22,16 +27,14 @@ define(['Class'], function(Class){
                 }
             }.bind(this));
 
-            this.props.paintManager.onStateAdded.add(function(){
+            this.props.paintManager.onStateAdded.add(function() {
                 this.setState({
                     enabled: true
                 });
             }.bind(this));
         },
 
-        render: function(){
-
-            var disabled = this.state.enabled ? null : 'disabled';
+        render: function() {
 
             return (
                 <li className={"tools__item tools__item-undo"}>

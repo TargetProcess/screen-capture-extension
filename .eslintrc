@@ -7,7 +7,6 @@
 
     "globals": {
         "$": false,
-        "console": false,
         "fabric": false,
         "Q": false,
         "React": false,

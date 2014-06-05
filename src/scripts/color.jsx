@@ -1,4 +1,9 @@
+/**
+ * @jsx React.DOM
+ */
 define(['./storage'], function(storage) {
+
+    'use strict';
 
     return React.createClass({
 

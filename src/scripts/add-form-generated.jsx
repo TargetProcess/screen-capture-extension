@@ -1,3 +1,7 @@
+/**
+ * @jsx React.DOM
+ */
+/*globals Ladda */
 define(['./card-entity'], function(Card) {
     'use strict';
 

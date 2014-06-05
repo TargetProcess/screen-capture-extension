@@ -1,3 +1,6 @@
+/**
+ * @jsx React.DOM
+ */
 define([
     './line',
     './settings',
@@ -17,6 +20,8 @@ define([
     './rest-api',
     './storage'
 ], function(Line, Settings, Add, Crop, Pencil, Rect, Circle, Arrow, Text, Color, Cursor, Undo, Export, PaintManager, RestApi, storage){
+
+    'use strict';
 
     return React.createClass({
 

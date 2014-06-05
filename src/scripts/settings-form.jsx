@@ -1,4 +1,10 @@
+/**
+ * @jsx React.DOM
+ */
+/*globals Ladda, chrome */
 define(['./rest-api', './storage'], function(RestApi, storage) {
+
+    'use strict';
 
     return React.createClass({
 
@@ -32,7 +38,7 @@ define(['./rest-api', './storage'], function(RestApi, storage) {
             }
         },
 
-        logout: function(e) {
+        logout: function() {
 
             var loader = Ladda.create(this.getDOMNode().querySelector('[type=submit]'));
             loader.start();
