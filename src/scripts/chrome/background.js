@@ -74,7 +74,8 @@
         switch (request.action) {
             case 'captureVisible:selected':
                 chrome.tabs.query({
-                    active: true
+                    active: true,
+                    currentWindow: true
                 }, function(tabs) {
                     takeScreenshot(tabs[0]);
                 });
@@ -83,7 +84,8 @@
 
             case 'captureSelection:selected':
                 chrome.tabs.query({
-                    active: true
+                    active: true,
+                    currentWindow: true
                 }, function(tabs) {
                     initSelection(tabs[0]);
                 });
@@ -122,5 +124,14 @@
         .addListener(function(info) {
             return toggleAction(info.tabId);
         });
+
+    chrome.windows.onFocusChanged.addListener(function() {
+        chrome.tabs.query({
+            active: true,
+            currentWindow: true
+        }, function(tabs) {
+            toggleAction(tabs[0].id);
+        });
+    });
 
 }());

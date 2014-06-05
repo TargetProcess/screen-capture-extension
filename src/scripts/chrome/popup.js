@@ -5,7 +5,8 @@
     var links = Array.prototype.slice.call(document.querySelectorAll('a'));
 
     chrome.tabs.query({
-        active: true
+        active: true,
+        currentWindow: true
     }, function(tabs) {
         if (tabs[0].url.match(/^chrome(-extension)?:\/\//)) {
             links[0].classList.add('disabled');
