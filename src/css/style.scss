@@ -37,6 +37,10 @@ body {
     justify-content: center;
     overflow: auto;
     outline: 0;
+
+    > .canvas-container {
+        margin: auto; // correct center
+    }
 }
 
 .ladda-button .ladda-progress {
