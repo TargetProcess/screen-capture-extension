@@ -148,21 +148,38 @@ define(['Class'], function(Class) {
 
                     if (!selectionActivated) {
                         canvasRect = canvas.upperCanvasEl.getBoundingClientRect();
+                        var pos = evt.e;
+
+                        if (fabric.isTouchSupported) {
+                            pos = fabric.util.getPointer(evt.e, canvas.upperCanvasEl);
+                            pos = {
+                                offsetX: pos.x - canvasRect.left,
+                                offsetY: pos.y - canvasRect.top
+                            };
+                        }
 
                         isDrawMode = true;
-                        this.trigger('custom:mousedown', evt.e);
+                        this.trigger('custom:mousedown', pos);
                     }
                 },
 
                 'mouse:move': function(evt) {
 
                     if (isDrawMode) {
-                        var e = evt.e;
-                        e = {
-                            offsetX: e.clientX - canvasRect.left,
-                            offsetY: e.clientY - canvasRect.top
-                        };
-                        this.trigger('custom:mousemove', e);
+                        var pos = evt.e;
+                        if (fabric.isTouchSupported) {
+                            pos = fabric.util.getPointer(evt.e, canvas.upperCanvasEl);
+                            pos = {
+                                offsetX: pos.x - canvasRect.left,
+                                offsetY: pos.y - canvasRect.top
+                            };
+                        } else {
+                            pos = {
+                                offsetX: pos.clientX - canvasRect.left,
+                                offsetY: pos.clientY - canvasRect.top
+                            };
+                        }
+                        this.trigger('custom:mousemove', pos);
                     }
                 },
 
@@ -268,8 +285,8 @@ define(['Class'], function(Class) {
                         left = 0;
                         top = 0;
                     } else if (element === fabric.document) {
-                        left = body.scrollLeft || docElement.scrollLeft || left;
-                        top = body.scrollTop || docElement.scrollTop || top;
+                        left = body.scrollLeft || docElement.scrollLeft || (fabric.isTouchSupported ? 0 : left);
+                        top = body.scrollTop || docElement.scrollTop || (fabric.isTouchSupported ? 0 : top);
                     } else {
                         left += element.scrollLeft || 0;
                         top += element.scrollTop || 0;
