@@ -188,7 +188,7 @@ gulp.task('content-js-release', function() {
     // should make it automatic
     return gulp.src([
         'dist/vendor/jquery/dist/jquery.js',
-        'dist/vendor/imgareaselect/jquery.imgareaselect.dev.js',
+        'dist/vendor/imgareaselect/src/jquery.imgareaselect.js',
         'dist/vendor/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js',
         'dist/scripts/chrome/selection.js'
     ])
@@ -201,7 +201,7 @@ gulp.task('content-css-release', function() {
     // should make it automatic
     return gulp.src([
         'dist/css/content.css',
-        'dist/vendor/imgareaselect/distfiles/css/imgareaselect-deprecated.css'
+        'dist/vendor/imgareaselect/src/css/imgareaselect-deprecated.css'
     ])
         .pipe(gp.concat('content.css'))
         .pipe(gp.csso())

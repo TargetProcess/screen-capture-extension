@@ -5,6 +5,8 @@ define(['Class', './button-tool'], function(Class, Button) {
 
         enable: function(options, fabricCanvas) {
 
+            var isTouch = Boolean(window.DocumentTouch && document instanceof window.DocumentTouch);
+
             this.options = options;
             this.fabricCanvas = fabricCanvas;
 
@@ -20,10 +22,14 @@ define(['Class', './button-tool'], function(Class, Button) {
                 }.bind(this)
             });
 
-            this.$cropHelper = $('.imgareaselect-selection').parent();
+            var text = isTouch ? 'Crop It' : 'Double click or press Enter to crop, Esc to leave';
+            var $tooltip = $('<span class="crop-tooltip"> ' + text + ' </span>');
+
+            this.$cropHelper = $('.imgareaselect-selection').parent().addClass('imgareaselect-main');
             this.$cropHelper.tooltip({
                 trigger: 'manual',
-                title: 'Double click or press Enter to crop, Esc to leave'
+                html: true,
+                title: $tooltip
             });
 
             $(document).on('keydown.crop', function(e) {
@@ -41,6 +47,8 @@ define(['Class', './button-tool'], function(Class, Button) {
                     this.onEnter();
                 }
             }.bind(this));
+
+            $(document).on('touchend.crop click.crop', '.crop-tooltip', this.onEnter.bind(this));
         },
 
         disable: function() {

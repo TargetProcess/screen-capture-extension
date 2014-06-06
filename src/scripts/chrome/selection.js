@@ -10,6 +10,8 @@
 
         enable: function() {
 
+            var isTouch = Boolean(window.DocumentTouch && document instanceof window.DocumentTouch);
+
             this.$cropEl = $('<div></div>').appendTo('body').css({
                 position: 'fixed',
                 width: '100%',
@@ -40,10 +42,14 @@
                 }.bind(this)
             });
 
-            this.$cropHelper = $('.imgareaselect-selection').parent();
+            var text = isTouch ? 'Snap Area' : 'Double click or press Enter to crop, Esc to leave';
+            var $tooltip = $('<span class="crop-tooltip"> ' + text + ' </span>');
+
+            this.$cropHelper = $('.imgareaselect-selection').parent().addClass('imgareaselect-main');
             this.$cropHelper.tooltip({
                 trigger: 'manual',
-                title: 'Double click or press Enter to crop, Esc to leave'
+                html: true,
+                title: $tooltip
             });
 
             $(document).on('keydown.crop', function(e) {
@@ -61,6 +67,8 @@
                     this.onEnter();
                 }
             }.bind(this));
+
+            $(document).on('touchend.crop click.crop', '.crop-tooltip', this.onEnter.bind(this));
 
             this.enabled = true;
         },
