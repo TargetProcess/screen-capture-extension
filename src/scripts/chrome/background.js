@@ -54,8 +54,7 @@
     var takeScreenshot = function(tab) {
 
         if (!isEditorTab(tab)) {
-            Promise
-                .cast(getImageData())
+            getImageData()
                 .then(function(imageData) {
                     openImageInEditor(imageData);
                 });
