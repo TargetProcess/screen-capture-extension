@@ -43,7 +43,7 @@
         "css": [
             <% if (locals.env === "dev") { %>
             "css/content.css",
-            "vendor/imgareaselect/src/css/imgareaselect-default.css"
+            "vendor/imgareaselect/src/css/imgareaselect-deprecated.css"
             <% } else { %>
             "build/content.css"
             <% } %>
