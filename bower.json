@@ -37,8 +37,7 @@
     },
     "imgareaselect": {
       "main": [
-        "src/jquery.imgareaselect.js",
-        "src/css/imgareaselect-deprecated.css"
+        "src/jquery.imgareaselect.js"
       ]
     },
     "react": {

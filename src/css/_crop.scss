@@ -9,6 +9,10 @@
     position: absolute;
     z-index: 99999;
 
+    .tooltip-arrow {
+        left: 50% !important;
+    }
+
     .tooltip-inner {
         cursor: pointer;
     }

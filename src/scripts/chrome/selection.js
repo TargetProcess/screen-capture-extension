@@ -12,7 +12,7 @@
 
             var isTouch = Boolean(window.DocumentTouch && document instanceof window.DocumentTouch);
 
-            this.$cropEl = $('<div></div>').appendTo('body').css({
+            this.$cropEl = $('<div class="targetprocess-screen-capture"></div>').appendTo('body').css({
                 position: 'fixed',
                 width: '100%',
                 background: 'transparent',
@@ -26,6 +26,7 @@
             this.$cropEl.imgAreaSelect({
                 handles: true,
                 zIndex: 9999,
+                parent: this.$cropEl,
                 onSelectEnd: function(img, selection) {
 
                     var rect = this.$cropEl[0].getBoundingClientRect();
@@ -49,7 +50,8 @@
             this.$cropHelper.tooltip({
                 trigger: 'manual',
                 html: true,
-                title: $tooltip
+                title: $tooltip,
+                viewport: this.$cropEl
             });
 
             $(document).on('keydown.crop', function(e) {
