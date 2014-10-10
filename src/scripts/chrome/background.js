@@ -3,6 +3,8 @@
     'use strict';
 
     var selection = null;
+    var image = null;
+    var lastTab = null;
 
     var isEditorTab = function(tab) {
         return (tab.title === 'Targetprocess Screen Capture' && tab.url.match(/^chrome-extension:\/\//));
@@ -18,27 +20,7 @@
 
     var openImageInEditor = function(imageData) {
 
-        var editorTab = null;
-        chrome
-            .tabs
-            .onUpdated
-            .addListener(function waitComplete(tabId, changedProps) {
-
-                if (editorTab && tabId === editorTab.id && changedProps.status === 'loading') {
-
-                    chrome.tabs.onUpdated.removeListener(waitComplete);
-
-                    var view = chrome.extension.getViews().filter(function(view) {
-                        return view.location.href === editorTab.url;
-                    })[0];
-
-                    if (view) {
-                        view.screenshotUrl = imageData;
-                        view.screenshotSelection = selection;
-                    }
-                    selection = null;
-                }
-            });
+        image = imageData;
 
         var url = chrome.extension.getURL('editor.html?id=' + Number(new Date()));
 
@@ -47,7 +29,7 @@
             .create({
                 url: url
             }, function(tab) {
-                editorTab = tab;
+                lastTab = tab;
             });
     };
 
@@ -93,6 +75,26 @@
             case 'captureSelection:completed':
                 selection = request.selection;
                 takeScreenshot(sender.tab);
+                break;
+
+            case 'editor:ready':
+
+                if (lastTab && image && sender.tab.id === lastTab.id) {
+                    chrome.tabs.sendMessage(sender.tab.id, {
+                        action: 'editor:startExternal',
+                        image: image,
+                        selection: selection
+                    });
+
+                    lastTab = null;
+                    selection = null;
+                    image = null;
+                } else {
+                    // F5 in editor
+                    chrome.tabs.sendMessage(sender.tab.id, {
+                        action: 'editor:startLocal'
+                    });
+                }
                 break;
 
         }

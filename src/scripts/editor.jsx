@@ -1,6 +1,9 @@
 /**
  * @jsx React.DOM
  */
+
+ /* globals chrome, Promise */
+
 define([
     './line',
     './settings',
@@ -27,34 +30,38 @@ define([
 
         getInitialState: function() {
 
-            var imageUrl = window.screenshotUrl || '';
-            var imageSelection = window.screenshotSelection || null;
-
             return {
                 restApi: new RestApi(),
                 paintManager: new PaintManager({
                     width: 4
                 }),
                 selectedTool: 'rect',
-                imageUrl: imageUrl,
-                imageSelection: imageSelection
+                imageUrl: null,
+                imageSelection: null
             };
         },
 
         loadImage: function(imageUrl, imageSelection) {
 
-            this.state.paintManager.start('imageView', imageUrl, imageSelection).then(function() {
-                this.state.paintManager.selectTool(this.state.selectedTool);
+            return this.state.paintManager
+                .start('imageView', imageUrl, imageSelection)
+                .then(function() {
 
                 if (imageSelection) {
-                    this.state.paintManager.exportDataURL()
-                    .then(function(data) {
-                        storage.set('imageUrl', data, 'local');
-                    })
-                    .done();
+                    return this.state.paintManager.exportDataURL()
+                        .then(function(data) {
+                            return storage.set('imageUrl', data, 'local');
+                        })
+                        .done();
                 } else {
-                    storage.set('imageUrl', imageUrl, 'local');
+                    return storage.set('imageUrl', imageUrl, 'local');
                 }
+            }.bind(this))
+            .then(function() {
+                return storage.get('tool');
+            })
+            .then(function(tool) {
+                this.state.paintManager.selectTool(tool);
             }.bind(this));
         },
 
@@ -85,18 +92,12 @@ define([
 
         componentDidMount: function() {
 
-            Q.all([
-                storage.get('imageUrl', 'local'),
-                storage.get('tool')
-            ])
-            .spread(function(imageUrl, tool) {
-                this.setState({
-                    imageUrl: this.state.imageUrl || imageUrl,
-                    selectedTool: tool || this.state.selectedTool
-                });
-
-                this.loadImage(this.state.imageUrl, this.state.imageSelection);
-
+            storage.get('tool').then(function(tool) {
+                if (tool) {
+                    this.setState({
+                        selectedTool: tool
+                    });
+                }
             }.bind(this));
 
             this.state.paintManager.onToolSelected.add(function(name) {
@@ -106,6 +107,64 @@ define([
                 });
                 storage.set('tool', name);
             }.bind(this));
+
+
+            var initLocal = function() {
+
+                storage
+                    .get('imageUrl', 'local')
+                    .then(function(image) {
+                        return this.loadImage(image, null).then(function() {
+                            return image;
+                        });
+                    }.bind(this))
+                    .then(function(image) {
+                        this.setState({
+                            imageUrl: image,
+                            imageSelection: null
+                        });
+                    }.bind(this));
+            }.bind(this);
+
+            if (!(chrome && chrome.tabs)) {
+                initLocal();
+            }
+
+            this.chromeListener = function(request) {
+
+                switch (request.action) {
+
+                    case 'editor:startExternal':
+
+                        this
+                            .loadImage(request.image, request.selection)
+                            .then(function() {
+                                this.setState({
+                                    imageUrl: request.image,
+                                    imageSelection: request.selection
+                                });
+                            }.bind(this));
+                        break;
+
+                    case 'editor:startLocal':
+
+                        initLocal();
+                        break;
+                }
+            }.bind(this);
+
+            chrome.runtime.onMessage.addListener(this.chromeListener);
+
+            chrome.tabs.getCurrent(function(tab) {
+                chrome.runtime.sendMessage({
+                    action: 'editor:ready',
+                    tabId: tab.id
+                });
+            });
+        },
+
+        componentWillUnmount: function() {
+            chrome.runtime.onMessage.removeListener(this.chromeListener);
         },
 
         render: function() {
