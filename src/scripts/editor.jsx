@@ -2,7 +2,7 @@
  * @jsx React.DOM
  */
 
- /* globals chrome, Promise */
+ /* globals chrome */
 
 define([
     './line',
