@@ -71,10 +71,9 @@
             ctx.translate(x1, y1 - this.arcDirection);
             ctx.rotate( -1 * 10 * this.arcDirection * Math.PI / 180);
 
-            ctx.setLineJoin('miter');
-            ctx.setLineCap('miter');
-            ctx.setLineWidth(1);
-            ctx.lineWidth = 0;
+            ctx.lineJoin = 'miter';
+            ctx.lineCap = 'miter';
+            ctx.lineWidth = 1;
             ctx.moveTo(0, 0);
 
             ctx.lineTo( -1 * triangleHeight, -1 * triangleWidth / 2);
