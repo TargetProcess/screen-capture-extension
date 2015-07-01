@@ -1,6 +1,6 @@
 {
   "name": "screen-capture-extension",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Capture and annotate screenshots and create entities in your Targetprocess account.",
   "main": "gulpfile.js",
   "scripts": {
