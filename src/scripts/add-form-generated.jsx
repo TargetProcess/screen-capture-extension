@@ -241,8 +241,10 @@ define(['./card-entity'], function(Card) {
 
         getCurrentProcessId: function(fields) {
 
-            var project = _.findWhere(fields, {
-                id: 'project'
+            var project = _.find(fields, function(v) {
+
+                return v.id.toLowerCase && v.id.toLowerCase() === 'project';
+
             });
             var processId = _.findWhere(project.options.values, {
                 id: project.options.selectedValue
@@ -478,7 +480,8 @@ define(['./card-entity'], function(Card) {
                         case 'DDL':
                         case 'DropDown':
                         case 'MultipleSelectionList':
-                            return (<FieldSelect key={field.name} ref={field.name} field={field} onChange={field.name === 'project' ? this.onSelectProject : null} />);
+                            return (<FieldSelect key={field.name} ref={field.name} field={field}
+                                    onChange={field.name.toLowerCase() === 'project' ? this.onSelectProject : null} />);
 
                         case 'CheckBox':
                             return (<FieldCheckbox key={field.name} ref={field.name} field={field} />);
