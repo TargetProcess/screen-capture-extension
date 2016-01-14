@@ -8,10 +8,25 @@
         active: true,
         currentWindow: true
     }, function(tabs) {
-        if (tabs[0].url.match(/^chrome(-extension)?:\/\//)) {
-            links[0].classList.add('disabled');
-            links[0].parentNode.classList.add('disabled');
-        }
+
+        var currentTab = tabs[0];
+
+        links[0].classList.add('disabled');
+        links[0].parentNode.classList.add('disabled');
+
+        chrome.tabs.executeScript(currentTab.id, {
+            code: 'document.createElement("div").style'
+        }, function(res) {
+
+            if (res && res[0]) {
+
+                links[0].classList.remove('disabled');
+                links[0].parentNode.classList.remove('disabled');
+
+            }
+
+        });
+
     });
 
     var linkListener = function(button) {
