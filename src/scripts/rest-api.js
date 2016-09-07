@@ -176,15 +176,15 @@ define(['Class'], function(Class) {
                         }
                     }
                 })
-            })).then(function (data) {
+            })).then(function(data) {
                 var items = data
                     .items
-                    .filter(function (item) {
+                    .filter(function(item) {
                         var res = item.availableResource;
                         return (res.name + res.title).toLowerCase() === (name + title).toLowerCase();
                     });
 
-                var formItem = (items.length > 0) ? items[0] : {fieldTemplates:{items:[]}};
+                var formItem = (items.length > 0) ? items[0] : {fieldTemplates: {items: []}};
 
                 return formItem.fieldTemplates.items;
             });
