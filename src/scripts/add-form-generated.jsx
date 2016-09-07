@@ -225,7 +225,7 @@ define(['./card-entity'], function(Card) {
 
 
             this.props.restApi
-                .getForm(this.props.restId)
+                .getForm(this.props.restId, this.props.restTitle)
                 .then(function(fields) {
                     var processId = this.getCurrentProcessId(fields);
                     fields = this.processFields(fields);

@@ -161,25 +161,32 @@ define(['Class'], function(Class) {
             });
         },
 
-        getForm: function(id) {
+        getForm: function(name, title) {
             return Q($.ajax({
                 type: 'post',
-                url: this.host + '/slice/v1/matrix/listDataTemplate',
+                url: this.host + '/slice/v1/matrix/listDataTemplates',
                 contentType: 'application/json; charset=UTF-8',
                 dataType: 'json',
                 data: JSON.stringify({
                     base64: true,
-                    dataItemType: id,
+                    dataItemTypes: [name],
                     definition: {
                         cells: {
-                            items: [{
-                                id: id
-                            }]
+                            items: [{id: name}]
                         }
                     }
                 })
-            })).then(function(data) {
-                return data.items;
+            })).then(function (data) {
+                var items = data
+                    .items
+                    .filter(function (item) {
+                        var res = item.availableResource;
+                        return (res.name + res.title).toLowerCase() === (name + title).toLowerCase();
+                    });
+
+                var formItem = (items.length > 0) ? items[0] : {fieldTemplates:{items:[]}};
+
+                return formItem.fieldTemplates.items;
             });
         },
 

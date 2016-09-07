@@ -57,7 +57,7 @@ define(['./add-form-generated', './add-form-existing', './settings-form'], funct
                             <ul className="nav nav-pills nav-stacked">
                                 {this.state.forms.map(function(v){
                                     return (
-                                        <li key={v.name} className={v.name.toLowerCase() + (v.active ? ' active' : '')}>
+                                        <li key={v.name + v.title} className={v.name.toLowerCase() + (v.active ? ' active' : '')}>
                                             <a href={"#" + v.name} data-toggle="tab">{v.title}</a>
                                         </li>
                                     );
@@ -70,8 +70,11 @@ define(['./add-form-generated', './add-form-existing', './settings-form'], funct
                         <div className="tab-content column-forms">
                             {this.state.forms.map(function(v){
                                 return (
-                                    <div key={v.name} className={"tab-pane " + (v.active ? 'active' : '')} id={v.name}>
-                                        <GeneratedForm restApi={this.props.restApi} restId={v.name} paintManager={this.props.paintManager} />
+                                    <div key={v.name + v.title} className={"tab-pane " + (v.active ? 'active' : '')} id={v.name}>
+                                        <GeneratedForm restApi={this.props.restApi}
+                                                       restId={v.name}
+                                                       restTitle={v.title}
+                                                       paintManager={this.props.paintManager} />
                                     </div>
                                 );
                             }.bind(this))}
