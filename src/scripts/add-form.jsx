@@ -2,6 +2,10 @@ define(['./add-form-generated', './add-form-existing', './settings-form'], funct
 
     'use strict';
 
+    var getKey = function (v) {
+        return btoa(v.name + v.title).replace(/=/g, '_');
+    };
+
     return React.createClass({
 
         getInitialState: function() {
@@ -57,8 +61,8 @@ define(['./add-form-generated', './add-form-existing', './settings-form'], funct
                             <ul className="nav nav-pills nav-stacked">
                                 {this.state.forms.map(function(v){
                                     return (
-                                        <li key={v.name + v.title} className={v.name.toLowerCase() + (v.active ? ' active' : '')}>
-                                            <a href={"#" + v.name} data-toggle="tab">{v.title}</a>
+                                        <li key={getKey(v)} className={v.name.toLowerCase() + (v.active ? ' active' : '')}>
+                                            <a href={"#" + getKey(v)} data-toggle="tab">{v.title}</a>
                                         </li>
                                     );
                                 })}
@@ -70,7 +74,7 @@ define(['./add-form-generated', './add-form-existing', './settings-form'], funct
                         <div className="tab-content column-forms">
                             {this.state.forms.map(function(v){
                                 return (
-                                    <div key={v.name + v.title} className={"tab-pane " + (v.active ? 'active' : '')} id={v.name}>
+                                    <div key={getKey(v)} className={"tab-pane " + (v.active ? 'active' : '')} id={getKey(v)}>
                                         <GeneratedForm restApi={this.props.restApi}
                                                        restId={v.name}
                                                        restTitle={v.title}
