@@ -9,7 +9,7 @@ define(['Class'], function(Class) {
             this.endpointApi = 'api/v1';
             this.endpointUpload = 'UploadFile.ashx';
             this.authToken = null;
-            this.versionGt3_9_2 = null;
+            this.versionGt392 = null;
             this.host = null;
             this.hostName = null;
 
@@ -42,10 +42,12 @@ define(['Class'], function(Class) {
                     this.authToken = data.Token;
 
                     $.get(this.host + '/info.ashx')
-                        .then(function (info) {
+                        .then(function(info) {
                             var tokens = info.version.split('.');
-                            var version = parseInt(tokens[0]) * 10000 + parseInt(tokens[1]) * 100 + parseInt(tokens[2]);
-                            this.versionGt3_9_2 = (version >= 30902);
+                            var version = (parseInt(tokens[0], 10) * 10000 +
+                                parseInt(tokens[1], 10) * 100 +
+                                parseInt(tokens[2], 10));
+                            this.versionGt392 = (version >= 30902);
                             this.onAuth.fire();
                         }.bind(this));
                 }.bind(this));
@@ -171,7 +173,7 @@ define(['Class'], function(Class) {
 
         getForm: function(name, title) {
 
-            var newApi = (this.versionGt3_9_2 === true);
+            var newApi = (this.versionGt392 === true);
 
             var restPath = (
                 (newApi) ?
