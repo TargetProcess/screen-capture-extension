@@ -9,6 +9,7 @@ define(['Class'], function(Class) {
             this.endpointApi = 'api/v1';
             this.endpointUpload = 'UploadFile.ashx';
             this.authToken = null;
+            this.versionGt3_9_2 = null;
             this.host = null;
             this.hostName = null;
 
@@ -39,7 +40,14 @@ define(['Class'], function(Class) {
                 .get('Authentication')
                 .then(function(data) {
                     this.authToken = data.Token;
-                    this.onAuth.fire();
+
+                    $.get(this.host + '/info.ashx')
+                        .then(function (info) {
+                            var tokens = info.version.split('.');
+                            var version = parseInt(tokens[0]) * 10000 + parseInt(tokens[1]) * 100 + parseInt(tokens[2]);
+                            this.versionGt3_9_2 = (version >= 30902);
+                            this.onAuth.fire();
+                        }.bind(this));
                 }.bind(this));
         },
 
@@ -162,21 +170,44 @@ define(['Class'], function(Class) {
         },
 
         getForm: function(name, title) {
+
+            var newApi = (this.versionGt3_9_2 === true);
+
+            var restPath = (
+                (newApi) ?
+                    ('/slice/v1/matrix/listDataTemplates') :
+                    ('/slice/v1/matrix/listDataTemplate')
+            );
+
+            var args = {
+                base64: true,
+                definition: {
+                    cells: {
+                        items: [{id: name}]
+                    }
+                }
+            };
+
+            if (newApi) {
+                args.dataItemTypes = [name];
+            } else {
+                args.dataItemType = name;
+            }
+
             return Q($.ajax({
                 type: 'post',
-                url: this.host + '/slice/v1/matrix/listDataTemplates',
+                url: this.host + restPath,
                 contentType: 'application/json; charset=UTF-8',
                 dataType: 'json',
-                data: JSON.stringify({
-                    base64: true,
-                    dataItemTypes: [name],
-                    definition: {
-                        cells: {
-                            items: [{id: name}]
-                        }
-                    }
-                })
+                data: JSON.stringify(args)
             })).then(function(data) {
+
+                // below 3.9.2
+                if (!newApi) {
+                    return data.items;
+                }
+
+                // >= 3.9.2
                 var items = data
                     .items
                     .filter(function(item) {
