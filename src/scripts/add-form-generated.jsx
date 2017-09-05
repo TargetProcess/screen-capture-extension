@@ -5,6 +5,12 @@
 define(['./card-entity'], function(Card) {
     'use strict';
 
+    function getFieldKey(field) {
+        var key = field.name + ' ' + field.type;
+
+        return field.processId ? key + ' ' + field.processId : key;
+    }
+
     var FieldInput = React.createClass({
 
         serialize: function() {
@@ -475,19 +481,19 @@ define(['./card-entity'], function(Card) {
                         case 'Date':
                         case 'Number':
                         case 'TemplatedURL':
-                            return (<FieldInput key={field.name} ref={field.name} field={field} />);
+                            return (<FieldInput key={getFieldKey(field)} ref={getFieldKey(field)} field={field} />);
 
                         case 'DDL':
                         case 'DropDown':
                         case 'MultipleSelectionList':
-                            return (<FieldSelect key={field.name} ref={field.name} field={field}
+                            return (<FieldSelect key={getFieldKey(field)} ref={getFieldKey(field)} field={field}
                                     onChange={field.name.toLowerCase() === 'project' ? this.onSelectProject : null} />);
 
                         case 'CheckBox':
-                            return (<FieldCheckbox key={field.name} ref={field.name} field={field} />);
+                            return (<FieldCheckbox key={getFieldKey(field)} ref={getFieldKey(field)} field={field} />);
 
                         case 'URL':
-                            return (<FieldUrl key={field.name} ref={field.name} field={field} />);
+                            return (<FieldUrl key={getFieldKey(field)} ref={getFieldKey(field)} field={field} />);
 
                         default:
                             return null;
