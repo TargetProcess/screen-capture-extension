@@ -307,7 +307,7 @@ define(['./card-entity'], function(Card) {
                     field.name = field.id;
                 }
 
-                if (['Text', 'Number', 'Date', 'TemplatedURL'].indexOf(field.type) >= 0) {
+                if (['Text', 'Number', 'Date', 'Money', 'TemplatedURL'].indexOf(field.type) >= 0) {
                     field.inputType = field.type === 'TemplatedURL' ? 'text' : field.type.toLowerCase();
                 }
 
@@ -481,6 +481,7 @@ define(['./card-entity'], function(Card) {
                         case 'Date':
                         case 'Number':
                         case 'TemplatedURL':
+                        case 'Money':
                             return (<FieldInput key={getFieldKey(field)} ref={getFieldKey(field)} field={field} />);
 
                         case 'DDL':
