@@ -73,7 +73,7 @@ define([], function(){
 
             var attachs = entity.Attachments.Items;
             attachs = attachs.map(function(attach) {
-                attach.thumbnailUri = attach.ThumbnailUri.replace(/localhost/, 'localhost:8080').replace(/100/g, '50');
+                attach.thumbnailUri = attach.ThumbnailUri.replace(/100/g, '50');
                 return attach;
             });
 
